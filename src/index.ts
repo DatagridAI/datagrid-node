@@ -4,7 +4,12 @@ import { type Agent } from './_shims/index';
 import * as Core from './core';
 import * as Errors from './error';
 import * as Pagination from './pagination';
-import { type CursorPageParams, CursorPageResponse } from './pagination';
+import {
+  type CursorIDPageParams,
+  CursorIDPageResponse,
+  type CursorPageParams,
+  CursorPageResponse,
+} from './pagination';
 import * as Uploads from './uploads';
 import * as API from './resources/index';
 import {
@@ -14,17 +19,12 @@ import {
   KnowledgeResource,
   KnowledgeUpdateParams,
   KnowledgeUpdateResponse,
-  KnowledgesCursorPage,
+  KnowledgesCursorIDPage,
 } from './resources/knowledge';
 
 export interface ClientOptions {
   /**
-   * Bearer token for accessing the Datagrid API
-   */
-  bearerToken?: string | undefined;
-
-  /**
-   * API key required in the X-API-Key header for accessing the Datagrid API
+   * API key required
    */
   apiKey?: string | undefined;
 
@@ -89,7 +89,6 @@ export interface ClientOptions {
  * API Client for interfacing with the Datagrid API.
  */
 export class Datagrid extends Core.APIClient {
-  bearerToken: string;
   apiKey: string;
 
   private _options: ClientOptions;
@@ -97,7 +96,6 @@ export class Datagrid extends Core.APIClient {
   /**
    * API Client for interfacing with the Datagrid API.
    *
-   * @param {string | undefined} [opts.bearerToken=process.env['BEARER_TOKEN'] ?? undefined]
    * @param {string | undefined} [opts.apiKey=process.env['DATAGRID_API_KEY'] ?? undefined]
    * @param {string} [opts.baseURL=process.env['DATAGRID_BASE_URL'] ?? https://api.datagrid.com] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
@@ -109,15 +107,9 @@ export class Datagrid extends Core.APIClient {
    */
   constructor({
     baseURL = Core.readEnv('DATAGRID_BASE_URL'),
-    bearerToken = Core.readEnv('BEARER_TOKEN'),
     apiKey = Core.readEnv('DATAGRID_API_KEY'),
     ...opts
   }: ClientOptions = {}) {
-    if (bearerToken === undefined) {
-      throw new Errors.DatagridError(
-        "The BEARER_TOKEN environment variable is missing or empty; either provide it, or instantiate the Datagrid client with an bearerToken option, like new Datagrid({ bearerToken: 'My Bearer Token' }).",
-      );
-    }
     if (apiKey === undefined) {
       throw new Errors.DatagridError(
         "The DATAGRID_API_KEY environment variable is missing or empty; either provide it, or instantiate the Datagrid client with an apiKey option, like new Datagrid({ apiKey: 'My API Key' }).",
@@ -125,7 +117,6 @@ export class Datagrid extends Core.APIClient {
     }
 
     const options: ClientOptions = {
-      bearerToken,
       apiKey,
       ...opts,
       baseURL: baseURL || `https://api.datagrid.com`,
@@ -141,7 +132,6 @@ export class Datagrid extends Core.APIClient {
 
     this._options = options;
 
-    this.bearerToken = bearerToken;
     this.apiKey = apiKey;
   }
 
@@ -159,17 +149,7 @@ export class Datagrid extends Core.APIClient {
   }
 
   protected override authHeaders(opts: Core.FinalRequestOptions): Core.Headers {
-    const bearerAuth = this.bearerAuth(opts);
-    const apiKeyAuth = this.apiKeyAuth(opts);
-    return {};
-  }
-
-  protected bearerAuth(opts: Core.FinalRequestOptions): Core.Headers {
-    return { Authorization: `Bearer ${this.bearerToken}` };
-  }
-
-  protected apiKeyAuth(opts: Core.FinalRequestOptions): Core.Headers {
-    return { 'X-API-Key': this.apiKey };
+    return { Authorization: `Bearer ${this.apiKey}` };
   }
 
   static Datagrid = this;
@@ -194,18 +174,21 @@ export class Datagrid extends Core.APIClient {
 }
 
 Datagrid.KnowledgeResource = KnowledgeResource;
-Datagrid.KnowledgesCursorPage = KnowledgesCursorPage;
+Datagrid.KnowledgesCursorIDPage = KnowledgesCursorIDPage;
 export declare namespace Datagrid {
   export type RequestOptions = Core.RequestOptions;
 
   export import CursorPage = Pagination.CursorPage;
   export { type CursorPageParams as CursorPageParams, type CursorPageResponse as CursorPageResponse };
 
+  export import CursorIDPage = Pagination.CursorIDPage;
+  export { type CursorIDPageParams as CursorIDPageParams, type CursorIDPageResponse as CursorIDPageResponse };
+
   export {
     KnowledgeResource as KnowledgeResource,
     type Knowledge as Knowledge,
     type KnowledgeUpdateResponse as KnowledgeUpdateResponse,
-    KnowledgesCursorPage as KnowledgesCursorPage,
+    KnowledgesCursorIDPage as KnowledgesCursorIDPage,
     type KnowledgeCreateParams as KnowledgeCreateParams,
     type KnowledgeUpdateParams as KnowledgeUpdateParams,
     type KnowledgeListParams as KnowledgeListParams,

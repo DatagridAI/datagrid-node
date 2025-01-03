@@ -58,3 +58,71 @@ export class CursorPage<Item> extends AbstractPage<Item> implements CursorPageRe
     };
   }
 }
+
+export interface CursorIDPageResponse<Item> {
+  data: Array<Item>;
+}
+
+export interface CursorIDPageParams {
+  after?: string;
+
+  before?: string;
+
+  limit?: number;
+}
+
+export class CursorIDPage<Item extends { id: string }>
+  extends AbstractPage<Item>
+  implements CursorIDPageResponse<Item>
+{
+  data: Array<Item>;
+
+  constructor(
+    client: APIClient,
+    response: Response,
+    body: CursorIDPageResponse<Item>,
+    options: FinalRequestOptions,
+  ) {
+    super(client, response, body, options);
+
+    this.data = body.data || [];
+  }
+
+  getPaginatedItems(): Item[] {
+    return this.data ?? [];
+  }
+
+  // @deprecated Please use `nextPageInfo()` instead
+  nextPageParams(): Partial<CursorIDPageParams> | null {
+    const info = this.nextPageInfo();
+    if (!info) return null;
+    if ('params' in info) return info.params;
+    const params = Object.fromEntries(info.url.searchParams);
+    if (!Object.keys(params).length) return null;
+    return params;
+  }
+
+  nextPageInfo(): PageInfo | null {
+    const data = this.getPaginatedItems();
+    if (!data.length) {
+      return null;
+    }
+
+    const isForwards = !(typeof this.options.query === 'object' && 'before' in (this.options.query || {}));
+    if (isForwards) {
+      const id = data[data.length - 1]?.id;
+      if (!id) {
+        return null;
+      }
+
+      return { params: { after: id } };
+    }
+
+    const id = data[0]?.id;
+    if (!id) {
+      return null;
+    }
+
+    return { params: { before: id } };
+  }
+}
