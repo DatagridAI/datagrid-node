@@ -11,8 +11,11 @@ It is generated with [Stainless](https://www.stainlessapi.com/).
 ## Installation
 
 ```sh
-npm install datagrid-ai
+npm install git+ssh://git@github.com:stainless-sdks/datagrid-node.git
 ```
+
+> [!NOTE]
+> Once this package is [published to npm](https://app.stainlessapi.com/docs/guides/publish), this will become: `npm install datagrid-ai`
 
 ## Usage
 
@@ -22,7 +25,9 @@ The full API of this library can be found in [api.md](api.md).
 ```js
 import Datagrid from 'datagrid-ai';
 
-const client = new Datagrid();
+const client = new Datagrid({
+  apiKey: process.env['DATAGRID_API_KEY'], // This is the default and can be omitted
+});
 
 async function main() {
   const knowledge = await client.knowledge.create({ files: [fs.createReadStream('path/to/file')] });
@@ -41,7 +46,9 @@ This library includes TypeScript definitions for all request params and response
 ```ts
 import Datagrid from 'datagrid-ai';
 
-const client = new Datagrid();
+const client = new Datagrid({
+  apiKey: process.env['DATAGRID_API_KEY'], // This is the default and can be omitted
+});
 
 async function main() {
   const params: Datagrid.KnowledgeCreateParams = { files: [fs.createReadStream('path/to/file')] };
@@ -247,7 +254,7 @@ import Datagrid from 'datagrid-ai';
 ```
 
 To do the inverse, add `import "datagrid-ai/shims/node"` (which does import polyfills).
-This can also be useful if you are getting the wrong TypeScript types for `Response` ([more details](https://github.com/ToricLabs/datagrid-node/tree/main/src/_shims#readme)).
+This can also be useful if you are getting the wrong TypeScript types for `Response` ([more details](https://github.com/stainless-sdks/datagrid-node/tree/main/src/_shims#readme)).
 
 ### Logging and middleware
 
@@ -306,7 +313,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/ToricLabs/datagrid-node/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/datagrid-node/issues) with questions, bugs, or suggestions.
 
 ## Requirements
 
