@@ -1,5 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+export { Health } from './health';
 export {
   KnowledgesCursorIDPage,
   KnowledgeResource,
@@ -9,3 +10,4 @@ export {
   type KnowledgeUpdateParams,
   type KnowledgeListParams,
 } from './knowledge';
+export { type Properties, type ConverseResponse, type ConverseParams } from './top-level';
