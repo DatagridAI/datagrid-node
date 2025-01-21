@@ -10,14 +10,14 @@ export class KnowledgeResource extends APIResource {
    * Create knowledge which will be learned and leveraged by agents.
    */
   create(body: KnowledgeCreateParams, options?: Core.RequestOptions): Core.APIPromise<Knowledge> {
-    return this._client.post('/v1/knowledge', Core.multipartFormRequestOptions({ body, ...options }));
+    return this._client.post('/knowledge', Core.multipartFormRequestOptions({ body, ...options }));
   }
 
   /**
    * Retrieves a knowledge by id.
    */
   retrieve(knowledgeId: string, options?: Core.RequestOptions): Core.APIPromise<Knowledge> {
-    return this._client.get(`/v1/knowledge/${knowledgeId}`, options);
+    return this._client.get(`/knowledge/${knowledgeId}`, options);
   }
 
   /**
@@ -28,7 +28,7 @@ export class KnowledgeResource extends APIResource {
     body: KnowledgeUpdateParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<KnowledgeUpdateResponse> {
-    return this._client.patch(`/v1/knowledge/${knowledgeId}`, { body, ...options });
+    return this._client.patch(`/knowledge/${knowledgeId}`, { body, ...options });
   }
 
   /**
@@ -46,14 +46,14 @@ export class KnowledgeResource extends APIResource {
     if (isRequestOptions(query)) {
       return this.list({}, query);
     }
-    return this._client.getAPIList('/v1/knowledge', KnowledgesCursorIDPage, { query, ...options });
+    return this._client.getAPIList('/knowledge', KnowledgesCursorIDPage, { query, ...options });
   }
 
   /**
    * Delete knowledge.
    */
   delete(knowledgeId: string, options?: Core.RequestOptions): Core.APIPromise<void> {
-    return this._client.delete(`/v1/knowledge/${knowledgeId}`, {
+    return this._client.delete(`/knowledge/${knowledgeId}`, {
       ...options,
       headers: { Accept: '*/*', ...options?.headers },
     });
