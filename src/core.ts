@@ -19,6 +19,7 @@ import {
 } from './_shims/index';
 export { type Response };
 import { BlobLike, isBlobLike, isMultipartBody } from './uploads';
+import { Stream } from './lib/streaming/stream';
 export {
   maybeMultipartFormRequestOptions,
   multipartFormRequestOptions,
@@ -38,6 +39,7 @@ type APIResponseProps = {
 
 async function defaultParseResponse<T>(props: APIResponseProps): Promise<T> {
   const { response } = props;
+
   // fetch refuses to read the body when the status code is 204.
   if (response.status === 204) {
     return null as T;
@@ -48,8 +50,18 @@ async function defaultParseResponse<T>(props: APIResponseProps): Promise<T> {
   }
 
   const contentType = response.headers.get('content-type');
+
+  const isStream = contentType?.includes('text/event-stream');
+
+  if (isStream) {
+    debug('response', response.status, response.url, response.headers, response.body);
+
+    return Stream.fromSSEResponse(response, props.controller) as any;
+  }
+
   const isJSON =
     contentType?.includes('application/json') || contentType?.includes('application/vnd.api+json');
+
   if (isJSON) {
     const json = await response.json();
 
