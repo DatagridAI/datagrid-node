@@ -210,7 +210,6 @@ export class Datagrid extends Core.APIClient {
 Datagrid.KnowledgeResource = KnowledgeResource;
 Datagrid.KnowledgesCursorIDPage = KnowledgesCursorIDPage;
 Datagrid.Health = Health;
-
 export declare namespace Datagrid {
   export type RequestOptions = Core.RequestOptions;
 
