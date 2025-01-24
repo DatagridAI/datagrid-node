@@ -5,7 +5,7 @@ import { LineDecoder } from './decoder';
 type Bytes = string | ArrayBuffer | Uint8Array | Buffer | null | undefined;
 
 export type ServerSentEvent = {
-  type: string | null;
+  event: string | null;
   data: string;
   raw: string[];
 };
@@ -38,7 +38,7 @@ export class Stream<Item> implements AsyncIterable<Item> {
             continue;
           }
 
-          if (sse.type === null) {
+          if (sse.event === null) {
             let data;
 
             try {
@@ -64,10 +64,10 @@ export class Stream<Item> implements AsyncIterable<Item> {
               throw e;
             }
             // TODO: Is this where the error should be thrown?
-            if (sse.type == 'error') {
+            if (sse.event == 'error') {
               throw new APIError(undefined, data.error, data.message, undefined);
             }
-            yield { type: sse.type, data: data } as any;
+            yield { event: sse.event, data: data } as any;
           }
         }
         done = true;
@@ -289,11 +289,11 @@ function findDoubleNewlineIndex(buffer: Uint8Array): number {
 
 class SSEDecoder {
   private data: string[];
-  private type: string | null;
+  private event: string | null;
   private chunks: string[];
 
   constructor() {
-    this.type = null;
+    this.event = null;
     this.data = [];
     this.chunks = [];
   }
@@ -305,15 +305,15 @@ class SSEDecoder {
 
     if (!line) {
       // empty line and we didn't previously encounter any messages
-      if (!this.type && !this.data.length) return null;
+      if (!this.event && !this.data.length) return null;
 
       const sse: ServerSentEvent = {
-        type: this.type,
+        event: this.event,
         data: this.data.join('\n'),
         raw: this.chunks,
       };
 
-      this.type = null;
+      this.event = null;
       this.data = [];
       this.chunks = [];
 
@@ -332,9 +332,8 @@ class SSEDecoder {
       value = value.substring(1);
     }
 
-    // For some reason backend decorator still sends types as events
     if (fieldname === 'event') {
-      this.type = value;
+      this.event = value;
     } else if (fieldname === 'data') {
       this.data.push(value);
     }
