@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.2 (2025-01-24)
+
+Full Changelog: [v0.1.0-alpha.1...v0.1.0-alpha.2](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.1...v0.1.0-alpha.2)
+
+### Features
+
+* feat: sse converse ([d23e74e](https://github.com/DatagridAI/datagrid-node/commit/d23e74ed27468295ed78be81712d27a7a6476900))
+
 ## 0.1.0-alpha.1 (2025-01-24)
 
 Full Changelog: [v0.0.1-alpha.0...v0.1.0-alpha.1](https://github.com/DatagridAI/datagrid-node/compare/v0.0.1-alpha.0...v0.1.0-alpha.1)
