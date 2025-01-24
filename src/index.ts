@@ -25,6 +25,14 @@ import {
   KnowledgesCursorIDPage,
 } from './resources/knowledge';
 
+import { Stream } from './lib/streaming/stream';
+import {
+  AllConverseParams,
+  ConverseEvent,
+  ConverseNonStreamParams,
+  ConverseStreamParams,
+} from './lib/agents/agent-converse-types';
+
 export interface ClientOptions {
   /**
    * API key required
@@ -144,11 +152,23 @@ export class Datagrid extends Core.APIClient {
   /**
    * Converse with an AI Agent
    */
+
+  converse(
+    body: ConverseNonStreamParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<TopLevelAPI.ConverseResponse>;
+  converse(body: ConverseStreamParams, options?: Core.RequestOptions): Core.APIPromise<Stream<ConverseEvent>>;
   converse(
     body: TopLevelAPI.ConverseParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<TopLevelAPI.ConverseResponse> {
-    return this.post('/converse', { body, ...options });
+  ): Core.APIPromise<TopLevelAPI.ConverseResponse> | Core.APIPromise<Stream<ConverseEvent>>;
+  converse(
+    body: AllConverseParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<TopLevelAPI.ConverseResponse> | Core.APIPromise<Stream<ConverseEvent>> {
+    return this.post('/converse', { body, ...options }) as
+      | Core.APIPromise<TopLevelAPI.ConverseResponse>
+      | Core.APIPromise<Stream<ConverseEvent>>;
   }
 
   protected override defaultQuery(): Core.DefaultQuery | undefined {
