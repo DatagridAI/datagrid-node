@@ -34,7 +34,7 @@ export namespace Properties {
   export interface ConverseStatusEvent {
     data: ConverseStatusEvent.Data;
 
-    event: 'start' | 'end';
+    type: 'start' | 'end';
   }
 
   export namespace ConverseStatusEvent {
@@ -62,7 +62,7 @@ export namespace Properties {
     /**
      * Type of the event which is always delta
      */
-    event: 'delta';
+    type: 'delta';
   }
 
   export namespace ConverseContentMessageDeltaEvent {
