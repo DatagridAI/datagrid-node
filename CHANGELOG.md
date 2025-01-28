@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.3 (2025-01-28)
+
+Full Changelog: [v0.1.0-alpha.2...v0.1.0-alpha.3](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.2...v0.1.0-alpha.3)
+
+### Chores
+
+* go live ([#33](https://github.com/DatagridAI/datagrid-node/issues/33)) ([b66bcdd](https://github.com/DatagridAI/datagrid-node/commit/b66bcdd7e64842eea0bd87889fd32e67f7a1868b))
+
 ## 0.1.0-alpha.2 (2025-01-27)
 
 Full Changelog: [v0.1.0-alpha.1...v0.1.0-alpha.2](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.1...v0.1.0-alpha.2)
