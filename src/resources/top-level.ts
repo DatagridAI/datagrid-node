@@ -34,7 +34,7 @@ export namespace Properties {
   export interface ConverseStatusEvent {
     data: ConverseStatusEvent.Data;
 
-    type: 'start' | 'end';
+    event: 'start' | 'end';
   }
 
   export namespace ConverseStatusEvent {
@@ -62,7 +62,7 @@ export namespace Properties {
     /**
      * Type of the event which is always delta
      */
-    type: 'delta';
+    event: 'delta';
   }
 
   export namespace ConverseContentMessageDeltaEvent {
@@ -147,11 +147,21 @@ export namespace ConverseParams {
    */
   export interface Config {
     /**
+     * The version of Datagrid's agent brain.
+     */
+    agent_model?: 'magpie-1' | 'mapgie-1.1';
+
+    /**
      * Array of Knowledge IDs the agent should use during the converse. If not
      * provided - default settings are used. If null provided - all available knowledge
      * is used.
      */
     knowledge_ids?: Array<string> | null;
+
+    /**
+     * Directs your AI Agent's operational behavior.
+     */
+    system_prompt?: string;
   }
 }
 
