@@ -23,9 +23,3 @@ Methods:
 - <code title="patch /knowledge/{knowledge_id}">client.knowledge.<a href="./src/resources/knowledge.ts">update</a>(knowledgeId, { ...params }) -> KnowledgeUpdateResponse</code>
 - <code title="get /knowledge">client.knowledge.<a href="./src/resources/knowledge.ts">list</a>({ ...params }) -> KnowledgesCursorIDPage</code>
 - <code title="delete /knowledge/{knowledge_id}">client.knowledge.<a href="./src/resources/knowledge.ts">delete</a>(knowledgeId) -> void</code>
-
-# Health
-
-Methods:
-
-- <code title="get /health">client.health.<a href="./src/resources/health.ts">checkAPIHealth</a>() -> void</code>

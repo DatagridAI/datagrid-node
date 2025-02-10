@@ -14,7 +14,6 @@ import * as Uploads from './uploads';
 import * as API from './resources/index';
 import * as TopLevelAPI from './resources/top-level';
 import { ConverseParams, ConverseResponse, Properties } from './resources/top-level';
-import { Health } from './resources/health';
 import {
   Knowledge,
   KnowledgeCreateParams,
@@ -139,7 +138,6 @@ export class Datagrid extends Core.APIClient {
   }
 
   knowledge: API.KnowledgeResource = new API.KnowledgeResource(this);
-  health: API.Health = new API.Health(this);
 
   /**
    * Converse with an AI Agent
@@ -189,7 +187,6 @@ export class Datagrid extends Core.APIClient {
 
 Datagrid.KnowledgeResource = KnowledgeResource;
 Datagrid.KnowledgesCursorIDPage = KnowledgesCursorIDPage;
-Datagrid.Health = Health;
 export declare namespace Datagrid {
   export type RequestOptions = Core.RequestOptions;
 
@@ -214,8 +211,6 @@ export declare namespace Datagrid {
     type KnowledgeUpdateParams as KnowledgeUpdateParams,
     type KnowledgeListParams as KnowledgeListParams,
   };
-
-  export { Health as Health };
 }
 
 export { toFile, fileFromPath } from './uploads';

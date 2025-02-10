@@ -136,6 +136,9 @@ export interface KnowledgeCreateParams {
    */
   files: Array<Core.Uploadable>;
 
+  /**
+   * The name of the knowledge.
+   */
   name?: string;
 }
 
