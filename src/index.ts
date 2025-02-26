@@ -13,7 +13,17 @@ import {
 import * as Uploads from './uploads';
 import * as API from './resources/index';
 import * as TopLevelAPI from './resources/top-level';
-import { ConverseParams, ConverseResponse, Properties } from './resources/top-level';
+import {
+  ActionTools,
+  AgentTools,
+  ConverseParams,
+  ConverseResponse,
+  DataProcessingTools,
+  EnhancedResponsesTools,
+  KnowledgeManagementTools,
+  Properties,
+  WebTools,
+} from './resources/top-level';
 import {
   Knowledge,
   KnowledgeCreateParams,
@@ -197,7 +207,13 @@ export declare namespace Datagrid {
   export { type CursorIDPageParams as CursorIDPageParams, type CursorIDPageResponse as CursorIDPageResponse };
 
   export {
+    type ActionTools as ActionTools,
+    type AgentTools as AgentTools,
+    type DataProcessingTools as DataProcessingTools,
+    type EnhancedResponsesTools as EnhancedResponsesTools,
+    type KnowledgeManagementTools as KnowledgeManagementTools,
     type Properties as Properties,
+    type WebTools as WebTools,
     type ConverseResponse as ConverseResponse,
     type ConverseParams as ConverseParams,
   };

@@ -2,7 +2,13 @@
 
 Types:
 
+- <code><a href="./src/resources/top-level.ts">ActionTools</a></code>
+- <code><a href="./src/resources/top-level.ts">AgentTools</a></code>
+- <code><a href="./src/resources/top-level.ts">DataProcessingTools</a></code>
+- <code><a href="./src/resources/top-level.ts">EnhancedResponsesTools</a></code>
+- <code><a href="./src/resources/top-level.ts">KnowledgeManagementTools</a></code>
 - <code><a href="./src/resources/top-level.ts">Properties</a></code>
+- <code><a href="./src/resources/top-level.ts">WebTools</a></code>
 - <code><a href="./src/resources/top-level.ts">ConverseResponse</a></code>
 
 Methods:
