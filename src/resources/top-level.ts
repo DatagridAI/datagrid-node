@@ -26,7 +26,7 @@ export type AgentTools =
   | 'image_detection'
   | 'agent_memory'
   | 'pdf_extraction'
-  | 'semantic_search_tool'
+  | 'semantic_search'
   | 'company_prospect_researcher'
   | 'people_prospect_researcher'
   | 'web_search'
@@ -58,15 +58,14 @@ export type EnhancedResponsesTools = 'connect_data' | 'create_dataset' | 'downlo
  * - agent_memory: "Agents can remember experiences, conversations and user
  *   preferences."
  * - pdf_extraction: "Extraction of information from PDFs using AI"
- * - semantic_search_tool: "Agents better understand context. Example: “Apple” is
- *   both a fruit and a company"
+ * - semantic_search: "Search knowledge through natural language queries."
  */
 export type KnowledgeManagementTools =
   | 'data_analysis'
   | 'image_detection'
   | 'agent_memory'
   | 'pdf_extraction'
-  | 'semantic_search_tool';
+  | 'semantic_search';
 
 export type Properties =
   | Properties.ConverseResponse
@@ -229,7 +228,7 @@ export namespace ConverseParams {
     /**
      * The version of Datagrid's agent brain.
      */
-    agent_model?: 'magpie-1' | 'mapgie-1.1';
+    agent_model?: 'magpie-1' | 'magpie-1.1';
 
     /**
      * Array of the agent tools to enable. If not provided - default tools of the agent
