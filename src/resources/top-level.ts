@@ -2,70 +2,25 @@
 
 import * as TopLevelAPI from './top-level';
 
-/**
- * - calendar: "Allows the Agent access to your Calendar"
- * - schedule_recurring_message_tool: "Eliminate busywork such as: “Send a summary
- *   of today’s meetings at 5pm on workdays”"
- */
-export type ActionTools = 'calendar' | 'schedule_recurring_message_tool';
-
-/**
- * Customizes AI Agent abilities
- */
 export type AgentTools =
+  | 'data_analysis'
+  | 'semantic_search'
+  | 'agent_memory'
+  | 'schema_info'
+  | 'table_info'
+  | 'create_dataset'
   | 'calendar'
   | 'schedule_recurring_message_tool'
   | 'data_classification'
   | 'data_extraction'
-  | 'schema_info'
-  | 'table_info'
+  | 'image_detection'
+  | 'pdf_extraction'
   | 'connect_data'
-  | 'create_dataset'
   | 'download_data'
-  | 'data_analysis'
-  | 'image_detection'
-  | 'agent_memory'
-  | 'pdf_extraction'
-  | 'semantic_search'
-  | 'company_prospect_researcher'
-  | 'people_prospect_researcher'
   | 'web_search'
-  | 'fetch_url';
-
-/**
- * - data_classification: "Agents handle queries like “Label these emails as high,
- *   medium, or low priority”"
- * - data_extraction: "Helps the agent understand data from other tools. Avoid
- *   disabling"
- * - schema_info: "Helps the Agent understand column names and dataset purpose.
- *   Avoid disabling"
- * - table_info: "Allow the AI Agent to get information about datasets and schemas"
- */
-export type DataProcessingTools = 'data_classification' | 'data_extraction' | 'schema_info' | 'table_info';
-
-/**
- * - connect_data: "Agents provide buttons to import data in response to queries
- *   like “Connect Hubspot”"
- * - create_dataset: "Agents respond with data tables"
- * - download_data: "Agents handle queries like “download the table as CSV”"
- */
-export type EnhancedResponsesTools = 'connect_data' | 'create_dataset' | 'download_data';
-
-/**
- * - data_analysis: "Answer statistical or analytical questions like “Show my
- *   quarterly revenue growth”"
- * - image_detection: "Extract information from images using AI"
- * - agent_memory: "Agents can remember experiences, conversations and user
- *   preferences."
- * - pdf_extraction: "Extraction of information from PDFs using AI"
- * - semantic_search: "Search knowledge through natural language queries."
- */
-export type KnowledgeManagementTools =
-  | 'data_analysis'
-  | 'image_detection'
-  | 'agent_memory'
-  | 'pdf_extraction'
-  | 'semantic_search';
+  | 'fetch_url'
+  | 'company_prospect_researcher'
+  | 'people_prospect_researcher';
 
 export type Properties =
   | Properties.ConverseResponse
@@ -153,18 +108,6 @@ export namespace Properties {
   }
 }
 
-/**
- * - company_prospect_researcher: "Agents provide information about companies"
- * - people_prospect_researcher: "Agents provide information about people"
- * - web_search: "Agents search the internet, and provide links to their sources"
- * - fetch_url: "Fetch URL content"
- */
-export type WebTools =
-  | 'company_prospect_researcher'
-  | 'people_prospect_researcher'
-  | 'web_search'
-  | 'fetch_url';
-
 export interface ConverseResponse {
   /**
    * The ID of the agent used for the converse.
@@ -234,6 +177,46 @@ export namespace ConverseParams {
      * Array of the agent tools to enable. If not provided - default tools of the agent
      * are used. If empty list provided - none of the tools are used. If null
      * provided - all tools are used.
+     *
+     * Knowledge management tools:
+     *
+     * - data_analysis: Answer statistical or analytical questions like "Show my
+     *   quarterly revenue growth"
+     * - semantic_search: Search knowledge through natural language queries.
+     * - agent_memory: Agents can remember experiences, conversations and user
+     *   preferences.
+     * - schema_info: Helps the Agent understand column names and dataset purpose.
+     *   Avoid disabling
+     * - table_info: Allow the AI Agent to get information about datasets and schemas
+     * - create_dataset: Agents respond with data tables
+     *
+     * Actions:
+     *
+     * - calendar: Allow the Agent to access and make changes to your Google Calendar
+     * - schedule_recurring_message_tool: Eliminate busywork such as: "Send a summary
+     *   of today's meetings at 5pm on workdays"
+     *
+     * Data processing tools:
+     *
+     * - data_classification: Agents handle queries like "Label these emails as high,
+     *   medium, or low priority"
+     * - data_extraction: Helps the agent understand data from other tools. Avoid
+     *   disabling
+     * - image_detection: Extract information from images using AI
+     * - pdf_extraction: Extraction of information from PDFs using AI
+     *
+     * Enhanced response tools:
+     *
+     * - connect_data: Agents provide buttons to import data in response to queries
+     *   like "Connect Hubspot"
+     * - download_data: Agents handle queries like "download the table as CSV"
+     *
+     * Web tools:
+     *
+     * - web_search: Agents search the internet, and provide links to their sources
+     * - fetch_url: Fetch URL content
+     * - company_prospect_researcher: Agents provide information about companies
+     * - people_prospect_researcher: Agents provide information about people
      */
     agent_tools?: Array<TopLevelAPI.AgentTools> | null;
 
@@ -268,13 +251,8 @@ export namespace ConverseParams {
 
 export declare namespace TopLevel {
   export {
-    type ActionTools as ActionTools,
     type AgentTools as AgentTools,
-    type DataProcessingTools as DataProcessingTools,
-    type EnhancedResponsesTools as EnhancedResponsesTools,
-    type KnowledgeManagementTools as KnowledgeManagementTools,
     type Properties as Properties,
-    type WebTools as WebTools,
     type ConverseResponse as ConverseResponse,
     type ConverseParams as ConverseParams,
   };

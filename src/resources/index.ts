@@ -9,14 +9,4 @@ export {
   type KnowledgeUpdateParams,
   type KnowledgeListParams,
 } from './knowledge';
-export {
-  type ActionTools,
-  type AgentTools,
-  type DataProcessingTools,
-  type EnhancedResponsesTools,
-  type KnowledgeManagementTools,
-  type Properties,
-  type WebTools,
-  type ConverseResponse,
-  type ConverseParams,
-} from './top-level';
+export { type AgentTools, type Properties, type ConverseResponse, type ConverseParams } from './top-level';
