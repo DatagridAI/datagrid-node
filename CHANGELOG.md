@@ -1,33 +1,5 @@
 # Changelog
 
-## 0.1.0-alpha.5 (2025-03-05)
-
-Full Changelog: [v0.1.0-alpha.4...v0.1.0-alpha.5](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.4...v0.1.0-alpha.5)
-
-### Features
-
-* **api:** api update ([8498ef4](https://github.com/DatagridAI/datagrid-node/commit/8498ef47fee96fcfebaba6d3e78b2b256a208d4b))
-* **api:** api update ([4d40e80](https://github.com/DatagridAI/datagrid-node/commit/4d40e807d81a82adba35e81ffcf9f495eb18eb71))
-* **api:** api update ([d991469](https://github.com/DatagridAI/datagrid-node/commit/d991469d00c0aed702daf338c3f0b62714ee476a))
-
-
-### Bug Fixes
-
-* **client:** fix export map for index exports ([bf2ed4a](https://github.com/DatagridAI/datagrid-node/commit/bf2ed4a0cf4c747df21f56805d7e89ae983b5de0))
-
-
-### Chores
-
-* go live ([#44](https://github.com/DatagridAI/datagrid-node/issues/44)) ([3051a84](https://github.com/DatagridAI/datagrid-node/commit/3051a84f55d023a91f0365ec746a8ca6d8bb98c1))
-* **internal:** codegen related update ([c53d1c6](https://github.com/DatagridAI/datagrid-node/commit/c53d1c64f280bcedf20f31f74d3d055456e55095))
-* **internal:** fix devcontainers setup ([84b7fc5](https://github.com/DatagridAI/datagrid-node/commit/84b7fc5a5a1db8aed7bcb762ef49d543f6e4651d))
-* update SDK settings ([#46](https://github.com/DatagridAI/datagrid-node/issues/46)) ([ce07763](https://github.com/DatagridAI/datagrid-node/commit/ce07763b5765eb001cea1ca4a70fbb3a38e2a3bc))
-
-
-### Documentation
-
-* update URLs from stainlessapi.com to stainless.com ([20a8ac8](https://github.com/DatagridAI/datagrid-node/commit/20a8ac83e846f83428aa8e1cfa3d87e78c20538d))
-
 ## 0.1.0-alpha.4 (2025-01-29)
 
 Full Changelog: [v0.1.0-alpha.3...v0.1.0-alpha.4](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.3...v0.1.0-alpha.4)
