@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.1.0-alpha.6 (2025-04-02)
+
+Full Changelog: [v0.1.0-alpha.4...v0.1.0-alpha.6](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.4...v0.1.0-alpha.6)
+
+### Features
+
+* **api:** api update ([6d5c9dd](https://github.com/DatagridAI/datagrid-node/commit/6d5c9dd64f039a71fc95ae62f0b93b005095726b))
+
+
+### Chores
+
+* go live ([#47](https://github.com/DatagridAI/datagrid-node/issues/47)) ([226c7fd](https://github.com/DatagridAI/datagrid-node/commit/226c7fdcaa9c197643a3fc4cac84ca2f3086b061))
+* go live ([#49](https://github.com/DatagridAI/datagrid-node/issues/49)) ([6930fd0](https://github.com/DatagridAI/datagrid-node/commit/6930fd0b50cb3e7dd3ea8ea64422bcb5301a84bf))
+* sync repo ([eafd5f6](https://github.com/DatagridAI/datagrid-node/commit/eafd5f662c6db2aa5fa17ecd32b976e541c3ecd5))
+* update SDK settings ([#50](https://github.com/DatagridAI/datagrid-node/issues/50)) ([5f2f125](https://github.com/DatagridAI/datagrid-node/commit/5f2f1258c11c91f669231ee77d078172faaf4268))
+
 ## 0.1.0-alpha.4 (2025-01-29)
 
 Full Changelog: [v0.1.0-alpha.3...v0.1.0-alpha.4](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.3...v0.1.0-alpha.4)
