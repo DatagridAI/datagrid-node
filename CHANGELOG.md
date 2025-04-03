@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.1.0-alpha.7 (2025-04-03)
+
+Full Changelog: [v0.1.0-alpha.6...v0.1.0-alpha.7](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.6...v0.1.0-alpha.7)
+
+### Features
+
+* **api:** api update ([794ae1e](https://github.com/DatagridAI/datagrid-node/commit/794ae1e1bfd9e031152998b82900857b7fe22c28))
+
+
+### Bug Fixes
+
+* **client:** send `X-Stainless-Timeout` in seconds ([b1b1d3d](https://github.com/DatagridAI/datagrid-node/commit/b1b1d3df2823a6edf9d93be400d59f99c45f2f05))
+
+
+### Chores
+
+* go live ([#52](https://github.com/DatagridAI/datagrid-node/issues/52)) ([410a557](https://github.com/DatagridAI/datagrid-node/commit/410a557bef5962f87d1a8750c24f3769228a8f33))
+* **internal:** add aliases for Record and Array ([86bdd4c](https://github.com/DatagridAI/datagrid-node/commit/86bdd4c56ffec4a5b885d1bb83d03cfce46830aa))
+* update SDK settings ([#54](https://github.com/DatagridAI/datagrid-node/issues/54)) ([a262911](https://github.com/DatagridAI/datagrid-node/commit/a26291102a3acdf7571ca2854180d2d1a9347ac0))
+
 ## 0.1.0-alpha.6 (2025-04-02)
 
 Full Changelog: [v0.1.0-alpha.4...v0.1.0-alpha.6](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.4...v0.1.0-alpha.6)
