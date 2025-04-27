@@ -10,7 +10,14 @@ export class KnowledgeResource extends APIResource {
    * Create knowledge which will be learned and leveraged by agents.
    */
   create(body: KnowledgeCreateParams, options?: Core.RequestOptions): Core.APIPromise<Knowledge> {
-    return this._client.post('/knowledge', Core.multipartFormRequestOptions({ body, ...options }));
+    return this._client.post(
+      '/knowledge',
+      Core.multipartFormRequestOptions({
+        body,
+        timeout: (this._client as any)._options.timeout ?? 120000,
+        ...options,
+      }),
+    );
   }
 
   /**
@@ -61,6 +68,52 @@ export class KnowledgeResource extends APIResource {
 }
 
 export class KnowledgesCursorIDPage extends CursorIDPage<Knowledge> {}
+
+/**
+ * Metadata of an attachment object
+ */
+export interface AttachmentMetadata {
+  /**
+   * The media type of the attachment.
+   */
+  media_type: string;
+
+  /**
+   * The name of the attachment.
+   */
+  name: string;
+
+  /**
+   * The object type, which is always `attachment_metadata`.
+   */
+  object: 'attachment_metadata';
+
+  /**
+   * The source of the attachment.
+   */
+  source: MessageMetadata | RowMetadata;
+
+  /**
+   * The url of the blob of the attachment.
+   */
+  url: string;
+
+  page?: AttachmentMetadata.Page;
+}
+
+export namespace AttachmentMetadata {
+  export interface Page {
+    /**
+     * The page number of the attachment.
+     */
+    pageNumber: number;
+
+    /**
+     * The url of the blob of the page.
+     */
+    url: string;
+  }
+}
 
 /**
  * The `knowledge` object represents knowledge that an agent may leverage to
@@ -125,6 +178,247 @@ export namespace Knowledge {
   }
 }
 
+/**
+ * Represents metadata for a knowledge object
+ */
+export interface KnowledgeMetadata {
+  /**
+   * The unique identifier of the knowledge.
+   */
+  id: string;
+
+  /**
+   * The name of the knowledge.
+   */
+  name: string;
+
+  /**
+   * The navigation item of the knowledge.
+   */
+  navigation_item: KnowledgeMetadata.NavigationItem;
+
+  /**
+   * The object type, which is always `knowledge_metadata`.
+   */
+  object: 'knowledge_metadata';
+
+  /**
+   * The url of the knowledge.
+   */
+  url: string;
+}
+
+export namespace KnowledgeMetadata {
+  /**
+   * The navigation item of the knowledge.
+   */
+  export interface NavigationItem {
+    /**
+     * The id of the navigation item.
+     */
+    id: string;
+
+    /**
+     * The type of the navigation item.
+     */
+    item_type: string;
+
+    /**
+     * The name of the navigation item.
+     */
+    name: string;
+
+    /**
+     * The object type, which is always `navigation_item_metadata`.
+     */
+    object: 'navigation_item_metadata';
+
+    /**
+     * The url of the navigation item.
+     */
+    url: string;
+
+    /**
+     * The emoticon of the navigation item.
+     */
+    emoticon?: string;
+
+    /**
+     * The media type of the navigation item if known.
+     */
+    source_media_type?: string;
+  }
+}
+
+/**
+ * Metadata of a conversation message object
+ */
+export interface MessageMetadata {
+  /**
+   * The id of the message.
+   */
+  id: string;
+
+  /**
+   * The identifier of the message author (either a user ID or agent ID).
+   */
+  author_id: string;
+
+  /**
+   * Indicates whether the author is a user or an agent.
+   */
+  author_type: 'user' | 'agent';
+
+  /**
+   * The conversation that the message belongs to.
+   */
+  conversation: MessageMetadata.Conversation;
+
+  /**
+   * The object type, which is always `message_metadata`.
+   */
+  object: 'message_metadata';
+
+  /**
+   * The url of the message.
+   */
+  url: string;
+
+  /**
+   * The pretty name of the author of the message.
+   */
+  author_name?: string;
+}
+
+export namespace MessageMetadata {
+  /**
+   * The conversation that the message belongs to.
+   */
+  export interface Conversation {
+    /**
+     * The id of the conversation.
+     */
+    id: string;
+
+    /**
+     * The name of the conversation.
+     */
+    name: string;
+
+    /**
+     * The navigation item of the conversation.
+     */
+    navigation_item: Conversation.NavigationItem;
+
+    /**
+     * The object type, which is always `conversation_metadata`.
+     */
+    object: 'conversation_metadata';
+
+    /**
+     * The url of the conversation.
+     */
+    url: string;
+  }
+
+  export namespace Conversation {
+    /**
+     * The navigation item of the conversation.
+     */
+    export interface NavigationItem {
+      /**
+       * The id of the navigation item.
+       */
+      id: string;
+
+      /**
+       * The type of the navigation item.
+       */
+      item_type: string;
+
+      /**
+       * The name of the navigation item.
+       */
+      name: string;
+
+      /**
+       * The object type, which is always `navigation_item_metadata`.
+       */
+      object: 'navigation_item_metadata';
+
+      /**
+       * The url of the navigation item.
+       */
+      url: string;
+
+      /**
+       * The emoticon of the navigation item.
+       */
+      emoticon?: string;
+
+      /**
+       * The media type of the navigation item if known.
+       */
+      source_media_type?: string;
+    }
+  }
+}
+
+/**
+ * Metadata of a row in a table
+ */
+export interface RowMetadata {
+  /**
+   * The id of the row (**datagrid**uuid), unique within the table.
+   */
+  id: string;
+
+  /**
+   * The object type, which is always `row_metadata`.
+   */
+  object: 'row_metadata';
+
+  /**
+   * The table that the row belongs to.
+   */
+  table: TableMetadata;
+
+  /**
+   * The url of the row of the table.
+   */
+  url: string;
+}
+
+/**
+ * Represents metadata for a table in a knowledge object
+ */
+export interface TableMetadata {
+  /**
+   * The unique identifier for the table.
+   */
+  id: string;
+
+  /**
+   * The knowledge object that the table belongs to.
+   */
+  knowledge: KnowledgeMetadata;
+
+  /**
+   * The name of the table.
+   */
+  name: string;
+
+  /**
+   * The object type, which is always `table_metadata`.
+   */
+  object: 'table_metadata';
+
+  /**
+   * The url of the table.
+   */
+  url: string;
+}
+
 export interface KnowledgeUpdateResponse {
   name?: string;
 }
@@ -152,7 +446,12 @@ KnowledgeResource.KnowledgesCursorIDPage = KnowledgesCursorIDPage;
 
 export declare namespace KnowledgeResource {
   export {
+    type AttachmentMetadata as AttachmentMetadata,
     type Knowledge as Knowledge,
+    type KnowledgeMetadata as KnowledgeMetadata,
+    type MessageMetadata as MessageMetadata,
+    type RowMetadata as RowMetadata,
+    type TableMetadata as TableMetadata,
     type KnowledgeUpdateResponse as KnowledgeUpdateResponse,
     KnowledgesCursorIDPage as KnowledgesCursorIDPage,
     type KnowledgeCreateParams as KnowledgeCreateParams,
