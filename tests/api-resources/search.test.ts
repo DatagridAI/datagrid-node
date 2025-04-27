@@ -8,9 +8,9 @@ const client = new Datagrid({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('top level methods', () => {
-  test('converse: only required params', async () => {
-    const responsePromise = client.converse({ prompt: 'string' });
+describe('resource search', () => {
+  test('search: only required params', async () => {
+    const responsePromise = client.search.search({ query: 'query' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,20 +20,7 @@ describe('top level methods', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('converse: required and optional params', async () => {
-    const response = await client.converse({
-      prompt: 'string',
-      agent_id: 'agent_id',
-      config: {
-        agent_model: 'magpie-1',
-        agent_tools: ['data_analysis'],
-        knowledge_ids: ['string'],
-        llm_model: 'gemini-1.5-flash-001',
-        system_prompt: 'system_prompt',
-      },
-      conversation_id: 'conversation_id',
-      generate_citations: true,
-      stream: true,
-    });
+  test('search: required and optional params', async () => {
+    const response = await client.search.search({ query: 'query', limit: 1, next: 'next' });
   });
 });

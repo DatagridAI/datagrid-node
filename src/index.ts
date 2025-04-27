@@ -15,14 +15,34 @@ import * as API from './resources/index';
 import * as TopLevelAPI from './resources/top-level';
 import { AgentTools, ConverseParams, ConverseResponse, Properties } from './resources/top-level';
 import {
+  FileCreateParams,
+  FileListParams,
+  FileObject,
+  FileObjectsCursorIDPage,
+  Files,
+} from './resources/files';
+import {
+  AttachmentMetadata,
   Knowledge,
   KnowledgeCreateParams,
   KnowledgeListParams,
+  KnowledgeMetadata,
   KnowledgeResource,
   KnowledgeUpdateParams,
   KnowledgeUpdateResponse,
   KnowledgesCursorIDPage,
+  MessageMetadata,
+  RowMetadata,
+  TableMetadata,
 } from './resources/knowledge';
+import {
+  Search,
+  SearchResultItem,
+  SearchResultItemsCursorPage,
+  SearchResultResource,
+  SearchResultResourceType,
+  SearchSearchParams,
+} from './resources/search';
 
 export interface ClientOptions {
   /**
@@ -100,7 +120,7 @@ export class Datagrid extends Core.APIClient {
    *
    * @param {string | undefined} [opts.apiKey=process.env['DATAGRID_API_KEY'] ?? undefined]
    * @param {string} [opts.baseURL=process.env['DATAGRID_BASE_URL'] ?? https://api.datagrid.com/v1] - Override the default base URL for the API.
-   * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
+   * @param {number} [opts.timeout=3 minutes] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {number} [opts.httpAgent] - An HTTP agent used to manage HTTP(s) connections.
    * @param {Core.Fetch} [opts.fetch] - Specify a custom `fetch` function implementation.
    * @param {number} [opts.maxRetries=2] - The maximum number of times the client will retry a request.
@@ -126,7 +146,7 @@ export class Datagrid extends Core.APIClient {
 
     super({
       baseURL: options.baseURL!,
-      timeout: options.timeout ?? 60000 /* 1 minute */,
+      timeout: options.timeout ?? 180000 /* 3 minutes */,
       httpAgent: options.httpAgent,
       maxRetries: options.maxRetries,
       fetch: options.fetch,
@@ -138,6 +158,8 @@ export class Datagrid extends Core.APIClient {
   }
 
   knowledge: API.KnowledgeResource = new API.KnowledgeResource(this);
+  files: API.Files = new API.Files(this);
+  search: API.Search = new API.Search(this);
 
   /**
    * Converse with an AI Agent
@@ -165,7 +187,7 @@ export class Datagrid extends Core.APIClient {
   }
 
   static Datagrid = this;
-  static DEFAULT_TIMEOUT = 60000; // 1 minute
+  static DEFAULT_TIMEOUT = 180000; // 3 minutes
 
   static DatagridError = Errors.DatagridError;
   static APIError = Errors.APIError;
@@ -187,6 +209,10 @@ export class Datagrid extends Core.APIClient {
 
 Datagrid.KnowledgeResource = KnowledgeResource;
 Datagrid.KnowledgesCursorIDPage = KnowledgesCursorIDPage;
+Datagrid.Files = Files;
+Datagrid.FileObjectsCursorIDPage = FileObjectsCursorIDPage;
+Datagrid.Search = Search;
+Datagrid.SearchResultItemsCursorPage = SearchResultItemsCursorPage;
 export declare namespace Datagrid {
   export type RequestOptions = Core.RequestOptions;
 
@@ -205,12 +231,34 @@ export declare namespace Datagrid {
 
   export {
     KnowledgeResource as KnowledgeResource,
+    type AttachmentMetadata as AttachmentMetadata,
     type Knowledge as Knowledge,
+    type KnowledgeMetadata as KnowledgeMetadata,
+    type MessageMetadata as MessageMetadata,
+    type RowMetadata as RowMetadata,
+    type TableMetadata as TableMetadata,
     type KnowledgeUpdateResponse as KnowledgeUpdateResponse,
     KnowledgesCursorIDPage as KnowledgesCursorIDPage,
     type KnowledgeCreateParams as KnowledgeCreateParams,
     type KnowledgeUpdateParams as KnowledgeUpdateParams,
     type KnowledgeListParams as KnowledgeListParams,
+  };
+
+  export {
+    Files as Files,
+    type FileObject as FileObject,
+    FileObjectsCursorIDPage as FileObjectsCursorIDPage,
+    type FileCreateParams as FileCreateParams,
+    type FileListParams as FileListParams,
+  };
+
+  export {
+    Search as Search,
+    type SearchResultItem as SearchResultItem,
+    type SearchResultResource as SearchResultResource,
+    type SearchResultResourceType as SearchResultResourceType,
+    SearchResultItemsCursorPage as SearchResultItemsCursorPage,
+    type SearchSearchParams as SearchSearchParams,
   };
 }
 
