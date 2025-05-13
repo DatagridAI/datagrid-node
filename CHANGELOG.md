@@ -1,5 +1,42 @@
 # Changelog
 
+## 0.1.0-alpha.7 (2025-05-13)
+
+Full Changelog: [v0.1.0-alpha.6...v0.1.0-alpha.7](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.6...v0.1.0-alpha.7)
+
+### Features
+
+* **api:** api update ([c76f79c](https://github.com/DatagridAI/datagrid-node/commit/c76f79c8dd39971a6e1a99d865bc530082c359b5))
+* **api:** api update ([6d3c14f](https://github.com/DatagridAI/datagrid-node/commit/6d3c14f8fb7686afaab8446902e57197bf74c054))
+* **api:** api update ([794ae1e](https://github.com/DatagridAI/datagrid-node/commit/794ae1e1bfd9e031152998b82900857b7fe22c28))
+
+
+### Bug Fixes
+
+* **api:** improve type resolution when importing as a package ([563f264](https://github.com/DatagridAI/datagrid-node/commit/563f2641d55b996db5d448225b497e5a6964460c))
+* **client:** send `X-Stainless-Timeout` in seconds ([b1b1d3d](https://github.com/DatagridAI/datagrid-node/commit/b1b1d3df2823a6edf9d93be400d59f99c45f2f05))
+* **mcp:** remove unused tools.ts ([f64295b](https://github.com/DatagridAI/datagrid-node/commit/f64295b853cfb5391b1e86087b9b27e7f7a342ed))
+
+
+### Chores
+
+* **ci:** add timeout thresholds for CI jobs ([6fe0a37](https://github.com/DatagridAI/datagrid-node/commit/6fe0a3753cb300dad1859671fd17c1fddc387fb9))
+* **ci:** bump node version for release workflows ([ac101ce](https://github.com/DatagridAI/datagrid-node/commit/ac101ced83a1b0ab7f4bb8c63434973d1c0ca0ca))
+* **ci:** only use depot for staging repos ([d4f97a4](https://github.com/DatagridAI/datagrid-node/commit/d4f97a4a0ff561a8b8fbae6e9fbdfb3db477849b))
+* **client:** minor internal fixes ([eaf4d66](https://github.com/DatagridAI/datagrid-node/commit/eaf4d667a402d9aaeb49bcbbdd8698f627d94f65))
+* go live ([#52](https://github.com/DatagridAI/datagrid-node/issues/52)) ([410a557](https://github.com/DatagridAI/datagrid-node/commit/410a557bef5962f87d1a8750c24f3769228a8f33))
+* **internal:** add aliases for Record and Array ([86bdd4c](https://github.com/DatagridAI/datagrid-node/commit/86bdd4c56ffec4a5b885d1bb83d03cfce46830aa))
+* **internal:** codegen related update ([d7544a3](https://github.com/DatagridAI/datagrid-node/commit/d7544a3993499cdef2bde4159c3c85fc5cfad90c))
+* **internal:** reduce CI branch coverage ([2737ac0](https://github.com/DatagridAI/datagrid-node/commit/2737ac07418b9af7ecef51ff257425893e0c6083))
+* **internal:** upload builds and expand CI branch coverage ([a38e24d](https://github.com/DatagridAI/datagrid-node/commit/a38e24dc846d79c61f51035b38157d4dbde53af7))
+* update SDK settings ([b63a21e](https://github.com/DatagridAI/datagrid-node/commit/b63a21e530713a3bed559908777341a2a777a0a8))
+* update SDK settings ([#54](https://github.com/DatagridAI/datagrid-node/issues/54)) ([a262911](https://github.com/DatagridAI/datagrid-node/commit/a26291102a3acdf7571ca2854180d2d1a9347ac0))
+
+
+### Documentation
+
+* **readme:** fix typo ([b3ba9a9](https://github.com/DatagridAI/datagrid-node/commit/b3ba9a90d41a3c010469c1fe47a92bdbaecb6e01))
+
 ## 0.1.0-alpha.6 (2025-04-02)
 
 Full Changelog: [v0.1.0-alpha.4...v0.1.0-alpha.6](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.4...v0.1.0-alpha.6)
