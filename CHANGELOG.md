@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.8 (2025-05-14)
+
+Full Changelog: [v0.1.0-alpha.7...v0.1.0-alpha.8](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.7...v0.1.0-alpha.8)
+
+### Chores
+
+* update SDK settings ([abf6a3e](https://github.com/DatagridAI/datagrid-node/commit/abf6a3ef6006d3b7c5022a5a9fcca467bf770dcb))
+
 ## 0.1.0-alpha.7 (2025-05-13)
 
 Full Changelog: [v0.1.0-alpha.6...v0.1.0-alpha.7](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.6...v0.1.0-alpha.7)
