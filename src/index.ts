@@ -59,6 +59,11 @@ export interface ClientOptions {
   apiKey?: string | undefined;
 
   /**
+   * Teamspace to use
+   */
+  teamspace?: string | null | undefined;
+
+  /**
    * Override the default base URL for the API, e.g., "https://api.example.com/v2/"
    *
    * Defaults to process.env['DATAGRID_BASE_URL'].
@@ -120,6 +125,7 @@ export interface ClientOptions {
  */
 export class Datagrid extends Core.APIClient {
   apiKey: string;
+  teamspace: string | null;
 
   private _options: ClientOptions;
 
@@ -127,6 +133,7 @@ export class Datagrid extends Core.APIClient {
    * API Client for interfacing with the Datagrid API.
    *
    * @param {string | undefined} [opts.apiKey=process.env['DATAGRID_API_KEY'] ?? undefined]
+   * @param {string | null | undefined} [opts.teamspace=process.env['DATAGRID_TEAMSPACE_ID'] ?? null]
    * @param {string} [opts.baseURL=process.env['DATAGRID_BASE_URL'] ?? https://api.datagrid.com/v1] - Override the default base URL for the API.
    * @param {number} [opts.timeout=3 minutes] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {number} [opts.httpAgent] - An HTTP agent used to manage HTTP(s) connections.
@@ -138,6 +145,7 @@ export class Datagrid extends Core.APIClient {
   constructor({
     baseURL = Core.readEnv('DATAGRID_BASE_URL'),
     apiKey = Core.readEnv('DATAGRID_API_KEY'),
+    teamspace = Core.readEnv('DATAGRID_TEAMSPACE_ID') ?? null,
     ...opts
   }: ClientOptions = {}) {
     if (apiKey === undefined) {
@@ -148,6 +156,7 @@ export class Datagrid extends Core.APIClient {
 
     const options: ClientOptions = {
       apiKey,
+      teamspace,
       ...opts,
       baseURL: baseURL || `https://api.datagrid.com/v1`,
     };
@@ -163,6 +172,7 @@ export class Datagrid extends Core.APIClient {
     this._options = options;
 
     this.apiKey = apiKey;
+    this.teamspace = teamspace;
   }
 
   knowledge: API.KnowledgeResource = new API.KnowledgeResource(this);
@@ -198,6 +208,7 @@ export class Datagrid extends Core.APIClient {
   protected override defaultHeaders(opts: Core.FinalRequestOptions): Core.Headers {
     return {
       ...super.defaultHeaders(opts),
+      'Datagrid-Teamspace': this.teamspace,
       ...this._options.defaultHeaders,
     };
   }
