@@ -26,13 +26,9 @@ const client = new Datagrid({
   apiKey: process.env['DATAGRID_API_KEY'], // This is the default and can be omitted
 });
 
-async function main() {
-  const knowledge = await client.knowledge.create({ files: [] });
+const knowledge = await client.knowledge.create({ files: [] });
 
-  console.log(knowledge.id);
-}
-
-main();
+console.log(knowledge.id);
 ```
 
 ### Request & Response types
@@ -47,12 +43,8 @@ const client = new Datagrid({
   apiKey: process.env['DATAGRID_API_KEY'], // This is the default and can be omitted
 });
 
-async function main() {
-  const params: Datagrid.KnowledgeCreateParams = { files: [] };
-  const knowledge: Datagrid.Knowledge = await client.knowledge.create(params);
-}
-
-main();
+const params: Datagrid.KnowledgeCreateParams = { files: [] };
+const knowledge: Datagrid.Knowledge = await client.knowledge.create(params);
 ```
 
 Documentation for each method, request param, and response field are available in docstrings and will appear on hover in most modern editors.
@@ -95,19 +87,15 @@ a subclass of `APIError` will be thrown:
 
 <!-- prettier-ignore -->
 ```ts
-async function main() {
-  const knowledge = await client.knowledge.create({ files: [] }).catch(async (err) => {
-    if (err instanceof Datagrid.APIError) {
-      console.log(err.status); // 400
-      console.log(err.name); // BadRequestError
-      console.log(err.headers); // {server: 'nginx', ...}
-    } else {
-      throw err;
-    }
-  });
-}
-
-main();
+const knowledge = await client.knowledge.create({ files: [] }).catch(async (err) => {
+  if (err instanceof Datagrid.APIError) {
+    console.log(err.status); // 400
+    console.log(err.name); // BadRequestError
+    console.log(err.headers); // {server: 'nginx', ...}
+  } else {
+    throw err;
+  }
+});
 ```
 
 Error codes are as follows:
