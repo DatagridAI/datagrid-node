@@ -163,6 +163,7 @@ export class Datagrid extends Core.APIClient {
 
     super({
       baseURL: options.baseURL!,
+      baseURLOverridden: baseURL ? baseURL !== 'https://api.datagrid.com/v1' : false,
       timeout: options.timeout ?? 180000 /* 3 minutes */,
       httpAgent: options.httpAgent,
       maxRetries: options.maxRetries,
@@ -178,6 +179,13 @@ export class Datagrid extends Core.APIClient {
   knowledge: API.KnowledgeResource = new API.KnowledgeResource(this);
   files: API.Files = new API.Files(this);
   search: API.Search = new API.Search(this);
+
+  /**
+   * Check whether the base URL is set to its default.
+   */
+  #baseURLOverridden(): boolean {
+    return this.baseURL !== 'https://api.datagrid.com/v1';
+  }
 
   /**
    * Converse with an AI Agent
