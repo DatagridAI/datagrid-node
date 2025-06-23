@@ -10,6 +10,7 @@ export type AgentTools =
   | 'table_info'
   | 'create_dataset'
   | 'calendar'
+  | 'email'
   | 'schedule_recurring_message_tool'
   | 'procore'
   | 'egnyte'
@@ -17,6 +18,18 @@ export type AgentTools =
   | 'google_sheets'
   | 'slack'
   | 'microsoft_teams'
+  | 'sharepoint'
+  | 'drive'
+  | 'fieldwire'
+  | 'webbrowser'
+  | 'pdf_manipulation'
+  | 'pdf_generator'
+  | 'acc'
+  | 'docusign'
+  | 'webflow'
+  | 'hubspot'
+  | 'nec'
+  | 'github'
   | 'data_classification'
   | 'data_extraction'
   | 'image_detection'
@@ -392,6 +405,11 @@ export namespace ConverseParams {
     agent_tools?: Array<TopLevelAPI.AgentTools> | null;
 
     /**
+     * Use custom prompt to instruct the style and formatting of the agent's response
+     */
+    custom_prompt?: string;
+
+    /**
      * Array of Knowledge IDs the agent should use during the converse. If not
      * provided - default settings are used. If null provided - all available knowledge
      * is used.
@@ -405,11 +423,14 @@ export namespace ConverseParams {
       | 'gemini-1.5-flash-001'
       | 'gemini-1.5-flash-002'
       | 'gemini-2.0-flash-001'
+      | 'gemini-2.0-flash'
       | 'gemini-2.5-flash-preview-04-17'
+      | 'gemini-2.5-flash'
       | 'gemini-1.5-pro-001'
       | 'gemini-1.5-pro-002'
-      | 'chatgpt-4o-latest'
       | 'gemini-2.5-pro-preview-05-06'
+      | 'gemini-2.5-pro'
+      | 'chatgpt-4o-latest'
       | 'gpt-4'
       | 'gpt-4-turbo'
       | 'gpt-4o'
