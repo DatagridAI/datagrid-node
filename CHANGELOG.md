@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.1.0-alpha.9 (2025-06-23)
+
+Full Changelog: [v0.1.0-alpha.8...v0.1.0-alpha.9](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.8...v0.1.0-alpha.9)
+
+### Features
+
+* **api:** api update ([da8161d](https://github.com/DatagridAI/datagrid-node/commit/da8161d8f85ae2e3b8482ed2e443576cc3fe6840))
+* **api:** api update ([e1dd704](https://github.com/DatagridAI/datagrid-node/commit/e1dd7041beb674387323606fb9f32f5d2dd03359))
+* **api:** api update ([a269b85](https://github.com/DatagridAI/datagrid-node/commit/a269b85ab43fabdcbe0b650c80b249104facaab8))
+* **api:** api update ([77ab1e3](https://github.com/DatagridAI/datagrid-node/commit/77ab1e3ad56ccbf08bbeb50cafbd50fc5a0c6863))
+* **api:** api update ([bf5a2c4](https://github.com/DatagridAI/datagrid-node/commit/bf5a2c4066445d4ce6c7cf8984fbdee53c570bf4))
+* **api:** api update ([9fef1f9](https://github.com/DatagridAI/datagrid-node/commit/9fef1f95f1b69f5991017efabd84fd0191b164da))
+* **client:** add support for endpoint-specific base URLs ([3378451](https://github.com/DatagridAI/datagrid-node/commit/3378451f6720db574928a86abe2451f0c5db9030))
+
+
+### Bug Fixes
+
+* publish script — handle NPM errors correctly ([f334d6d](https://github.com/DatagridAI/datagrid-node/commit/f334d6d4eaf81aa28f25ae4b2178a571ad702eda))
+
+
+### Chores
+
+* **ci:** enable for pull requests ([a5f3b64](https://github.com/DatagridAI/datagrid-node/commit/a5f3b6435b72b1b0aa58fd7415ee805134611235))
+* **docs:** grammar improvements ([640c65e](https://github.com/DatagridAI/datagrid-node/commit/640c65e76867312b546f588e665937a30499b30c))
+* **docs:** use top-level-await in example snippets ([66a13a7](https://github.com/DatagridAI/datagrid-node/commit/66a13a720c806e9efec80390bce357f4e4a1218f))
+* improve publish-npm script --latest tag logic ([97eaf2c](https://github.com/DatagridAI/datagrid-node/commit/97eaf2cd58c05eac3251aee4d26f0c0cf3086114))
+* **internal:** make base APIResource abstract ([98a633d](https://github.com/DatagridAI/datagrid-node/commit/98a633d538d14c156ac881509f087d612f82a19a))
+* update SDK settings ([f764a12](https://github.com/DatagridAI/datagrid-node/commit/f764a126ef972ca8cd939702a97077caacb1069d))
+* update SDK settings ([cdb6110](https://github.com/DatagridAI/datagrid-node/commit/cdb61108e0d1301665343dcf90f3df6d2e28fa5a))
+
 ## 0.1.0-alpha.8 (2025-05-14)
 
 Full Changelog: [v0.1.0-alpha.7...v0.1.0-alpha.8](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.7...v0.1.0-alpha.8)
