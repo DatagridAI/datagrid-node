@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.0-alpha.10 (2025-06-28)
+
+Full Changelog: [v0.1.0-alpha.9...v0.1.0-alpha.10](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.9...v0.1.0-alpha.10)
+
+### Bug Fixes
+
+* **ci:** release-doctor — report correct token name ([8b50625](https://github.com/DatagridAI/datagrid-node/commit/8b50625e8adeb109e6e026552060385883a30903))
+
+
+### Chores
+
+* **ci:** only run for pushes and fork pull requests ([62cae59](https://github.com/DatagridAI/datagrid-node/commit/62cae592d8d011544a00f6a636b6f1a3ec4c1e0b))
+
 ## 0.1.0-alpha.9 (2025-06-23)
 
 Full Changelog: [v0.1.0-alpha.8...v0.1.0-alpha.9](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.8...v0.1.0-alpha.9)
