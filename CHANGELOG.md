@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.1.0-alpha.10 (2025-07-03)
+
+Full Changelog: [v0.1.0-alpha.9...v0.1.0-alpha.10](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.9...v0.1.0-alpha.10)
+
+### Bug Fixes
+
+* **ci:** release-doctor — report correct token name ([8b50625](https://github.com/DatagridAI/datagrid-node/commit/8b50625e8adeb109e6e026552060385883a30903))
+* **client:** don't send `Content-Type` for bodyless methods ([d024b40](https://github.com/DatagridAI/datagrid-node/commit/d024b40c17ccb3bb962e750e75b21e0c11bed468))
+
+
+### Chores
+
+* **ci:** only run for pushes and fork pull requests ([62cae59](https://github.com/DatagridAI/datagrid-node/commit/62cae592d8d011544a00f6a636b6f1a3ec4c1e0b))
+* mention unit type in timeout docs ([7855479](https://github.com/DatagridAI/datagrid-node/commit/78554794edee2f25e81d31556a16af1eb65091a3))
+
 ## 0.1.0-alpha.9 (2025-06-23)
 
 Full Changelog: [v0.1.0-alpha.8...v0.1.0-alpha.9](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.8...v0.1.0-alpha.9)
