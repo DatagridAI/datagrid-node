@@ -8,9 +8,9 @@ const client = new Datagrid({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource knowledge', () => {
-  test('create', async () => {
-    const responsePromise = client.knowledge.create({});
+describe('resource user', () => {
+  test('create: only required params', async () => {
+    const responsePromise = client.memory.user.create({ agent_id: 'agent_id', memory: 'memory' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,41 +20,17 @@ describe('resource knowledge', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('retrieve', async () => {
-    const responsePromise = client.knowledge.retrieve('knowledge_id');
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('retrieve: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.knowledge.retrieve('knowledge_id', { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(Datagrid.NotFoundError);
-  });
-
-  test('update: only required params', async () => {
-    const responsePromise = client.knowledge.update('knowledge_id', { name: 'name' });
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('update: required and optional params', async () => {
-    const response = await client.knowledge.update('knowledge_id', { name: 'name' });
+  test('create: required and optional params', async () => {
+    const response = await client.memory.user.create({
+      agent_id: 'agent_id',
+      memory: 'memory',
+      context: 'context',
+      user_prompt: 'user_prompt',
+    });
   });
 
   test('list', async () => {
-    const responsePromise = client.knowledge.list();
+    const responsePromise = client.memory.user.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -66,7 +42,7 @@ describe('resource knowledge', () => {
 
   test('list: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.knowledge.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.memory.user.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
       Datagrid.NotFoundError,
     );
   });
@@ -74,15 +50,12 @@ describe('resource knowledge', () => {
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.knowledge.list(
-        { after: 'after', before: 'before', limit: 1 },
-        { path: '/_stainless_unknown_path' },
-      ),
+      client.memory.user.list({ limit: 1, offset: 0 }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(Datagrid.NotFoundError);
   });
 
   test('delete', async () => {
-    const responsePromise = client.knowledge.delete('knowledge_id');
+    const responsePromise = client.memory.user.delete('user_memory_id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -95,7 +68,7 @@ describe('resource knowledge', () => {
   test('delete: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.knowledge.delete('knowledge_id', { path: '/_stainless_unknown_path' }),
+      client.memory.user.delete('user_memory_id', { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(Datagrid.NotFoundError);
   });
 });

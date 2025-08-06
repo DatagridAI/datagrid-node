@@ -7,7 +7,7 @@ import { CursorPage, type CursorPageParams } from '../pagination';
 
 export class Search extends APIResource {
   /**
-   * [BETA] Semantic search across your workspace resources.
+   * [BETA] Search across knowledge.
    */
   search(
     query: SearchSearchParams,

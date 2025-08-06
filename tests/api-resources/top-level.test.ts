@@ -28,13 +28,16 @@ describe('top level methods', () => {
         agent_model: 'magpie-1',
         agent_tools: ['data_analysis'],
         custom_prompt: 'custom_prompt',
+        disabled_agent_tools: ['data_analysis'],
         knowledge_ids: ['string'],
         llm_model: 'gemini-1.5-flash-001',
         system_prompt: 'system_prompt',
       },
       conversation_id: 'conversation_id',
       generate_citations: true,
+      secret_ids: ['string'],
       stream: true,
+      text: { format: {} },
     });
   });
 });

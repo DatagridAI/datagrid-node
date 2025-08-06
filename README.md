@@ -27,8 +27,6 @@ const client = new Datagrid({
 });
 
 const knowledge = await client.knowledge.create({ files: [] });
-
-console.log(knowledge.id);
 ```
 
 ### Request & Response types
@@ -44,7 +42,7 @@ const client = new Datagrid({
 });
 
 const params: Datagrid.KnowledgeCreateParams = { files: [] };
-const knowledge: Datagrid.Knowledge = await client.knowledge.create(params);
+const knowledge: Datagrid.KnowledgeCreateResponse = await client.knowledge.create(params);
 ```
 
 Documentation for each method, request param, and response field are available in docstrings and will appear on hover in most modern editors.
@@ -202,7 +200,7 @@ console.log(response.statusText); // access the underlying Response object
 
 const { data: knowledge, response: raw } = await client.knowledge.create({ files: [] }).withResponse();
 console.log(raw.headers.get('X-My-Header'));
-console.log(knowledge.id);
+console.log(knowledge);
 ```
 
 ### Making custom/undocumented requests
