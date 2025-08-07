@@ -13,7 +13,29 @@ import {
 import * as Uploads from './uploads';
 import * as API from './resources/index';
 import * as TopLevelAPI from './resources/top-level';
-import { AgentTools, ConverseParams, ConverseResponse, Properties } from './resources/top-level';
+import {
+  AgentToolItem,
+  AgentTools,
+  ConverseParams,
+  ConverseResponse,
+  Properties,
+} from './resources/top-level';
+import {
+  Connection,
+  ConnectionCreateParams,
+  ConnectionListParams,
+  ConnectionUpdateParams,
+  Connections,
+  ConnectionsCursorIDPage,
+  RedirectURLResponse,
+} from './resources/connections';
+import { Connector, ConnectorListParams, Connectors, ConnectorsCursorIDPage } from './resources/connectors';
+import {
+  Credits,
+  CreditsConverseResponse,
+  CreditsKnowledgeResponse,
+  CreditsResponse,
+} from './resources/credits';
 import {
   FileCreateParams,
   FileListParams,
@@ -22,9 +44,19 @@ import {
   Files,
 } from './resources/files';
 import {
+  ConnectionPayload,
+  ErrorPayload,
+  IFrameEvent,
+  IFrameEventType,
+  IFrameEvents,
+  KnowledgeCreatedPayload,
+  ResizePayload,
+} from './resources/i-frame-events';
+import {
   AttachmentMetadata,
   Knowledge,
   KnowledgeCreateParams,
+  KnowledgeCreateResponse,
   KnowledgeListParams,
   KnowledgeMetadata,
   KnowledgeResource,
@@ -43,6 +75,15 @@ import {
   SearchResultResourceType,
   SearchSearchParams,
 } from './resources/search';
+import {
+  Secret,
+  SecretCreateParams,
+  SecretListParams,
+  Secrets,
+  SecretsCursorIDPage,
+} from './resources/secrets';
+import { Memory } from './resources/memory/memory';
+import { Organization } from './resources/organization/organization';
 
 import { Stream } from './lib/streaming/stream';
 import {
@@ -179,8 +220,15 @@ export class Datagrid extends Core.APIClient {
   }
 
   knowledge: API.KnowledgeResource = new API.KnowledgeResource(this);
+  connections: API.Connections = new API.Connections(this);
+  connectors: API.Connectors = new API.Connectors(this);
   files: API.Files = new API.Files(this);
+  credits: API.Credits = new API.Credits(this);
+  secrets: API.Secrets = new API.Secrets(this);
   search: API.Search = new API.Search(this);
+  organization: API.Organization = new API.Organization(this);
+  memory: API.Memory = new API.Memory(this);
+  iFrameEvents: API.IFrameEvents = new API.IFrameEvents(this);
 
   /**
    * Check whether the base URL is set to its default.
@@ -250,10 +298,20 @@ export class Datagrid extends Core.APIClient {
 
 Datagrid.KnowledgeResource = KnowledgeResource;
 Datagrid.KnowledgesCursorIDPage = KnowledgesCursorIDPage;
+Datagrid.Connections = Connections;
+Datagrid.ConnectionsCursorIDPage = ConnectionsCursorIDPage;
+Datagrid.Connectors = Connectors;
+Datagrid.ConnectorsCursorIDPage = ConnectorsCursorIDPage;
 Datagrid.Files = Files;
 Datagrid.FileObjectsCursorIDPage = FileObjectsCursorIDPage;
+Datagrid.Credits = Credits;
+Datagrid.Secrets = Secrets;
+Datagrid.SecretsCursorIDPage = SecretsCursorIDPage;
 Datagrid.Search = Search;
 Datagrid.SearchResultItemsCursorPage = SearchResultItemsCursorPage;
+Datagrid.Organization = Organization;
+Datagrid.Memory = Memory;
+Datagrid.IFrameEvents = IFrameEvents;
 export declare namespace Datagrid {
   export type RequestOptions = Core.RequestOptions;
 
@@ -264,6 +322,7 @@ export declare namespace Datagrid {
   export { type CursorIDPageParams as CursorIDPageParams, type CursorIDPageResponse as CursorIDPageResponse };
 
   export {
+    type AgentToolItem as AgentToolItem,
     type AgentTools as AgentTools,
     type Properties as Properties,
     type ConverseResponse as ConverseResponse,
@@ -278,11 +337,29 @@ export declare namespace Datagrid {
     type MessageMetadata as MessageMetadata,
     type RowMetadata as RowMetadata,
     type TableMetadata as TableMetadata,
+    type KnowledgeCreateResponse as KnowledgeCreateResponse,
     type KnowledgeUpdateResponse as KnowledgeUpdateResponse,
     KnowledgesCursorIDPage as KnowledgesCursorIDPage,
     type KnowledgeCreateParams as KnowledgeCreateParams,
     type KnowledgeUpdateParams as KnowledgeUpdateParams,
     type KnowledgeListParams as KnowledgeListParams,
+  };
+
+  export {
+    Connections as Connections,
+    type Connection as Connection,
+    type RedirectURLResponse as RedirectURLResponse,
+    ConnectionsCursorIDPage as ConnectionsCursorIDPage,
+    type ConnectionCreateParams as ConnectionCreateParams,
+    type ConnectionUpdateParams as ConnectionUpdateParams,
+    type ConnectionListParams as ConnectionListParams,
+  };
+
+  export {
+    Connectors as Connectors,
+    type Connector as Connector,
+    ConnectorsCursorIDPage as ConnectorsCursorIDPage,
+    type ConnectorListParams as ConnectorListParams,
   };
 
   export {
@@ -294,12 +371,41 @@ export declare namespace Datagrid {
   };
 
   export {
+    Credits as Credits,
+    type CreditsConverseResponse as CreditsConverseResponse,
+    type CreditsKnowledgeResponse as CreditsKnowledgeResponse,
+    type CreditsResponse as CreditsResponse,
+  };
+
+  export {
+    Secrets as Secrets,
+    type Secret as Secret,
+    SecretsCursorIDPage as SecretsCursorIDPage,
+    type SecretCreateParams as SecretCreateParams,
+    type SecretListParams as SecretListParams,
+  };
+
+  export {
     Search as Search,
     type SearchResultItem as SearchResultItem,
     type SearchResultResource as SearchResultResource,
     type SearchResultResourceType as SearchResultResourceType,
     SearchResultItemsCursorPage as SearchResultItemsCursorPage,
     type SearchSearchParams as SearchSearchParams,
+  };
+
+  export { Organization as Organization };
+
+  export { Memory as Memory };
+
+  export {
+    IFrameEvents as IFrameEvents,
+    type ConnectionPayload as ConnectionPayload,
+    type ErrorPayload as ErrorPayload,
+    type IFrameEvent as IFrameEvent,
+    type IFrameEventType as IFrameEventType,
+    type KnowledgeCreatedPayload as KnowledgeCreatedPayload,
+    type ResizePayload as ResizePayload,
   };
 }
 
