@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.1.0-alpha.10 (2025-08-07)
+
+Full Changelog: [v0.1.0-alpha.9...v0.1.0-alpha.10](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.9...v0.1.0-alpha.10)
+
+### Features
+
+* **api:** api update ([06f9f05](https://github.com/DatagridAI/datagrid-node/commit/06f9f056638d6dc05717b0921e8034ff02c3800f))
+* **api:** api update ([7a0cde6](https://github.com/DatagridAI/datagrid-node/commit/7a0cde66c40cb2d25ed82a492827043db17e8983))
+
+
+### Bug Fixes
+
+* **ci:** release-doctor — report correct token name ([8b50625](https://github.com/DatagridAI/datagrid-node/commit/8b50625e8adeb109e6e026552060385883a30903))
+* **client:** don't send `Content-Type` for bodyless methods ([d024b40](https://github.com/DatagridAI/datagrid-node/commit/d024b40c17ccb3bb962e750e75b21e0c11bed468))
+
+
+### Chores
+
+* **ci:** only run for pushes and fork pull requests ([62cae59](https://github.com/DatagridAI/datagrid-node/commit/62cae592d8d011544a00f6a636b6f1a3ec4c1e0b))
+* **internal:** move publish config ([30c2542](https://github.com/DatagridAI/datagrid-node/commit/30c2542cee26ffd26c73a5bf9cba6293d9257413))
+* **internal:** remove redundant imports config ([f302b7e](https://github.com/DatagridAI/datagrid-node/commit/f302b7e27cbcf935cbd20e016136afd1ad81c642))
+* make some internal functions async ([7400950](https://github.com/DatagridAI/datagrid-node/commit/74009503469d9e64d39c7d259ca536a177c4d5ee))
+* mention unit type in timeout docs ([7855479](https://github.com/DatagridAI/datagrid-node/commit/78554794edee2f25e81d31556a16af1eb65091a3))
+
 ## 0.1.0-alpha.9 (2025-06-23)
 
 Full Changelog: [v0.1.0-alpha.8...v0.1.0-alpha.9](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.8...v0.1.0-alpha.9)
