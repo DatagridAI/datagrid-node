@@ -31,12 +31,6 @@ import {
 } from './resources/connections';
 import { Connector, ConnectorListParams, Connectors, ConnectorsCursorIDPage } from './resources/connectors';
 import {
-  Credits,
-  CreditsConverseResponse,
-  CreditsKnowledgeResponse,
-  CreditsResponse,
-} from './resources/credits';
-import {
   FileCreateParams,
   FileListParams,
   FileObject,
@@ -55,8 +49,8 @@ import {
 import {
   AttachmentMetadata,
   Knowledge,
+  KnowledgeConnectParams,
   KnowledgeCreateParams,
-  KnowledgeCreateResponse,
   KnowledgeListParams,
   KnowledgeMetadata,
   KnowledgeResource,
@@ -215,7 +209,6 @@ export class Datagrid extends Core.APIClient {
   connections: API.Connections = new API.Connections(this);
   connectors: API.Connectors = new API.Connectors(this);
   files: API.Files = new API.Files(this);
-  credits: API.Credits = new API.Credits(this);
   secrets: API.Secrets = new API.Secrets(this);
   search: API.Search = new API.Search(this);
   organization: API.Organization = new API.Organization(this);
@@ -284,7 +277,6 @@ Datagrid.Connectors = Connectors;
 Datagrid.ConnectorsCursorIDPage = ConnectorsCursorIDPage;
 Datagrid.Files = Files;
 Datagrid.FileObjectsCursorIDPage = FileObjectsCursorIDPage;
-Datagrid.Credits = Credits;
 Datagrid.Secrets = Secrets;
 Datagrid.SecretsCursorIDPage = SecretsCursorIDPage;
 Datagrid.Search = Search;
@@ -317,12 +309,12 @@ export declare namespace Datagrid {
     type MessageMetadata as MessageMetadata,
     type RowMetadata as RowMetadata,
     type TableMetadata as TableMetadata,
-    type KnowledgeCreateResponse as KnowledgeCreateResponse,
     type KnowledgeUpdateResponse as KnowledgeUpdateResponse,
     KnowledgesCursorIDPage as KnowledgesCursorIDPage,
     type KnowledgeCreateParams as KnowledgeCreateParams,
     type KnowledgeUpdateParams as KnowledgeUpdateParams,
     type KnowledgeListParams as KnowledgeListParams,
+    type KnowledgeConnectParams as KnowledgeConnectParams,
   };
 
   export {
@@ -348,13 +340,6 @@ export declare namespace Datagrid {
     FileObjectsCursorIDPage as FileObjectsCursorIDPage,
     type FileCreateParams as FileCreateParams,
     type FileListParams as FileListParams,
-  };
-
-  export {
-    Credits as Credits,
-    type CreditsConverseResponse as CreditsConverseResponse,
-    type CreditsKnowledgeResponse as CreditsKnowledgeResponse,
-    type CreditsResponse as CreditsResponse,
   };
 
   export {

@@ -21,16 +21,16 @@ Types:
 - <code><a href="./src/resources/knowledge.ts">MessageMetadata</a></code>
 - <code><a href="./src/resources/knowledge.ts">RowMetadata</a></code>
 - <code><a href="./src/resources/knowledge.ts">TableMetadata</a></code>
-- <code><a href="./src/resources/knowledge.ts">KnowledgeCreateResponse</a></code>
 - <code><a href="./src/resources/knowledge.ts">KnowledgeUpdateResponse</a></code>
 
 Methods:
 
-- <code title="post /knowledge">client.knowledge.<a href="./src/resources/knowledge.ts">create</a>({ ...params }) -> KnowledgeCreateResponse</code>
+- <code title="post /knowledge">client.knowledge.<a href="./src/resources/knowledge.ts">create</a>({ ...params }) -> Knowledge</code>
 - <code title="get /knowledge/{knowledge_id}">client.knowledge.<a href="./src/resources/knowledge.ts">retrieve</a>(knowledgeId) -> Knowledge</code>
 - <code title="patch /knowledge/{knowledge_id}">client.knowledge.<a href="./src/resources/knowledge.ts">update</a>(knowledgeId, { ...params }) -> KnowledgeUpdateResponse</code>
 - <code title="get /knowledge">client.knowledge.<a href="./src/resources/knowledge.ts">list</a>({ ...params }) -> KnowledgesCursorIDPage</code>
 - <code title="delete /knowledge/{knowledge_id}">client.knowledge.<a href="./src/resources/knowledge.ts">delete</a>(knowledgeId) -> void</code>
+- <code title="post /knowledge/connect">client.knowledge.<a href="./src/resources/knowledge.ts">connect</a>({ ...params }) -> RedirectURLResponse</code>
 
 # Connections
 
@@ -71,18 +71,6 @@ Methods:
 - <code title="delete /files/{file_id}">client.files.<a href="./src/resources/files.ts">delete</a>(fileId) -> void</code>
 - <code title="get /files/{file_id}/content">client.files.<a href="./src/resources/files.ts">content</a>(fileId) -> Response</code>
 
-# Credits
-
-Types:
-
-- <code><a href="./src/resources/credits.ts">CreditsConverseResponse</a></code>
-- <code><a href="./src/resources/credits.ts">CreditsKnowledgeResponse</a></code>
-- <code><a href="./src/resources/credits.ts">CreditsResponse</a></code>
-
-Methods:
-
-- <code title="get /credits">client.credits.<a href="./src/resources/credits.ts">get</a>() -> CreditsResponse</code>
-
 # Secrets
 
 Types:
@@ -122,6 +110,16 @@ Methods:
 - <code title="get /organization/teamspaces/{teamspace_id}">client.organization.teamspaces.<a href="./src/resources/organization/teamspaces.ts">retrieve</a>(teamspaceId) -> Teamspace</code>
 - <code title="get /organization/teamspaces">client.organization.teamspaces.<a href="./src/resources/organization/teamspaces.ts">list</a>({ ...params }) -> TeamspacesCursorIDPage</code>
 - <code title="patch /organization/teamspaces/{teamspace_id}">client.organization.teamspaces.<a href="./src/resources/organization/teamspaces.ts">patch</a>(teamspaceId, { ...params }) -> Teamspace</code>
+
+## Credits
+
+Types:
+
+- <code><a href="./src/resources/organization/credits.ts">CreditsReport</a></code>
+
+Methods:
+
+- <code title="get /organization/credits">client.organization.credits.<a href="./src/resources/organization/credits.ts">get</a>() -> CreditsReport</code>
 
 # Memory
 

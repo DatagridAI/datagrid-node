@@ -1,7 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import * as TopLevelAPI from './top-level';
-import * as CreditsAPI from './credits';
 
 export interface AgentToolItem {
   name: AgentTools;
@@ -83,7 +82,7 @@ export namespace Properties {
      */
     citations?: Array<ConverseResponse.Citation>;
 
-    credits?: CreditsAPI.CreditsConverseResponse;
+    credits?: ConverseResponse.Credits;
   }
 
   export namespace ConverseResponse {
@@ -117,6 +116,13 @@ export namespace Properties {
 
         type: 'image' | 'pdf_page' | 'record' | 'web_search' | 'sql_query_result';
       }
+    }
+
+    export interface Credits {
+      /**
+       * The number of credits consumed by the converse call.
+       */
+      consumed: number;
     }
   }
 
@@ -288,7 +294,7 @@ export interface ConverseResponse {
    */
   citations?: Array<ConverseResponse.Citation>;
 
-  credits?: CreditsAPI.CreditsConverseResponse;
+  credits?: ConverseResponse.Credits;
 }
 
 export namespace ConverseResponse {
@@ -322,6 +328,13 @@ export namespace ConverseResponse {
 
       type: 'image' | 'pdf_page' | 'record' | 'web_search' | 'sql_query_result';
     }
+  }
+
+  export interface Credits {
+    /**
+     * The number of credits consumed by the converse call.
+     */
+    consumed: number;
   }
 }
 
@@ -560,36 +573,36 @@ export namespace ConverseParams {
      * The converse response will be a JSON string object, that adheres to the provided
      * JSON schema.
      *
-     * ```json
-     *   const exampleJsonSchema = {
-     *     $id: "movie_info",
-     *     title: "movie_info",
-     *     type: "object",
-     *     properties: {
-     *       name: {
-     *         type: "string",
-     *         description: "The name of the movie",
-     *       },
-     *       director: {
-     *         type: "string",
-     *         description: "The director of the movie",
-     *       },
-     *       release_year: {
-     *         type: "number",
-     *         description: "The year the movie was released",
-     *       },
+     * ```javascript
+     * const exampleJsonSchema = {
+     *   $id: "movie_info",
+     *   title: "movie_info",
+     *   type: "object",
+     *   properties: {
+     *     name: {
+     *       type: "string",
+     *       description: "The name of the movie",
      *     },
-     *     required: ["name", "director", "release_year"],
-     *     additionalProperties: false,
-     *   };
+     *     director: {
+     *       type: "string",
+     *       description: "The director of the movie",
+     *     },
+     *     release_year: {
+     *       type: "number",
+     *       description: "The year the movie was released",
+     *     },
+     *   },
+     *   required: ["name", "director", "release_year"],
+     *   additionalProperties: false,
+     * };
      *
-     *   const response = await datagrid.converse({
-     *     prompt: "What movie won best picture at the 2001 oscars?",
-     *     text: { format: exampleJsonSchema },
-     *   });
+     * const response = await datagrid.converse({
+     *   prompt: "What movie won best picture at the 2001 oscars?",
+     *   text: { format: exampleJsonSchema },
+     * });
      *
-     *   // Example response:
-     *   "{ "name": "Gladiator", "director": "Ridley Scott", "release_year": 2000 }"
+     * // Example response: "{ "name": "Gladiator", "director": "Ridley Scott", "release_year": 2000 }"
+     * const parsedResponse = JSON.parse(response.content[0].text);
      * ```
      */
     format?: unknown;
