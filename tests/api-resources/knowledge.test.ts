@@ -108,4 +108,19 @@ describe('resource knowledge', () => {
       client.knowledge.delete('knowledge_id', { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(Datagrid.NotFoundError);
   });
+
+  test('connect: only required params', async () => {
+    const responsePromise = client.knowledge.connect({ connection_id: 'connection_id' });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('connect: required and optional params', async () => {
+    const response = await client.knowledge.connect({ connection_id: 'connection_id' });
+  });
 });

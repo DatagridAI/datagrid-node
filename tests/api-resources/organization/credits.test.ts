@@ -10,7 +10,7 @@ const client = new Datagrid({
 
 describe('resource credits', () => {
   test('get', async () => {
-    const responsePromise = client.credits.get();
+    const responsePromise = client.organization.credits.get();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -22,7 +22,7 @@ describe('resource credits', () => {
 
   test('get: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.credits.get({ path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.organization.credits.get({ path: '/_stainless_unknown_path' })).rejects.toThrow(
       Datagrid.NotFoundError,
     );
   });

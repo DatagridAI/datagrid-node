@@ -4,17 +4,13 @@ import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
 import * as ConnectionsAPI from './connections';
-import * as CreditsAPI from './credits';
 import { CursorIDPage, type CursorIDPageParams } from '../pagination';
 
 export class KnowledgeResource extends APIResource {
   /**
    * Create knowledge which will be learned and leveraged by agents.
    */
-  create(
-    body: KnowledgeCreateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<KnowledgeCreateResponse> {
+  create(body: KnowledgeCreateParams, options?: Core.RequestOptions): Core.APIPromise<Knowledge> {
     return this._client.post(
       '/knowledge',
       Core.multipartFormRequestOptions({
@@ -69,6 +65,16 @@ export class KnowledgeResource extends APIResource {
       ...options,
       headers: { Accept: '*/*', ...options?.headers },
     });
+  }
+
+  /**
+   * Create knowledge from connection which will be learned and leveraged by agents.
+   */
+  connect(
+    body: KnowledgeConnectParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<ConnectionsAPI.RedirectURLResponse> {
+    return this._client.post('/knowledge/connect', { body, ...options });
   }
 }
 
@@ -165,7 +171,7 @@ export interface Knowledge {
    */
   status: 'pending' | 'partial' | 'ready';
 
-  credits?: CreditsAPI.CreditsKnowledgeResponse;
+  credits?: Knowledge.Credits;
 
   /**
    * The ISO string for when the knowledge was last updated.
@@ -192,6 +198,13 @@ export namespace Knowledge {
      * The total number of rows in the knowledge.
      */
     total: number;
+  }
+
+  export interface Credits {
+    /**
+     * The number of credits consumed by the knowledge.
+     */
+    consumed: number;
   }
 }
 
@@ -436,22 +449,11 @@ export interface TableMetadata {
   url: string;
 }
 
-/**
- * The `knowledge` object represents knowledge that an agent may leverage to
- * respond.
- */
-export type KnowledgeCreateResponse = Knowledge | ConnectionsAPI.RedirectURLResponse;
-
 export interface KnowledgeUpdateResponse {
   name?: string;
 }
 
 export interface KnowledgeCreateParams {
-  /**
-   * The id of the connection to be used to create the knowledge.
-   */
-  connection_id?: string | null;
-
   /**
    * The files to be uploaded and learned. Supported media types are `pdf`, `json`,
    * `csv`, `text`, `png`, `jpeg`, `excel`, `google sheets`.
@@ -470,6 +472,13 @@ export interface KnowledgeUpdateParams {
 
 export interface KnowledgeListParams extends CursorIDPageParams {}
 
+export interface KnowledgeConnectParams {
+  /**
+   * The id of the connection to be used to create the knowledge.
+   */
+  connection_id: string;
+}
+
 KnowledgeResource.KnowledgesCursorIDPage = KnowledgesCursorIDPage;
 
 export declare namespace KnowledgeResource {
@@ -480,11 +489,11 @@ export declare namespace KnowledgeResource {
     type MessageMetadata as MessageMetadata,
     type RowMetadata as RowMetadata,
     type TableMetadata as TableMetadata,
-    type KnowledgeCreateResponse as KnowledgeCreateResponse,
     type KnowledgeUpdateResponse as KnowledgeUpdateResponse,
     KnowledgesCursorIDPage as KnowledgesCursorIDPage,
     type KnowledgeCreateParams as KnowledgeCreateParams,
     type KnowledgeUpdateParams as KnowledgeUpdateParams,
     type KnowledgeListParams as KnowledgeListParams,
+    type KnowledgeConnectParams as KnowledgeConnectParams,
   };
 }
