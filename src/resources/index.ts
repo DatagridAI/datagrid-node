@@ -11,12 +11,6 @@ export {
 } from './connections';
 export { ConnectorsCursorIDPage, Connectors, type Connector, type ConnectorListParams } from './connectors';
 export {
-  Credits,
-  type CreditsConverseResponse,
-  type CreditsKnowledgeResponse,
-  type CreditsResponse,
-} from './credits';
-export {
   FileObjectsCursorIDPage,
   Files,
   type FileObject,
@@ -41,11 +35,11 @@ export {
   type MessageMetadata,
   type RowMetadata,
   type TableMetadata,
-  type KnowledgeCreateResponse,
   type KnowledgeUpdateResponse,
   type KnowledgeCreateParams,
   type KnowledgeUpdateParams,
   type KnowledgeListParams,
+  type KnowledgeConnectParams,
 } from './knowledge';
 export { Memory } from './memory/memory';
 export { Organization } from './organization/organization';
