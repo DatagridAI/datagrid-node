@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.11 (2025-08-09)
+
+Full Changelog: [v0.1.0-alpha.10...v0.1.0-alpha.11](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.10...v0.1.0-alpha.11)
+
+### Chores
+
+* update @stainless-api/prism-cli to v5.15.0 ([be254d7](https://github.com/DatagridAI/datagrid-node/commit/be254d70940fd40933e90e3c4880f02d90f21aef))
+
 ## 0.1.0-alpha.10 (2025-08-07)
 
 Full Changelog: [v0.1.0-alpha.9...v0.1.0-alpha.10](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.9...v0.1.0-alpha.10)
