@@ -284,6 +284,7 @@ Datagrid.SearchResultItemsCursorPage = SearchResultItemsCursorPage;
 Datagrid.Organization = Organization;
 Datagrid.Memory = Memory;
 Datagrid.IFrameEvents = IFrameEvents;
+
 export declare namespace Datagrid {
   export type RequestOptions = Core.RequestOptions;
 
