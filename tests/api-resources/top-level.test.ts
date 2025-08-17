@@ -24,6 +24,7 @@ describe('top level methods', () => {
     const response = await client.converse({
       prompt: 'string',
       agent_id: 'agent_id',
+      auto_approve_actions: true,
       config: {
         agent_model: 'magpie-1',
         agent_tools: ['data_analysis'],
@@ -31,6 +32,7 @@ describe('top level methods', () => {
         disabled_agent_tools: ['data_analysis'],
         knowledge_ids: ['string'],
         llm_model: 'gemini-1.5-flash-001',
+        planning_prompt: 'planning_prompt',
         system_prompt: 'system_prompt',
       },
       conversation_id: 'conversation_id',

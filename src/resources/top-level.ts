@@ -351,6 +351,13 @@ export interface ConverseParams {
   agent_id?: string | null;
 
   /**
+   * Auto-approve actions (skip halting for human approval). If boolean true: all
+   * tools auto-approve. If object: per-tool toggle by toolId (true to skip halting
+   * forhuman approval).
+   */
+  auto_approve_actions?: boolean | null | { [key: string]: boolean } | null;
+
+  /**
    * The config that overrides the default config of the agent for that converse.
    */
   config?: ConverseParams.Config | null;
@@ -557,6 +564,12 @@ export namespace ConverseParams {
       | 'gpt-4o-mini'
       | 'gpt-5'
       | null;
+
+    /**
+     * Define the planning strategy your AI Agent should use when breaking down tasks
+     * and solving problems
+     */
+    planning_prompt?: string | null;
 
     /**
      * Directs your AI Agent's operational behavior.
