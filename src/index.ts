@@ -21,6 +21,14 @@ import {
   Properties,
 } from './resources/top-level';
 import {
+  Agent as AgentsAPIAgent,
+  AgentCreateParams,
+  AgentListParams,
+  AgentUpdateParams,
+  Agents,
+  AgentsCursorIDPage,
+} from './resources/agents';
+import {
   Connection,
   ConnectionCreateParams,
   ConnectionListParams,
@@ -164,7 +172,7 @@ export class Datagrid extends Core.APIClient {
    * @param {string | undefined} [opts.apiKey=process.env['DATAGRID_API_KEY'] ?? undefined]
    * @param {string | null | undefined} [opts.teamspace=process.env['DATAGRID_TEAMSPACE_ID'] ?? null]
    * @param {string} [opts.baseURL=process.env['DATAGRID_BASE_URL'] ?? https://api.datagrid.com/v1] - Override the default base URL for the API.
-   * @param {number} [opts.timeout=3 minutes] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
+   * @param {number} [opts.timeout=30 minutes] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {number} [opts.httpAgent] - An HTTP agent used to manage HTTP(s) connections.
    * @param {Core.Fetch} [opts.fetch] - Specify a custom `fetch` function implementation.
    * @param {number} [opts.maxRetries=2] - The maximum number of times the client will retry a request.
@@ -193,7 +201,7 @@ export class Datagrid extends Core.APIClient {
     super({
       baseURL: options.baseURL!,
       baseURLOverridden: baseURL ? baseURL !== 'https://api.datagrid.com/v1' : false,
-      timeout: options.timeout ?? 180000 /* 3 minutes */,
+      timeout: options.timeout ?? 1800000 /* 30 minutes */,
       httpAgent: options.httpAgent,
       maxRetries: options.maxRetries,
       fetch: options.fetch,
@@ -211,9 +219,10 @@ export class Datagrid extends Core.APIClient {
   files: API.Files = new API.Files(this);
   secrets: API.Secrets = new API.Secrets(this);
   search: API.Search = new API.Search(this);
-  organization: API.Organization = new API.Organization(this);
+  agents: API.Agents = new API.Agents(this);
   memory: API.Memory = new API.Memory(this);
   iFrameEvents: API.IFrameEvents = new API.IFrameEvents(this);
+  organization: API.Organization = new API.Organization(this);
 
   /**
    * Check whether the base URL is set to its default.
@@ -249,7 +258,7 @@ export class Datagrid extends Core.APIClient {
   }
 
   static Datagrid = this;
-  static DEFAULT_TIMEOUT = 180000; // 3 minutes
+  static DEFAULT_TIMEOUT = 1800000; // 30 minutes
 
   static DatagridError = Errors.DatagridError;
   static APIError = Errors.APIError;
@@ -281,9 +290,11 @@ Datagrid.Secrets = Secrets;
 Datagrid.SecretsCursorIDPage = SecretsCursorIDPage;
 Datagrid.Search = Search;
 Datagrid.SearchResultItemsCursorPage = SearchResultItemsCursorPage;
-Datagrid.Organization = Organization;
+Datagrid.Agents = Agents;
+Datagrid.AgentsCursorIDPage = AgentsCursorIDPage;
 Datagrid.Memory = Memory;
 Datagrid.IFrameEvents = IFrameEvents;
+Datagrid.Organization = Organization;
 
 export declare namespace Datagrid {
   export type RequestOptions = Core.RequestOptions;
@@ -360,7 +371,14 @@ export declare namespace Datagrid {
     type SearchSearchParams as SearchSearchParams,
   };
 
-  export { Organization as Organization };
+  export {
+    Agents as Agents,
+    type AgentsAPIAgent as Agent,
+    AgentsCursorIDPage as AgentsCursorIDPage,
+    type AgentCreateParams as AgentCreateParams,
+    type AgentUpdateParams as AgentUpdateParams,
+    type AgentListParams as AgentListParams,
+  };
 
   export { Memory as Memory };
 
@@ -373,6 +391,8 @@ export declare namespace Datagrid {
     type KnowledgeCreatedPayload as KnowledgeCreatedPayload,
     type ResizePayload as ResizePayload,
   };
+
+  export { Organization as Organization };
 }
 
 export { toFile, fileFromPath } from './uploads';
