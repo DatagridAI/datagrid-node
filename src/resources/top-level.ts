@@ -34,6 +34,7 @@ export type AgentTools =
   | 'pdf_manipulation'
   | 'pdf_generator'
   | 'acc'
+  | 'acc_forms'
   | 'docusign'
   | 'webflow'
   | 'hubspot'
