@@ -1,11 +1,16 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-export { Credits, type CreditsReport } from './credits';
-export { Organization } from './organization';
 export {
-  OrganizationUsersCursorIDPage,
+  TeamspaceInvitesCursorIDPage,
+  Invites,
+  type TeamspaceInvite,
+  type InviteCreateParams,
+  type InviteListParams,
+} from './invites';
+export {
+  TeamspaceUsersCursorIDPage,
   Users,
-  type OrganizationUser,
+  type TeamspaceUser,
   type UserUpdateParams,
   type UserListParams,
 } from './users';
@@ -16,4 +21,4 @@ export {
   type TeamspaceCreateParams,
   type TeamspaceListParams,
   type TeamspacePatchParams,
-} from './teamspaces/index';
+} from './teamspaces';

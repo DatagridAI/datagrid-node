@@ -1,6 +1,14 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export {
+  AgentsCursorIDPage,
+  Agents,
+  type Agent,
+  type AgentCreateParams,
+  type AgentUpdateParams,
+  type AgentListParams,
+} from './agents';
+export {
   ConnectionsCursorIDPage,
   Connections,
   type Connection,
