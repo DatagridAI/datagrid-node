@@ -451,7 +451,7 @@ export interface KnowledgeCreateParams {
    * The files to be uploaded and learned. Supported media types are `pdf`, `json`,
    * `csv`, `text`, `png`, `jpeg`, `excel`, `google sheets`.
    */
-  files?: Array<Core.Uploadable> | null;
+  files: Array<Core.Uploadable>;
 
   /**
    * The name of the knowledge.

@@ -8,9 +8,9 @@ const client = new Datagrid({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource agents', () => {
+describe('resource conversations', () => {
   test('create', async () => {
-    const responsePromise = client.agents.create({});
+    const responsePromise = client.conversations.create({});
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -21,7 +21,7 @@ describe('resource agents', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.agents.retrieve('agent_id');
+    const responsePromise = client.conversations.retrieve('conversation_id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -33,24 +33,13 @@ describe('resource agents', () => {
 
   test('retrieve: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.agents.retrieve('agent_id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
-      Datagrid.NotFoundError,
-    );
-  });
-
-  test('update', async () => {
-    const responsePromise = client.agents.update('agent_id', {});
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
+    await expect(
+      client.conversations.retrieve('conversation_id', { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(Datagrid.NotFoundError);
   });
 
   test('list', async () => {
-    const responsePromise = client.agents.list();
+    const responsePromise = client.conversations.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -62,7 +51,7 @@ describe('resource agents', () => {
 
   test('list: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.agents.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.conversations.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
       Datagrid.NotFoundError,
     );
   });
@@ -70,7 +59,7 @@ describe('resource agents', () => {
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.agents.list(
+      client.conversations.list(
         { after: 'after', before: 'before', limit: 1 },
         { path: '/_stainless_unknown_path' },
       ),
@@ -78,7 +67,7 @@ describe('resource agents', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = client.agents.delete('agent_id');
+    const responsePromise = client.conversations.delete('conversation_id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -90,8 +79,8 @@ describe('resource agents', () => {
 
   test('delete: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.agents.delete('agent_id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
-      Datagrid.NotFoundError,
-    );
+    await expect(
+      client.conversations.delete('conversation_id', { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(Datagrid.NotFoundError);
   });
 });

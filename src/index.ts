@@ -13,13 +13,7 @@ import {
 import * as Uploads from './uploads';
 import * as API from './resources/index';
 import * as TopLevelAPI from './resources/top-level';
-import {
-  AgentToolItem,
-  AgentTools,
-  ConverseParams,
-  ConverseResponse,
-  Properties,
-} from './resources/top-level';
+import { ConverseParams, ConverseResponse, Properties } from './resources/top-level';
 import {
   Agent as AgentsAPIAgent,
   AgentCreateParams,
@@ -84,6 +78,14 @@ import {
   Secrets,
   SecretsCursorIDPage,
 } from './resources/secrets';
+import { Tool, ToolName, Tools } from './resources/tools';
+import {
+  Conversation,
+  ConversationCreateParams,
+  ConversationListParams,
+  Conversations,
+  ConversationsCursorIDPage,
+} from './resources/conversations/conversations';
 import { Memory } from './resources/memory/memory';
 import { Organization } from './resources/organization/organization';
 
@@ -220,9 +222,11 @@ export class Datagrid extends Core.APIClient {
   secrets: API.Secrets = new API.Secrets(this);
   search: API.Search = new API.Search(this);
   agents: API.Agents = new API.Agents(this);
+  tools: API.Tools = new API.Tools(this);
   memory: API.Memory = new API.Memory(this);
   iFrameEvents: API.IFrameEvents = new API.IFrameEvents(this);
   organization: API.Organization = new API.Organization(this);
+  conversations: API.Conversations = new API.Conversations(this);
 
   /**
    * Check whether the base URL is set to its default.
@@ -292,9 +296,12 @@ Datagrid.Search = Search;
 Datagrid.SearchResultItemsCursorPage = SearchResultItemsCursorPage;
 Datagrid.Agents = Agents;
 Datagrid.AgentsCursorIDPage = AgentsCursorIDPage;
+Datagrid.Tools = Tools;
 Datagrid.Memory = Memory;
 Datagrid.IFrameEvents = IFrameEvents;
 Datagrid.Organization = Organization;
+Datagrid.Conversations = Conversations;
+Datagrid.ConversationsCursorIDPage = ConversationsCursorIDPage;
 
 export declare namespace Datagrid {
   export type RequestOptions = Core.RequestOptions;
@@ -306,10 +313,8 @@ export declare namespace Datagrid {
   export { type CursorIDPageParams as CursorIDPageParams, type CursorIDPageResponse as CursorIDPageResponse };
 
   export {
-    type AgentToolItem as AgentToolItem,
-    type AgentTools as AgentTools,
-    type Properties as Properties,
     type ConverseResponse as ConverseResponse,
+    type Properties as Properties,
     type ConverseParams as ConverseParams,
   };
 
@@ -380,6 +385,8 @@ export declare namespace Datagrid {
     type AgentListParams as AgentListParams,
   };
 
+  export { Tools as Tools, type Tool as Tool, type ToolName as ToolName };
+
   export { Memory as Memory };
 
   export {
@@ -393,6 +400,14 @@ export declare namespace Datagrid {
   };
 
   export { Organization as Organization };
+
+  export {
+    Conversations as Conversations,
+    type Conversation as Conversation,
+    ConversationsCursorIDPage as ConversationsCursorIDPage,
+    type ConversationCreateParams as ConversationCreateParams,
+    type ConversationListParams as ConversationListParams,
+  };
 }
 
 export { toFile, fileFromPath } from './uploads';

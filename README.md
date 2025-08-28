@@ -26,9 +26,9 @@ const client = new Datagrid({
   apiKey: process.env['DATAGRID_API_KEY'], // This is the default and can be omitted
 });
 
-const response = await client.converse({ prompt: 'Hello world!' });
+const converseResponse = await client.converse({ prompt: 'Hello world!' });
 
-console.log(response.content);
+console.log(converseResponse.content);
 ```
 
 ### Request & Response types
@@ -44,7 +44,7 @@ const client = new Datagrid({
 });
 
 const params: Datagrid.ConverseParams = { prompt: 'Hello world!' };
-const response: Datagrid.ConverseResponse = await client.converse(params);
+const converseResponse: Datagrid.ConverseResponse = await client.converse(params);
 ```
 
 Documentation for each method, request param, and response field are available in docstrings and will appear on hover in most modern editors.
@@ -87,7 +87,7 @@ a subclass of `APIError` will be thrown:
 
 <!-- prettier-ignore -->
 ```ts
-const response = await client.converse({ prompt: 'Hello world!' }).catch(async (err) => {
+const converseResponse = await client.converse({ prompt: 'Hello world!' }).catch(async (err) => {
   if (err instanceof Datagrid.APIError) {
     console.log(err.status); // 400
     console.log(err.name); // BadRequestError
@@ -200,9 +200,11 @@ const response = await client.converse({ prompt: 'Hello world!' }).asResponse();
 console.log(response.headers.get('X-My-Header'));
 console.log(response.statusText); // access the underlying Response object
 
-const { data: response, response: raw } = await client.converse({ prompt: 'Hello world!' }).withResponse();
+const { data: converseResponse, response: raw } = await client
+  .converse({ prompt: 'Hello world!' })
+  .withResponse();
 console.log(raw.headers.get('X-My-Header'));
-console.log(response.content);
+console.log(converseResponse.content);
 ```
 
 ### Making custom/undocumented requests

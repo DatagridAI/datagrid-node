@@ -1,132 +1,109 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import * as TopLevelAPI from './top-level';
+import * as ToolsAPI from './tools';
+import * as MessagesAPI from './conversations/messages';
 
-export interface AgentToolItem {
-  name: AgentTools;
+/**
+ * The `conversation.message` object represents a message in a conversation.
+ */
+export interface ConverseResponse {
+  /**
+   * The message identifier.
+   */
+  id: string;
 
   /**
-   * The ID of the connection to use for the tool.
+   * The ID of the agent that sent or responded to the message.
    */
-  connection_id?: string;
+  agent_id: string;
+
+  /**
+   * Array of citations that provide knowledges for factual statements in the
+   * response. Each citation includes the referenced text and its knowledges.
+   */
+  citations: Array<ConverseResponse.Citation> | null;
+
+  /**
+   * Contents of the message.
+   */
+  content: Array<ConverseResponse.Content>;
+
+  /**
+   * The ID of the conversation the message belongs to.
+   */
+  conversation_id: string;
+
+  /**
+   * The ISO string for when the message was created.
+   */
+  created_at: string;
+
+  credits: ConverseResponse.Credits | null;
+
+  /**
+   * The object type, which is always `conversation.message`.
+   */
+  object: 'conversation.message';
+
+  /**
+   * The role of the message sender - either 'user' or 'agent'.
+   */
+  role: 'user' | 'agent';
 }
 
-export type AgentTools =
-  | 'data_analysis'
-  | 'semantic_search'
-  | 'agent_memory'
-  | 'schema_info'
-  | 'table_info'
-  | 'create_dataset'
-  | 'calendar'
-  | 'email'
-  | 'schedule_recurring_message_tool'
-  | 'procore'
-  | 'egnyte'
-  | 'notion'
-  | 'google_sheets'
-  | 'slack'
-  | 'microsoft_teams'
-  | 'sharepoint'
-  | 'drive'
-  | 'fieldwire'
-  | 'webbrowser'
-  | 'pdf_manipulation'
-  | 'pdf_generator'
-  | 'acc'
-  | 'acc_forms'
-  | 'docusign'
-  | 'webflow'
-  | 'hubspot'
-  | 'nec'
-  | 'github'
-  | 'data_classification'
-  | 'data_extraction'
-  | 'image_detection'
-  | 'attachment_extraction'
-  | 'pdf_extraction'
-  | 'connect_data'
-  | 'download_data'
-  | 'web_search'
-  | 'fetch_url'
-  | 'company_prospect_researcher'
-  | 'people_prospect_researcher';
+export namespace ConverseResponse {
+  export interface Citation {
+    /**
+     * The text snippet from the response that is being cited.
+     */
+    citation: string;
 
+    /**
+     * Array of knowledges that support this citation.
+     */
+    knowledges: Array<Citation.Knowledge>;
+  }
+
+  export namespace Citation {
+    export interface Knowledge {
+      /**
+       * An array of text snippets from the knowledge that confirm the citation.
+       */
+      confirmations: Array<string>;
+
+      /**
+       * Id of the knowledge.
+       */
+      knowledge_id: string;
+
+      type: 'image' | 'pdf_page' | 'record' | 'web_search' | 'sql_query_result';
+    }
+  }
+
+  export interface Content {
+    text: string;
+
+    type: 'text';
+  }
+
+  export interface Credits {
+    /**
+     * The number of credits consumed by the converse call.
+     */
+    consumed: number;
+  }
+}
+
+/**
+ * The `conversation.message` object represents a message in a conversation.
+ */
 export type Properties =
-  | Properties.ConverseResponse
+  | MessagesAPI.Message
   | Properties.ConverseStatusEvent
   | Properties.ConverseContentMessageDeltaEvent
   | Properties.ConverseToolCallDeltaEvent;
 
 export namespace Properties {
-  export interface ConverseResponse {
-    /**
-     * The ID of the agent used for the converse.
-     */
-    agent_id: string;
-
-    /**
-     * Contents of the converse response.
-     */
-    content: Array<ConverseResponse.Content>;
-
-    /**
-     * The ID of the agent conversation.
-     */
-    conversation_id: string;
-
-    object: 'conversation.message';
-
-    /**
-     * Array of citations that provide knowledges for factual statements in the
-     * response. Each citation includes the referenced text and its knowledges.
-     */
-    citations?: Array<ConverseResponse.Citation>;
-
-    credits?: ConverseResponse.Credits;
-  }
-
-  export namespace ConverseResponse {
-    export interface Content {
-      text: string;
-    }
-
-    export interface Citation {
-      /**
-       * The text snippet from the response that is being cited.
-       */
-      citation: string;
-
-      /**
-       * Array of knowledges that support this citation.
-       */
-      knowledges: Array<Citation.Knowledge>;
-    }
-
-    export namespace Citation {
-      export interface Knowledge {
-        /**
-         * An array of text snippets from the knowledge that confirm the citation.
-         */
-        confirmations: Array<string>;
-
-        /**
-         * Id of the knowledge.
-         */
-        knowledge_id: string;
-
-        type: 'image' | 'pdf_page' | 'record' | 'web_search' | 'sql_query_result';
-      }
-    }
-
-    export interface Credits {
-      /**
-       * The number of credits consumed by the converse call.
-       */
-      consumed: number;
-    }
-  }
-
   export interface ConverseStatusEvent {
     data: ConverseStatusEvent.Data;
 
@@ -260,82 +237,9 @@ export namespace Properties {
         /**
          * The name of the tool that was called.
          */
-        name: string;
-
-        /**
-         * The icon of the tool that was called.
-         */
-        icon?: string;
+        name: ToolsAPI.ToolName;
       }
     }
-  }
-}
-
-export interface ConverseResponse {
-  /**
-   * The ID of the agent used for the converse.
-   */
-  agent_id: string;
-
-  /**
-   * Contents of the converse response.
-   */
-  content: Array<ConverseResponse.Content>;
-
-  /**
-   * The ID of the agent conversation.
-   */
-  conversation_id: string;
-
-  object: 'conversation.message';
-
-  /**
-   * Array of citations that provide knowledges for factual statements in the
-   * response. Each citation includes the referenced text and its knowledges.
-   */
-  citations?: Array<ConverseResponse.Citation>;
-
-  credits?: ConverseResponse.Credits;
-}
-
-export namespace ConverseResponse {
-  export interface Content {
-    text: string;
-  }
-
-  export interface Citation {
-    /**
-     * The text snippet from the response that is being cited.
-     */
-    citation: string;
-
-    /**
-     * Array of knowledges that support this citation.
-     */
-    knowledges: Array<Citation.Knowledge>;
-  }
-
-  export namespace Citation {
-    export interface Knowledge {
-      /**
-       * An array of text snippets from the knowledge that confirm the citation.
-       */
-      confirmations: Array<string>;
-
-      /**
-       * Id of the knowledge.
-       */
-      knowledge_id: string;
-
-      type: 'image' | 'pdf_page' | 'record' | 'web_search' | 'sql_query_result';
-    }
-  }
-
-  export interface Credits {
-    /**
-     * The number of credits consumed by the converse call.
-     */
-    consumed: number;
   }
 }
 
@@ -346,20 +250,13 @@ export interface ConverseParams {
   prompt: string | Array<ConverseParams.InputItemList>;
 
   /**
-   * The ID of the agent that should be used for the converse. If both agent_id and
-   * conversation_id aren't provided - the new agent is created.
+   * The ID of the agent that should be used for the converse.
    */
   agent_id?: string | null;
 
   /**
-   * Auto-approve actions (skip halting for human approval). If boolean true: all
-   * tools auto-approve. If object: per-tool toggle by toolId (true to skip halting
-   * forhuman approval).
-   */
-  auto_approve_actions?: boolean | null | { [key: string]: boolean } | null;
-
-  /**
-   * The config that overrides the default config of the agent for that converse.
+   * Override the agent config for this converse call. This is applied as a partial
+   * override.
    */
   config?: ConverseParams.Config | null;
 
@@ -466,13 +363,84 @@ export namespace ConverseParams {
   }
 
   /**
-   * The config that overrides the default config of the agent for that converse.
+   * Override the agent config for this converse call. This is applied as a partial
+   * override.
    */
   export interface Config {
     /**
      * The version of Datagrid's agent brain.
+     *
+     * - magpie-1.1 is the default and most powerful model.
+     * - magpie-1.1-flash is a faster model useful for RAG usecases, it currently only
+     *   supports semantic_search tool. Structured outputs are not supported with this
+     *   model.
      */
-    agent_model?: 'magpie-1' | 'magpie-1.1' | 'magpie-1.1-flash' | null;
+    agent_model?: 'magpie-1.1' | 'magpie-1.1-flash' | 'magpie-1' | null;
+
+    /**
+     * @deprecated Deprecated, use tools instead
+     */
+    agent_tools?: Array<ToolsAPI.ToolName | ToolsAPI.Tool> | null;
+
+    /**
+     * Use custom prompt to instruct the style and formatting of the agent's response
+     */
+    custom_prompt?: string | null;
+
+    /**
+     * @deprecated Deprecated, use disabled_tools instead
+     */
+    disabled_agent_tools?: Array<unknown> | null;
+
+    /**
+     * Array of the agent tools to disable. Disabling is performed after the
+     * 'agent_tools' rules are applied. For example, agent_tools: null and
+     * disabled_tools: [data_analysis] will enable everything but the data_analysis
+     * tool. If nothing or [] is provided, nothing is disabled and therefore only the
+     * agent_tools setting is relevant.
+     */
+    disabled_tools?: Array<ToolsAPI.ToolName | ToolsAPI.Tool> | null;
+
+    /**
+     * Array of Knowledge IDs the agent should use during the converse. When ommited,
+     * all knowledge is used.
+     */
+    knowledge_ids?: Array<string> | null;
+
+    /**
+     * The LLM used to generate responses.
+     */
+    llm_model?:
+      | 'gemini-2.5-pro'
+      | 'gemini-2.5-pro-preview-05-06'
+      | 'gemini-2.5-flash'
+      | 'gemini-2.5-flash-preview-04-17'
+      | 'gemini-2.5-flash-lite'
+      | 'gpt-5'
+      | 'gemini-2.0-flash-001'
+      | 'gemini-2.0-flash'
+      | 'gemini-1.5-pro-001'
+      | 'gemini-1.5-pro-002'
+      | 'gemini-1.5-flash-002'
+      | 'gemini-1.5-flash-001'
+      | 'chatgpt-4o-latest'
+      | 'gpt-4o'
+      | 'gpt-4'
+      | 'gpt-4-turbo'
+      | 'gpt-4o-mini'
+      | (string & {})
+      | null;
+
+    /**
+     * Define the planning strategy your AI Agent should use when breaking down tasks
+     * and solving problems
+     */
+    planning_prompt?: string | null;
+
+    /**
+     * Directs your AI Agent's operational behavior.
+     */
+    system_prompt?: string | null;
 
     /**
      * Array of the agent tools to enable. If not provided - default tools of the agent
@@ -520,62 +488,7 @@ export namespace ConverseParams {
      * - company_prospect_researcher: Agents provide information about companies
      * - people_prospect_researcher: Agents provide information about people
      */
-    agent_tools?: Array<TopLevelAPI.AgentTools | TopLevelAPI.AgentToolItem> | null;
-
-    /**
-     * Use custom prompt to instruct the style and formatting of the agent's response
-     */
-    custom_prompt?: string | null;
-
-    /**
-     * Array of the agent tools to disable. Disabling is performed after the
-     * 'agent_tools' rules are applied. For example, agent_tools: null and
-     * disabled_agent_tools: [data_analysis] will enable everything but the
-     * data_analysis tool. If nothing or [] is provided, nothing is disabled and
-     * therefore only the agent_tools setting is relevant.
-     */
-    disabled_agent_tools?: Array<TopLevelAPI.AgentTools> | null;
-
-    /**
-     * Array of Knowledge IDs the agent should use during the converse. If not
-     * provided - default settings are used. If null provided - all available knowledge
-     * is used.
-     */
-    knowledge_ids?: Array<string> | null;
-
-    /**
-     * The LLM used to generate responses.
-     */
-    llm_model?:
-      | 'gemini-1.5-flash-001'
-      | 'gemini-1.5-flash-002'
-      | 'gemini-2.0-flash-001'
-      | 'gemini-2.0-flash'
-      | 'gemini-2.5-flash-preview-04-17'
-      | 'gemini-2.5-flash'
-      | 'gemini-2.5-flash-lite'
-      | 'gemini-1.5-pro-001'
-      | 'gemini-1.5-pro-002'
-      | 'gemini-2.5-pro-preview-05-06'
-      | 'gemini-2.5-pro'
-      | 'chatgpt-4o-latest'
-      | 'gpt-4'
-      | 'gpt-4-turbo'
-      | 'gpt-4o'
-      | 'gpt-4o-mini'
-      | 'gpt-5'
-      | null;
-
-    /**
-     * Define the planning strategy your AI Agent should use when breaking down tasks
-     * and solving problems
-     */
-    planning_prompt?: string | null;
-
-    /**
-     * Directs your AI Agent's operational behavior.
-     */
-    system_prompt?: string | null;
+    tools?: Array<ToolsAPI.ToolName | ToolsAPI.Tool | ToolsAPI.Tool> | null;
   }
 
   /**
@@ -626,10 +539,8 @@ export namespace ConverseParams {
 
 export declare namespace TopLevel {
   export {
-    type AgentToolItem as AgentToolItem,
-    type AgentTools as AgentTools,
-    type Properties as Properties,
     type ConverseResponse as ConverseResponse,
+    type Properties as Properties,
     type ConverseParams as ConverseParams,
   };
 }
