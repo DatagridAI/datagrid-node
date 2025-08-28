@@ -2,10 +2,8 @@
 
 Types:
 
-- <code><a href="./src/resources/top-level.ts">AgentToolItem</a></code>
-- <code><a href="./src/resources/top-level.ts">AgentTools</a></code>
-- <code><a href="./src/resources/top-level.ts">Properties</a></code>
 - <code><a href="./src/resources/top-level.ts">ConverseResponse</a></code>
+- <code><a href="./src/resources/top-level.ts">Properties</a></code>
 
 Methods:
 
@@ -110,6 +108,13 @@ Methods:
 - <code title="get /agents">client.agents.<a href="./src/resources/agents.ts">list</a>({ ...params }) -> AgentsCursorIDPage</code>
 - <code title="delete /agents/{agent_id}">client.agents.<a href="./src/resources/agents.ts">delete</a>(agentId) -> void</code>
 
+# Tools
+
+Types:
+
+- <code><a href="./src/resources/tools.ts">Tool</a></code>
+- <code><a href="./src/resources/tools.ts">ToolName</a></code>
+
 # Memory
 
 ## User
@@ -198,3 +203,27 @@ Types:
 Methods:
 
 - <code title="get /organization/credits">client.organization.credits.<a href="./src/resources/organization/credits.ts">get</a>() -> CreditsReport</code>
+
+# Conversations
+
+Types:
+
+- <code><a href="./src/resources/conversations/conversations.ts">Conversation</a></code>
+
+Methods:
+
+- <code title="post /conversations">client.conversations.<a href="./src/resources/conversations/conversations.ts">create</a>({ ...params }) -> Conversation</code>
+- <code title="get /conversations/{conversation_id}">client.conversations.<a href="./src/resources/conversations/conversations.ts">retrieve</a>(conversationId) -> Conversation</code>
+- <code title="get /conversations">client.conversations.<a href="./src/resources/conversations/conversations.ts">list</a>({ ...params }) -> ConversationsCursorIDPage</code>
+- <code title="delete /conversations/{conversation_id}">client.conversations.<a href="./src/resources/conversations/conversations.ts">delete</a>(conversationId) -> void</code>
+
+## Messages
+
+Types:
+
+- <code><a href="./src/resources/conversations/messages.ts">Message</a></code>
+
+Methods:
+
+- <code title="get /conversations/{conversation_id}/messages/{message_id}">client.conversations.messages.<a href="./src/resources/conversations/messages.ts">retrieve</a>(conversationId, messageId) -> Message</code>
+- <code title="get /conversations/{conversation_id}/messages">client.conversations.messages.<a href="./src/resources/conversations/messages.ts">list</a>(conversationId, { ...params }) -> MessagesCursorIDPage</code>

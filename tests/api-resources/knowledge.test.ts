@@ -30,6 +30,13 @@ describe('resource knowledge', () => {
     });
   });
 
+  test('create: required and optional params', async () => {
+    const response = await client.knowledge.create({
+      files: [await toFile(Buffer.from('# my file contents'), 'README.md')],
+      name: 'name',
+    });
+  });
+
   test('retrieve', async () => {
     const responsePromise = client.knowledge.retrieve('knowledge_id');
     const rawResponse = await responsePromise.asResponse();
