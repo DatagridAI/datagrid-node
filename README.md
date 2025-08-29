@@ -4,7 +4,7 @@
 
 This library provides convenient access to the Datagrid REST API from server-side TypeScript or JavaScript.
 
-The REST API documentation can be found on [docs.datagrid.com](https://docs.datagrid.com). The full API of this library can be found in [api.md](api.md).
+The REST API documentation can be found on [developers.datagrid.com](https://developers.datagrid.com). The full API of this library can be found in [api.md](api.md).
 
 It is generated with [Stainless](https://www.stainless.com/).
 
@@ -26,9 +26,9 @@ const client = new Datagrid({
   apiKey: process.env['DATAGRID_API_KEY'], // This is the default and can be omitted
 });
 
-const knowledge = await client.knowledge.create({ files: [] });
+const converseResponse = await client.converse({ prompt: 'Hello world!' });
 
-console.log(knowledge.id);
+console.log(converseResponse.content);
 ```
 
 ### Request & Response types
@@ -43,8 +43,8 @@ const client = new Datagrid({
   apiKey: process.env['DATAGRID_API_KEY'], // This is the default and can be omitted
 });
 
-const params: Datagrid.KnowledgeCreateParams = { files: [] };
-const knowledge: Datagrid.Knowledge = await client.knowledge.create(params);
+const params: Datagrid.ConverseParams = { prompt: 'Hello world!' };
+const converseResponse: Datagrid.ConverseResponse = await client.converse(params);
 ```
 
 Documentation for each method, request param, and response field are available in docstrings and will appear on hover in most modern editors.
@@ -87,7 +87,7 @@ a subclass of `APIError` will be thrown:
 
 <!-- prettier-ignore -->
 ```ts
-const knowledge = await client.knowledge.create({ files: [] }).catch(async (err) => {
+const converseResponse = await client.converse({ prompt: 'Hello world!' }).catch(async (err) => {
   if (err instanceof Datagrid.APIError) {
     console.log(err.status); // 400
     console.log(err.name); // BadRequestError
@@ -127,24 +127,24 @@ const client = new Datagrid({
 });
 
 // Or, configure per-request:
-await client.knowledge.create({ files: [] }, {
+await client.converse({ prompt: 'Hello world!' }, {
   maxRetries: 5,
 });
 ```
 
 ### Timeouts
 
-Requests time out after 3 minutes by default. You can configure this with a `timeout` option:
+Requests time out after 30 minutes by default. You can configure this with a `timeout` option:
 
 <!-- prettier-ignore -->
 ```ts
 // Configure the default for all requests:
 const client = new Datagrid({
-  timeout: 20 * 1000, // 20 seconds (default is 3 minutes)
+  timeout: 20 * 1000, // 20 seconds (default is 30 minutes)
 });
 
 // Override per-request:
-await client.knowledge.create({ files: [] }, {
+await client.converse({ prompt: 'Hello world!' }, {
   timeout: 5 * 1000,
 });
 ```
@@ -196,13 +196,15 @@ You can also use the `.withResponse()` method to get the raw `Response` along wi
 ```ts
 const client = new Datagrid();
 
-const response = await client.knowledge.create({ files: [] }).asResponse();
+const response = await client.converse({ prompt: 'Hello world!' }).asResponse();
 console.log(response.headers.get('X-My-Header'));
 console.log(response.statusText); // access the underlying Response object
 
-const { data: knowledge, response: raw } = await client.knowledge.create({ files: [] }).withResponse();
+const { data: converseResponse, response: raw } = await client
+  .converse({ prompt: 'Hello world!' })
+  .withResponse();
 console.log(raw.headers.get('X-My-Header'));
-console.log(knowledge.id);
+console.log(converseResponse.content);
 ```
 
 ### Making custom/undocumented requests
@@ -306,8 +308,8 @@ const client = new Datagrid({
 });
 
 // Override per-request:
-await client.knowledge.create(
-  { files: [] },
+await client.converse(
+  { prompt: 'Hello world!' },
   {
     httpAgent: new http.Agent({ keepAlive: false }),
   },

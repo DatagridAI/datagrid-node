@@ -2,10 +2,8 @@
 
 Types:
 
-- <code><a href="./src/resources/top-level.ts">AgentToolItem</a></code>
-- <code><a href="./src/resources/top-level.ts">AgentTools</a></code>
-- <code><a href="./src/resources/top-level.ts">Properties</a></code>
 - <code><a href="./src/resources/top-level.ts">ConverseResponse</a></code>
+- <code><a href="./src/resources/top-level.ts">Properties</a></code>
 
 Methods:
 
@@ -96,30 +94,26 @@ Methods:
 
 - <code title="get /search">client.search.<a href="./src/resources/search.ts">search</a>({ ...params }) -> SearchResultItemsCursorPage</code>
 
-# Organization
-
-## Teamspaces
+# Agents
 
 Types:
 
-- <code><a href="./src/resources/organization/teamspaces.ts">Teamspace</a></code>
+- <code><a href="./src/resources/agents.ts">Agent</a></code>
 
 Methods:
 
-- <code title="post /organization/teamspaces">client.organization.teamspaces.<a href="./src/resources/organization/teamspaces.ts">create</a>({ ...params }) -> Teamspace</code>
-- <code title="get /organization/teamspaces/{teamspace_id}">client.organization.teamspaces.<a href="./src/resources/organization/teamspaces.ts">retrieve</a>(teamspaceId) -> Teamspace</code>
-- <code title="get /organization/teamspaces">client.organization.teamspaces.<a href="./src/resources/organization/teamspaces.ts">list</a>({ ...params }) -> TeamspacesCursorIDPage</code>
-- <code title="patch /organization/teamspaces/{teamspace_id}">client.organization.teamspaces.<a href="./src/resources/organization/teamspaces.ts">patch</a>(teamspaceId, { ...params }) -> Teamspace</code>
+- <code title="post /agents">client.agents.<a href="./src/resources/agents.ts">create</a>({ ...params }) -> Agent</code>
+- <code title="get /agents/{agent_id}">client.agents.<a href="./src/resources/agents.ts">retrieve</a>(agentId) -> Agent</code>
+- <code title="patch /agents/{agent_id}">client.agents.<a href="./src/resources/agents.ts">update</a>(agentId, { ...params }) -> Agent</code>
+- <code title="get /agents">client.agents.<a href="./src/resources/agents.ts">list</a>({ ...params }) -> AgentsCursorIDPage</code>
+- <code title="delete /agents/{agent_id}">client.agents.<a href="./src/resources/agents.ts">delete</a>(agentId) -> void</code>
 
-## Credits
+# Tools
 
 Types:
 
-- <code><a href="./src/resources/organization/credits.ts">CreditsReport</a></code>
-
-Methods:
-
-- <code title="get /organization/credits">client.organization.credits.<a href="./src/resources/organization/credits.ts">get</a>() -> CreditsReport</code>
+- <code><a href="./src/resources/tools.ts">Tool</a></code>
+- <code><a href="./src/resources/tools.ts">ToolName</a></code>
 
 # Memory
 
@@ -146,3 +140,90 @@ Types:
 - <code><a href="./src/resources/i-frame-events.ts">IFrameEventType</a></code>
 - <code><a href="./src/resources/i-frame-events.ts">KnowledgeCreatedPayload</a></code>
 - <code><a href="./src/resources/i-frame-events.ts">ResizePayload</a></code>
+
+# Organization
+
+## Users
+
+Types:
+
+- <code><a href="./src/resources/organization/users.ts">OrganizationUser</a></code>
+
+Methods:
+
+- <code title="get /organization/users/{user_id}">client.organization.users.<a href="./src/resources/organization/users.ts">retrieve</a>(userId) -> OrganizationUser</code>
+- <code title="patch /organization/users/{user_id}">client.organization.users.<a href="./src/resources/organization/users.ts">update</a>(userId, { ...params }) -> OrganizationUser</code>
+- <code title="get /organization/users">client.organization.users.<a href="./src/resources/organization/users.ts">list</a>({ ...params }) -> OrganizationUsersCursorIDPage</code>
+
+## Teamspaces
+
+Types:
+
+- <code><a href="./src/resources/organization/teamspaces/teamspaces.ts">Teamspace</a></code>
+
+Methods:
+
+- <code title="post /organization/teamspaces">client.organization.teamspaces.<a href="./src/resources/organization/teamspaces/teamspaces.ts">create</a>({ ...params }) -> Teamspace</code>
+- <code title="get /organization/teamspaces/{teamspace_id}">client.organization.teamspaces.<a href="./src/resources/organization/teamspaces/teamspaces.ts">retrieve</a>(teamspaceId) -> Teamspace</code>
+- <code title="get /organization/teamspaces">client.organization.teamspaces.<a href="./src/resources/organization/teamspaces/teamspaces.ts">list</a>({ ...params }) -> TeamspacesCursorIDPage</code>
+- <code title="patch /organization/teamspaces/{teamspace_id}">client.organization.teamspaces.<a href="./src/resources/organization/teamspaces/teamspaces.ts">patch</a>(teamspaceId, { ...params }) -> Teamspace</code>
+
+### Invites
+
+Types:
+
+- <code><a href="./src/resources/organization/teamspaces/invites.ts">TeamspaceInvite</a></code>
+
+Methods:
+
+- <code title="post /organization/teamspaces/{teamspace_id}/invites">client.organization.teamspaces.invites.<a href="./src/resources/organization/teamspaces/invites.ts">create</a>(teamspaceId, { ...params }) -> TeamspaceInvite</code>
+- <code title="get /organization/teamspaces/{teamspace_id}/invites/{invite_id}">client.organization.teamspaces.invites.<a href="./src/resources/organization/teamspaces/invites.ts">retrieve</a>(teamspaceId, inviteId) -> TeamspaceInvite</code>
+- <code title="get /organization/teamspaces/{teamspace_id}/invites">client.organization.teamspaces.invites.<a href="./src/resources/organization/teamspaces/invites.ts">list</a>(teamspaceId, { ...params }) -> TeamspaceInvitesCursorIDPage</code>
+- <code title="delete /organization/teamspaces/{teamspace_id}/invites/{invite_id}">client.organization.teamspaces.invites.<a href="./src/resources/organization/teamspaces/invites.ts">delete</a>(teamspaceId, inviteId) -> void</code>
+
+### Users
+
+Types:
+
+- <code><a href="./src/resources/organization/teamspaces/users.ts">TeamspaceUser</a></code>
+
+Methods:
+
+- <code title="get /organization/teamspaces/{teamspace_id}/users/{user_id}">client.organization.teamspaces.users.<a href="./src/resources/organization/teamspaces/users.ts">retrieve</a>(teamspaceId, userId) -> TeamspaceUser</code>
+- <code title="patch /organization/teamspaces/{teamspace_id}/users/{user_id}">client.organization.teamspaces.users.<a href="./src/resources/organization/teamspaces/users.ts">update</a>(teamspaceId, userId, { ...params }) -> TeamspaceUser</code>
+- <code title="get /organization/teamspaces/{teamspace_id}/users">client.organization.teamspaces.users.<a href="./src/resources/organization/teamspaces/users.ts">list</a>(teamspaceId, { ...params }) -> TeamspaceUsersCursorIDPage</code>
+- <code title="delete /organization/teamspaces/{teamspace_id}/users/{user_id}">client.organization.teamspaces.users.<a href="./src/resources/organization/teamspaces/users.ts">delete</a>(teamspaceId, userId) -> void</code>
+
+## Credits
+
+Types:
+
+- <code><a href="./src/resources/organization/credits.ts">CreditsReport</a></code>
+
+Methods:
+
+- <code title="get /organization/credits">client.organization.credits.<a href="./src/resources/organization/credits.ts">get</a>() -> CreditsReport</code>
+
+# Conversations
+
+Types:
+
+- <code><a href="./src/resources/conversations/conversations.ts">Conversation</a></code>
+
+Methods:
+
+- <code title="post /conversations">client.conversations.<a href="./src/resources/conversations/conversations.ts">create</a>({ ...params }) -> Conversation</code>
+- <code title="get /conversations/{conversation_id}">client.conversations.<a href="./src/resources/conversations/conversations.ts">retrieve</a>(conversationId) -> Conversation</code>
+- <code title="get /conversations">client.conversations.<a href="./src/resources/conversations/conversations.ts">list</a>({ ...params }) -> ConversationsCursorIDPage</code>
+- <code title="delete /conversations/{conversation_id}">client.conversations.<a href="./src/resources/conversations/conversations.ts">delete</a>(conversationId) -> void</code>
+
+## Messages
+
+Types:
+
+- <code><a href="./src/resources/conversations/messages.ts">Message</a></code>
+
+Methods:
+
+- <code title="get /conversations/{conversation_id}/messages/{message_id}">client.conversations.messages.<a href="./src/resources/conversations/messages.ts">retrieve</a>(conversationId, messageId) -> Message</code>
+- <code title="get /conversations/{conversation_id}/messages">client.conversations.messages.<a href="./src/resources/conversations/messages.ts">list</a>(conversationId, { ...params }) -> MessagesCursorIDPage</code>

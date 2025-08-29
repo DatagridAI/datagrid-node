@@ -11,14 +11,7 @@ export class KnowledgeResource extends APIResource {
    * Create knowledge which will be learned and leveraged by agents.
    */
   create(body: KnowledgeCreateParams, options?: Core.RequestOptions): Core.APIPromise<Knowledge> {
-    return this._client.post(
-      '/knowledge',
-      Core.multipartFormRequestOptions({
-        body,
-        timeout: (this._client as any)._options.timeout ?? 120000,
-        ...options,
-      }),
-    );
+    return this._client.post('/knowledge', Core.multipartFormRequestOptions({ body, ...options }));
   }
 
   /**
@@ -458,7 +451,7 @@ export interface KnowledgeCreateParams {
    * The files to be uploaded and learned. Supported media types are `pdf`, `json`,
    * `csv`, `text`, `png`, `jpeg`, `excel`, `google sheets`.
    */
-  files?: Array<Core.Uploadable> | null;
+  files: Array<Core.Uploadable>;
 
   /**
    * The name of the knowledge.

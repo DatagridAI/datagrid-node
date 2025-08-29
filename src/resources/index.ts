@@ -1,6 +1,14 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export {
+  AgentsCursorIDPage,
+  Agents,
+  type Agent,
+  type AgentCreateParams,
+  type AgentUpdateParams,
+  type AgentListParams,
+} from './agents';
+export {
   ConnectionsCursorIDPage,
   Connections,
   type Connection,
@@ -10,6 +18,13 @@ export {
   type ConnectionListParams,
 } from './connections';
 export { ConnectorsCursorIDPage, Connectors, type Connector, type ConnectorListParams } from './connectors';
+export {
+  ConversationsCursorIDPage,
+  Conversations,
+  type Conversation,
+  type ConversationCreateParams,
+  type ConversationListParams,
+} from './conversations/conversations';
 export {
   FileObjectsCursorIDPage,
   Files,
@@ -58,10 +73,5 @@ export {
   type SecretCreateParams,
   type SecretListParams,
 } from './secrets';
-export {
-  type AgentToolItem,
-  type AgentTools,
-  type Properties,
-  type ConverseResponse,
-  type ConverseParams,
-} from './top-level';
+export { Tools, type Tool, type ToolName } from './tools';
+export { type ConverseResponse, type Properties, type ConverseParams } from './top-level';

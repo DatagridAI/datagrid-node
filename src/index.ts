@@ -13,13 +13,15 @@ import {
 import * as Uploads from './uploads';
 import * as API from './resources/index';
 import * as TopLevelAPI from './resources/top-level';
+import { ConverseParams, ConverseResponse, Properties } from './resources/top-level';
 import {
-  AgentToolItem,
-  AgentTools,
-  ConverseParams,
-  ConverseResponse,
-  Properties,
-} from './resources/top-level';
+  Agent as AgentsAPIAgent,
+  AgentCreateParams,
+  AgentListParams,
+  AgentUpdateParams,
+  Agents,
+  AgentsCursorIDPage,
+} from './resources/agents';
 import {
   Connection,
   ConnectionCreateParams,
@@ -76,6 +78,14 @@ import {
   Secrets,
   SecretsCursorIDPage,
 } from './resources/secrets';
+import { Tool, ToolName, Tools } from './resources/tools';
+import {
+  Conversation,
+  ConversationCreateParams,
+  ConversationListParams,
+  Conversations,
+  ConversationsCursorIDPage,
+} from './resources/conversations/conversations';
 import { Memory } from './resources/memory/memory';
 import { Organization } from './resources/organization/organization';
 
@@ -172,7 +182,7 @@ export class Datagrid extends Core.APIClient {
    * @param {string | undefined} [opts.apiKey=process.env['DATAGRID_API_KEY'] ?? undefined]
    * @param {string | null | undefined} [opts.teamspace=process.env['DATAGRID_TEAMSPACE_ID'] ?? null]
    * @param {string} [opts.baseURL=process.env['DATAGRID_BASE_URL'] ?? https://api.datagrid.com/v1] - Override the default base URL for the API.
-   * @param {number} [opts.timeout=3 minutes] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
+   * @param {number} [opts.timeout=30 minutes] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {number} [opts.httpAgent] - An HTTP agent used to manage HTTP(s) connections.
    * @param {Core.Fetch} [opts.fetch] - Specify a custom `fetch` function implementation.
    * @param {number} [opts.maxRetries=2] - The maximum number of times the client will retry a request.
@@ -201,7 +211,7 @@ export class Datagrid extends Core.APIClient {
     super({
       baseURL: options.baseURL!,
       baseURLOverridden: baseURL ? baseURL !== 'https://api.datagrid.com/v1' : false,
-      timeout: options.timeout ?? 180000 /* 3 minutes */,
+      timeout: options.timeout ?? 1800000 /* 30 minutes */,
       httpAgent: options.httpAgent,
       maxRetries: options.maxRetries,
       fetch: options.fetch,
@@ -219,9 +229,12 @@ export class Datagrid extends Core.APIClient {
   files: API.Files = new API.Files(this);
   secrets: API.Secrets = new API.Secrets(this);
   search: API.Search = new API.Search(this);
-  organization: API.Organization = new API.Organization(this);
+  agents: API.Agents = new API.Agents(this);
+  tools: API.Tools = new API.Tools(this);
   memory: API.Memory = new API.Memory(this);
   iFrameEvents: API.IFrameEvents = new API.IFrameEvents(this);
+  organization: API.Organization = new API.Organization(this);
+  conversations: API.Conversations = new API.Conversations(this);
 
   /**
    * Check whether the base URL is set to its default.
@@ -269,7 +282,7 @@ export class Datagrid extends Core.APIClient {
   }
 
   static Datagrid = this;
-  static DEFAULT_TIMEOUT = 180000; // 3 minutes
+  static DEFAULT_TIMEOUT = 1800000; // 30 minutes
 
   static DatagridError = Errors.DatagridError;
   static APIError = Errors.APIError;
@@ -301,9 +314,15 @@ Datagrid.Secrets = Secrets;
 Datagrid.SecretsCursorIDPage = SecretsCursorIDPage;
 Datagrid.Search = Search;
 Datagrid.SearchResultItemsCursorPage = SearchResultItemsCursorPage;
-Datagrid.Organization = Organization;
+Datagrid.Agents = Agents;
+Datagrid.AgentsCursorIDPage = AgentsCursorIDPage;
+Datagrid.Tools = Tools;
 Datagrid.Memory = Memory;
 Datagrid.IFrameEvents = IFrameEvents;
+Datagrid.Organization = Organization;
+Datagrid.Conversations = Conversations;
+Datagrid.ConversationsCursorIDPage = ConversationsCursorIDPage;
+
 export declare namespace Datagrid {
   export type RequestOptions = Core.RequestOptions;
 
@@ -314,10 +333,8 @@ export declare namespace Datagrid {
   export { type CursorIDPageParams as CursorIDPageParams, type CursorIDPageResponse as CursorIDPageResponse };
 
   export {
-    type AgentToolItem as AgentToolItem,
-    type AgentTools as AgentTools,
-    type Properties as Properties,
     type ConverseResponse as ConverseResponse,
+    type Properties as Properties,
     type ConverseParams as ConverseParams,
   };
 
@@ -379,7 +396,16 @@ export declare namespace Datagrid {
     type SearchSearchParams as SearchSearchParams,
   };
 
-  export { Organization as Organization };
+  export {
+    Agents as Agents,
+    type AgentsAPIAgent as Agent,
+    AgentsCursorIDPage as AgentsCursorIDPage,
+    type AgentCreateParams as AgentCreateParams,
+    type AgentUpdateParams as AgentUpdateParams,
+    type AgentListParams as AgentListParams,
+  };
+
+  export { Tools as Tools, type Tool as Tool, type ToolName as ToolName };
 
   export { Memory as Memory };
 
@@ -391,6 +417,16 @@ export declare namespace Datagrid {
     type IFrameEventType as IFrameEventType,
     type KnowledgeCreatedPayload as KnowledgeCreatedPayload,
     type ResizePayload as ResizePayload,
+  };
+
+  export { Organization as Organization };
+
+  export {
+    Conversations as Conversations,
+    type Conversation as Conversation,
+    ConversationsCursorIDPage as ConversationsCursorIDPage,
+    type ConversationCreateParams as ConversationCreateParams,
+    type ConversationListParams as ConversationListParams,
   };
 }
 
