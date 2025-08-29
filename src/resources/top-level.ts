@@ -390,7 +390,7 @@ export namespace ConverseParams {
     /**
      * @deprecated Deprecated, use disabled_tools instead
      */
-    disabled_agent_tools?: Array<unknown> | null;
+    disabled_agent_tools?: Array<Array<ToolsAPI.ToolName | ToolsAPI.Tool> | null> | null;
 
     /**
      * Array of the agent tools to disable. Disabling is performed after the
