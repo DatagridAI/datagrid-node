@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.1.0 (2025-08-29)
+
+Full Changelog: [v0.1.0-alpha.10...v0.1.0](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.10...v0.1.0)
+
+### Features
+
+* **api:** api update ([b2b0f8f](https://github.com/DatagridAI/datagrid-node/commit/b2b0f8ff029e60867e0f18af98914fcead1b4b66))
+* **api:** api update ([e9a8b5d](https://github.com/DatagridAI/datagrid-node/commit/e9a8b5d875b07b4fb7650a1f9c2235cfb7ff448e))
+* **api:** api update ([3c7e62a](https://github.com/DatagridAI/datagrid-node/commit/3c7e62a08ef7df8612c4057d7c9c34131137593b))
+* **api:** api update ([26e2f8c](https://github.com/DatagridAI/datagrid-node/commit/26e2f8c3065a90a6299b87974a3db1aa89cad76a))
+* **api:** manual updates ([16171f4](https://github.com/DatagridAI/datagrid-node/commit/16171f4edf5cd188c54878108ffa501aa8603db0))
+
+
+### Chores
+
+* **deps:** update dependency node-fetch to v2.6.13 ([418fa5c](https://github.com/DatagridAI/datagrid-node/commit/418fa5ca9d6cd2decf26f2636a473583d12b6c0d))
+* **internal:** formatting change ([da90542](https://github.com/DatagridAI/datagrid-node/commit/da905426a55a3b89a2089eecf4076234f5c0076f))
+* **internal:** update comment in script ([e5d96c3](https://github.com/DatagridAI/datagrid-node/commit/e5d96c35e765bce947fa1a878cda09d3b0286294))
+* update @stainless-api/prism-cli to v5.15.0 ([be254d7](https://github.com/DatagridAI/datagrid-node/commit/be254d70940fd40933e90e3c4880f02d90f21aef))
+* update CI script ([a044e24](https://github.com/DatagridAI/datagrid-node/commit/a044e24d72857fc64c46f72397cdb3a33113389b))
+
 ## 0.1.0-alpha.10 (2025-08-07)
 
 Full Changelog: [v0.1.0-alpha.9...v0.1.0-alpha.10](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.9...v0.1.0-alpha.10)
