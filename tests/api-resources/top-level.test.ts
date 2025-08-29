@@ -28,7 +28,7 @@ describe('top level methods', () => {
         agent_model: 'magpie-1.1',
         agent_tools: ['data_analysis'],
         custom_prompt: 'custom_prompt',
-        disabled_agent_tools: [{}],
+        disabled_agent_tools: [['data_analysis']],
         disabled_tools: ['data_analysis'],
         knowledge_ids: ['string'],
         llm_model: 'gemini-2.5-pro',
