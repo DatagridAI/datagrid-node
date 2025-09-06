@@ -119,7 +119,7 @@ export namespace Message {
        */
       knowledge_id: string;
 
-      type: 'image' | 'pdf_page' | 'record' | 'web_search' | 'sql_query_result';
+      type: 'image' | 'pdf_page' | 'record' | 'web_search' | 'sql_query_result' | 'action';
     }
   }
 
