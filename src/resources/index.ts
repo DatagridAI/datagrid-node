@@ -73,5 +73,12 @@ export {
   type SecretCreateParams,
   type SecretListParams,
 } from './secrets';
-export { Tools, type Tool, type ToolName } from './tools';
+export {
+  ToolDefsCursorNamePage,
+  Tools,
+  type Tool,
+  type ToolDef,
+  type ToolName,
+  type ToolListParams,
+} from './tools';
 export { type ConverseResponse, type Properties, type ConverseParams } from './top-level';
