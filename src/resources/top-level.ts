@@ -76,7 +76,7 @@ export namespace ConverseResponse {
        */
       knowledge_id: string;
 
-      type: 'image' | 'pdf_page' | 'record' | 'web_search' | 'sql_query_result';
+      type: 'image' | 'pdf_page' | 'record' | 'web_search' | 'sql_query_result' | 'action';
     }
   }
 
@@ -159,7 +159,7 @@ export namespace Properties {
            */
           knowledge_id: string;
 
-          type: 'image' | 'pdf_page' | 'record' | 'web_search' | 'sql_query_result';
+          type: 'image' | 'pdf_page' | 'record' | 'web_search' | 'sql_query_result' | 'action';
         }
       }
     }
@@ -212,7 +212,10 @@ export namespace Properties {
 
       status: 'in_progress' | 'completed' | 'failed';
 
-      tool: Data.Tool;
+      /**
+       * The `Tool` object represents a tool that can be used by agents.
+       */
+      tool: ToolsAPI.ToolDef;
 
       type: 'tool_call';
 
@@ -220,25 +223,6 @@ export namespace Properties {
        * The output of the tool call.
        */
       output?: string;
-    }
-
-    export namespace Data {
-      export interface Tool {
-        /**
-         * The description of the tool that was called.
-         */
-        description: string;
-
-        /**
-         * The label of the tool that was called.
-         */
-        label: string;
-
-        /**
-         * The name of the tool that was called.
-         */
-        name: ToolsAPI.ToolName;
-      }
     }
   }
 }
@@ -390,7 +374,7 @@ export namespace ConverseParams {
     /**
      * @deprecated Deprecated, use disabled_tools instead
      */
-    disabled_agent_tools?: Array<Array<ToolsAPI.ToolName | ToolsAPI.Tool> | null> | null;
+    disabled_agent_tools?: Array<ToolsAPI.ToolName | ToolsAPI.Tool> | null;
 
     /**
      * Array of the agent tools to disable. Disabling is performed after the

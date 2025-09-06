@@ -113,7 +113,13 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/tools.ts">Tool</a></code>
+- <code><a href="./src/resources/tools.ts">ToolDef</a></code>
 - <code><a href="./src/resources/tools.ts">ToolName</a></code>
+
+Methods:
+
+- <code title="get /tools/{tool_name}">client.tools.<a href="./src/resources/tools.ts">retrieve</a>(toolName) -> ToolDef</code>
+- <code title="get /tools">client.tools.<a href="./src/resources/tools.ts">list</a>({ ...params }) -> ToolDefsCursorNamePage</code>
 
 # Memory
 

@@ -7,6 +7,8 @@ import * as Pagination from './pagination';
 import {
   type CursorIDPageParams,
   CursorIDPageResponse,
+  type CursorNamePageParams,
+  CursorNamePageResponse,
   type CursorPageParams,
   CursorPageResponse,
 } from './pagination';
@@ -78,7 +80,7 @@ import {
   Secrets,
   SecretsCursorIDPage,
 } from './resources/secrets';
-import { Tool, ToolName, Tools } from './resources/tools';
+import { Tool, ToolDef, ToolDefsCursorNamePage, ToolListParams, ToolName, Tools } from './resources/tools';
 import {
   Conversation,
   ConversationCreateParams,
@@ -317,6 +319,7 @@ Datagrid.SearchResultItemsCursorPage = SearchResultItemsCursorPage;
 Datagrid.Agents = Agents;
 Datagrid.AgentsCursorIDPage = AgentsCursorIDPage;
 Datagrid.Tools = Tools;
+Datagrid.ToolDefsCursorNamePage = ToolDefsCursorNamePage;
 Datagrid.Memory = Memory;
 Datagrid.IFrameEvents = IFrameEvents;
 Datagrid.Organization = Organization;
@@ -331,6 +334,12 @@ export declare namespace Datagrid {
 
   export import CursorIDPage = Pagination.CursorIDPage;
   export { type CursorIDPageParams as CursorIDPageParams, type CursorIDPageResponse as CursorIDPageResponse };
+
+  export import CursorNamePage = Pagination.CursorNamePage;
+  export {
+    type CursorNamePageParams as CursorNamePageParams,
+    type CursorNamePageResponse as CursorNamePageResponse,
+  };
 
   export {
     type ConverseResponse as ConverseResponse,
@@ -405,7 +414,14 @@ export declare namespace Datagrid {
     type AgentListParams as AgentListParams,
   };
 
-  export { Tools as Tools, type Tool as Tool, type ToolName as ToolName };
+  export {
+    Tools as Tools,
+    type Tool as Tool,
+    type ToolDef as ToolDef,
+    type ToolName as ToolName,
+    ToolDefsCursorNamePage as ToolDefsCursorNamePage,
+    type ToolListParams as ToolListParams,
+  };
 
   export { Memory as Memory };
 
