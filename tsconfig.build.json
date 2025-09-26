@@ -5,8 +5,8 @@
   "compilerOptions": {
     "rootDir": "./dist/src",
     "paths": {
-      "datagrid-ai/*": ["dist/src/*"],
-      "datagrid-ai": ["dist/src/index.ts"],
+      "datagrid-ai/*": ["./dist/src/*"],
+      "datagrid-ai": ["./dist/src/index.ts"]
     },
     "noEmit": false,
     "declaration": true,
