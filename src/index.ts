@@ -176,7 +176,7 @@ export class Datagrid extends Core.APIClient {
    * @param {string | undefined} [opts.apiKey=process.env['DATAGRID_API_KEY'] ?? undefined]
    * @param {string | null | undefined} [opts.teamspace=process.env['DATAGRID_TEAMSPACE_ID'] ?? null]
    * @param {string} [opts.baseURL=process.env['DATAGRID_BASE_URL'] ?? https://api.datagrid.com/v1] - Override the default base URL for the API.
-   * @param {number} [opts.timeout=30 minutes] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
+   * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {number} [opts.httpAgent] - An HTTP agent used to manage HTTP(s) connections.
    * @param {Core.Fetch} [opts.fetch] - Specify a custom `fetch` function implementation.
    * @param {number} [opts.maxRetries=2] - The maximum number of times the client will retry a request.
@@ -205,7 +205,7 @@ export class Datagrid extends Core.APIClient {
     super({
       baseURL: options.baseURL!,
       baseURLOverridden: baseURL ? baseURL !== 'https://api.datagrid.com/v1' : false,
-      timeout: options.timeout ?? 1800000 /* 30 minutes */,
+      timeout: options.timeout ?? 60000 /* 1 minute */,
       httpAgent: options.httpAgent,
       maxRetries: options.maxRetries,
       fetch: options.fetch,
@@ -244,7 +244,11 @@ export class Datagrid extends Core.APIClient {
     body: TopLevelAPI.ConverseParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<TopLevelAPI.ConverseResponse> {
-    return this.post('/converse', { body, ...options });
+    return this.post('/converse', {
+      body,
+      timeout: (this._client as any)._options.timeout ?? 1800000,
+      ...options,
+    });
   }
 
   protected override defaultQuery(): Core.DefaultQuery | undefined {
@@ -264,7 +268,7 @@ export class Datagrid extends Core.APIClient {
   }
 
   static Datagrid = this;
-  static DEFAULT_TIMEOUT = 1800000; // 30 minutes
+  static DEFAULT_TIMEOUT = 60000; // 1 minute
 
   static DatagridError = Errors.DatagridError;
   static APIError = Errors.APIError;

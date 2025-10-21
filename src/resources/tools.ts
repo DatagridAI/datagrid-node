@@ -9,7 +9,61 @@ export class Tools extends APIResource {
   /**
    * Retrieves a specific tool by its identifier.
    */
-  retrieve(toolName: ToolName | (string & {}), options?: Core.RequestOptions): Core.APIPromise<ToolDef> {
+  retrieve(
+    toolName:
+      | 'data_analysis'
+      | 'semantic_search'
+      | 'agent_memory'
+      | 'schema_info'
+      | 'table_info'
+      | 'create_dataset'
+      | 'find_files'
+      | 'read_file_contents'
+      | 'calendar'
+      | 'email'
+      | 'schedule_recurring_message_tool'
+      | 'procore'
+      | 'egnyte'
+      | 'notion'
+      | 'google_sheets'
+      | 'slack'
+      | 'microsoft_teams'
+      | 'sharepoint'
+      | 'drive'
+      | 'fieldwire'
+      | 'webbrowser'
+      | 'pdf_manipulation'
+      | 'pdf_generator'
+      | 'acc'
+      | 'docusign'
+      | 'webflow'
+      | 'hubspot'
+      | 'nec'
+      | 'github'
+      | 'trimble_project_site'
+      | 'linkedin'
+      | 'google_docs'
+      | 'google_slides'
+      | 'code_tool'
+      | 'data_classification'
+      | 'data_extraction'
+      | 'image_detection'
+      | 'attachment_extraction'
+      | 'pdf_extraction'
+      | 'youtube_video_analysis'
+      | 'calculate'
+      | 'pdf_form_filling'
+      | 'image_generator'
+      | 'video_generator'
+      | 'connect_data'
+      | 'download_data'
+      | 'web_search'
+      | 'fetch_url'
+      | 'company_prospect_researcher'
+      | 'people_prospect_researcher'
+      | (string & {}),
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<ToolDef> {
     return this._client.get(`/tools/${toolName}`, options);
   }
 
@@ -75,6 +129,8 @@ export type ToolName =
   | 'schema_info'
   | 'table_info'
   | 'create_dataset'
+  | 'find_files'
+  | 'read_file_contents'
   | 'calendar'
   | 'email'
   | 'schedule_recurring_message_tool'
@@ -97,18 +153,27 @@ export type ToolName =
   | 'nec'
   | 'github'
   | 'trimble_project_site'
-  | 'linkedin_posts'
+  | 'linkedin'
+  | 'google_docs'
+  | 'google_slides'
+  | 'code_tool'
   | 'data_classification'
   | 'data_extraction'
   | 'image_detection'
   | 'attachment_extraction'
   | 'pdf_extraction'
+  | 'youtube_video_analysis'
+  | 'calculate'
+  | 'pdf_form_filling'
+  | 'image_generator'
+  | 'video_generator'
   | 'connect_data'
   | 'download_data'
   | 'web_search'
   | 'fetch_url'
   | 'company_prospect_researcher'
-  | 'people_prospect_researcher';
+  | 'people_prospect_researcher'
+  | (string & {});
 
 export interface ToolListParams extends CursorNamePageParams {}
 
