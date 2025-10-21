@@ -11,7 +11,14 @@ export class Files extends APIResource {
    * Create files which can be passed as input to agents.
    */
   create(body: FileCreateParams, options?: Core.RequestOptions): Core.APIPromise<FileObject> {
-    return this._client.post('/files', Core.multipartFormRequestOptions({ body, ...options }));
+    return this._client.post(
+      '/files',
+      Core.multipartFormRequestOptions({
+        body,
+        timeout: (this._client as any)._options.timeout ?? 300000,
+        ...options,
+      }),
+    );
   }
 
   /**

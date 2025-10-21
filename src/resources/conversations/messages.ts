@@ -115,11 +115,16 @@ export namespace Message {
       confirmations: Array<string>;
 
       /**
-       * Id of the knowledge.
+       * Name of the knowledge.
        */
-      knowledge_id: string;
+      knowledge_name: string;
 
       type: 'image' | 'pdf_page' | 'record' | 'web_search' | 'sql_query_result' | 'action';
+
+      /**
+       * Id of the knowledge.
+       */
+      knowledge_id?: string;
     }
   }
 

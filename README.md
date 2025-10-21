@@ -134,13 +134,13 @@ await client.converse({ prompt: 'Hello world!' }, {
 
 ### Timeouts
 
-Requests time out after 30 minutes by default. You can configure this with a `timeout` option:
+Requests time out after 1 minute by default. You can configure this with a `timeout` option:
 
 <!-- prettier-ignore -->
 ```ts
 // Configure the default for all requests:
 const client = new Datagrid({
-  timeout: 20 * 1000, // 20 seconds (default is 30 minutes)
+  timeout: 20 * 1000, // 20 seconds (default is 1 minute)
 });
 
 // Override per-request:
