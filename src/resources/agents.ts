@@ -69,8 +69,11 @@ export interface Agent {
    * - magpie-1.1-flash is a faster model useful for RAG usecases, it currently only
    *   supports semantic_search tool. Structured outputs are not supported with this
    *   model.
+   * - Can also accept any custom string value for future model versions.
+   * - Magpie-2.0 our latest agentic model with more proactive planning and reasoning
+   *   capabilities.
    */
-  agent_model: 'magpie-1.1' | 'magpie-1.1-flash' | 'magpie-1';
+  agent_model: 'magpie-1.1' | 'magpie-1.1-flash' | 'magpie-1' | 'magpie-2.0' | (string & {});
 
   /**
    * The ISO string for when the agent was created
@@ -81,6 +84,11 @@ export interface Agent {
    * Use custom prompt to instruct the style and formatting of the agent's response
    */
   custom_prompt: string | null;
+
+  /**
+   * The description of the agent
+   */
+  description: string | null;
 
   /**
    * Array of Knowledge IDs the agent should use during the converse. When ommited,
@@ -146,13 +154,21 @@ export interface AgentCreateParams {
    * - magpie-1.1-flash is a faster model useful for RAG usecases, it currently only
    *   supports semantic_search tool. Structured outputs are not supported with this
    *   model.
+   * - Can also accept any custom string value for future model versions.
+   * - Magpie-2.0 our latest agentic model with more proactive planning and reasoning
+   *   capabilities.
    */
-  agent_model?: 'magpie-1.1' | 'magpie-1.1-flash' | 'magpie-1' | null;
+  agent_model?: 'magpie-1.1' | 'magpie-1.1-flash' | 'magpie-1' | 'magpie-2.0' | (string & {}) | null;
 
   /**
    * Use custom prompt to instruct the style and formatting of the agent's response
    */
   custom_prompt?: string | null;
+
+  /**
+   * The description of the agent
+   */
+  description?: string | null;
 
   /**
    * Array of the agent tools to disable. Disabling is performed after the
@@ -161,7 +177,60 @@ export interface AgentCreateParams {
    * tool. If nothing or [] is provided, nothing is disabled and therefore only the
    * agent_tools setting is relevant.
    */
-  disabled_tools?: Array<ToolsAPI.ToolName | ToolsAPI.Tool> | null;
+  disabled_tools?: Array<
+    | 'data_analysis'
+    | 'semantic_search'
+    | 'agent_memory'
+    | 'schema_info'
+    | 'table_info'
+    | 'create_dataset'
+    | 'find_files'
+    | 'read_file_contents'
+    | 'calendar'
+    | 'email'
+    | 'schedule_recurring_message_tool'
+    | 'procore'
+    | 'egnyte'
+    | 'notion'
+    | 'google_sheets'
+    | 'slack'
+    | 'microsoft_teams'
+    | 'sharepoint'
+    | 'drive'
+    | 'fieldwire'
+    | 'webbrowser'
+    | 'pdf_manipulation'
+    | 'pdf_generator'
+    | 'acc'
+    | 'docusign'
+    | 'webflow'
+    | 'hubspot'
+    | 'nec'
+    | 'github'
+    | 'trimble_project_site'
+    | 'linkedin'
+    | 'google_docs'
+    | 'google_slides'
+    | 'code_tool'
+    | 'data_classification'
+    | 'data_extraction'
+    | 'image_detection'
+    | 'attachment_extraction'
+    | 'pdf_extraction'
+    | 'youtube_video_analysis'
+    | 'calculate'
+    | 'pdf_form_filling'
+    | 'image_generator'
+    | 'video_generator'
+    | 'connect_data'
+    | 'download_data'
+    | 'web_search'
+    | 'fetch_url'
+    | 'company_prospect_researcher'
+    | 'people_prospect_researcher'
+    | string
+    | ToolsAPI.Tool
+  > | null;
 
   /**
    * Array of Knowledge IDs the agent should use during the converse. When ommited,
@@ -255,7 +324,61 @@ export interface AgentCreateParams {
    * - company_prospect_researcher: Agents provide information about companies
    * - people_prospect_researcher: Agents provide information about people
    */
-  tools?: Array<ToolsAPI.ToolName | ToolsAPI.Tool | ToolsAPI.Tool> | null;
+  tools?: Array<
+    | 'data_analysis'
+    | 'semantic_search'
+    | 'agent_memory'
+    | 'schema_info'
+    | 'table_info'
+    | 'create_dataset'
+    | 'find_files'
+    | 'read_file_contents'
+    | 'calendar'
+    | 'email'
+    | 'schedule_recurring_message_tool'
+    | 'procore'
+    | 'egnyte'
+    | 'notion'
+    | 'google_sheets'
+    | 'slack'
+    | 'microsoft_teams'
+    | 'sharepoint'
+    | 'drive'
+    | 'fieldwire'
+    | 'webbrowser'
+    | 'pdf_manipulation'
+    | 'pdf_generator'
+    | 'acc'
+    | 'docusign'
+    | 'webflow'
+    | 'hubspot'
+    | 'nec'
+    | 'github'
+    | 'trimble_project_site'
+    | 'linkedin'
+    | 'google_docs'
+    | 'google_slides'
+    | 'code_tool'
+    | 'data_classification'
+    | 'data_extraction'
+    | 'image_detection'
+    | 'attachment_extraction'
+    | 'pdf_extraction'
+    | 'youtube_video_analysis'
+    | 'calculate'
+    | 'pdf_form_filling'
+    | 'image_generator'
+    | 'video_generator'
+    | 'connect_data'
+    | 'download_data'
+    | 'web_search'
+    | 'fetch_url'
+    | 'company_prospect_researcher'
+    | 'people_prospect_researcher'
+    | string
+    | ToolsAPI.Tool
+    | ToolsAPI.Tool
+  > | null;
 }
 
 export interface AgentUpdateParams {
@@ -266,13 +389,21 @@ export interface AgentUpdateParams {
    * - magpie-1.1-flash is a faster model useful for RAG usecases, it currently only
    *   supports semantic_search tool. Structured outputs are not supported with this
    *   model.
+   * - Can also accept any custom string value for future model versions.
+   * - Magpie-2.0 our latest agentic model with more proactive planning and reasoning
+   *   capabilities.
    */
-  agent_model?: 'magpie-1.1' | 'magpie-1.1-flash' | 'magpie-1' | null;
+  agent_model?: 'magpie-1.1' | 'magpie-1.1-flash' | 'magpie-1' | 'magpie-2.0' | (string & {}) | null;
 
   /**
    * Use custom prompt to instruct the style and formatting of the agent's response
    */
   custom_prompt?: string | null;
+
+  /**
+   * The description of the agent
+   */
+  description?: string | null;
 
   /**
    * Array of the agent tools to disable. Disabling is performed after the
@@ -281,7 +412,60 @@ export interface AgentUpdateParams {
    * tool. If nothing or [] is provided, nothing is disabled and therefore only the
    * agent_tools setting is relevant.
    */
-  disabled_tools?: Array<ToolsAPI.ToolName | ToolsAPI.Tool> | null;
+  disabled_tools?: Array<
+    | 'data_analysis'
+    | 'semantic_search'
+    | 'agent_memory'
+    | 'schema_info'
+    | 'table_info'
+    | 'create_dataset'
+    | 'find_files'
+    | 'read_file_contents'
+    | 'calendar'
+    | 'email'
+    | 'schedule_recurring_message_tool'
+    | 'procore'
+    | 'egnyte'
+    | 'notion'
+    | 'google_sheets'
+    | 'slack'
+    | 'microsoft_teams'
+    | 'sharepoint'
+    | 'drive'
+    | 'fieldwire'
+    | 'webbrowser'
+    | 'pdf_manipulation'
+    | 'pdf_generator'
+    | 'acc'
+    | 'docusign'
+    | 'webflow'
+    | 'hubspot'
+    | 'nec'
+    | 'github'
+    | 'trimble_project_site'
+    | 'linkedin'
+    | 'google_docs'
+    | 'google_slides'
+    | 'code_tool'
+    | 'data_classification'
+    | 'data_extraction'
+    | 'image_detection'
+    | 'attachment_extraction'
+    | 'pdf_extraction'
+    | 'youtube_video_analysis'
+    | 'calculate'
+    | 'pdf_form_filling'
+    | 'image_generator'
+    | 'video_generator'
+    | 'connect_data'
+    | 'download_data'
+    | 'web_search'
+    | 'fetch_url'
+    | 'company_prospect_researcher'
+    | 'people_prospect_researcher'
+    | string
+    | ToolsAPI.Tool
+  > | null;
 
   /**
    * Array of Knowledge IDs the agent should use during the converse. When ommited,
@@ -375,7 +559,61 @@ export interface AgentUpdateParams {
    * - company_prospect_researcher: Agents provide information about companies
    * - people_prospect_researcher: Agents provide information about people
    */
-  tools?: Array<ToolsAPI.ToolName | ToolsAPI.Tool | ToolsAPI.Tool> | null;
+  tools?: Array<
+    | 'data_analysis'
+    | 'semantic_search'
+    | 'agent_memory'
+    | 'schema_info'
+    | 'table_info'
+    | 'create_dataset'
+    | 'find_files'
+    | 'read_file_contents'
+    | 'calendar'
+    | 'email'
+    | 'schedule_recurring_message_tool'
+    | 'procore'
+    | 'egnyte'
+    | 'notion'
+    | 'google_sheets'
+    | 'slack'
+    | 'microsoft_teams'
+    | 'sharepoint'
+    | 'drive'
+    | 'fieldwire'
+    | 'webbrowser'
+    | 'pdf_manipulation'
+    | 'pdf_generator'
+    | 'acc'
+    | 'docusign'
+    | 'webflow'
+    | 'hubspot'
+    | 'nec'
+    | 'github'
+    | 'trimble_project_site'
+    | 'linkedin'
+    | 'google_docs'
+    | 'google_slides'
+    | 'code_tool'
+    | 'data_classification'
+    | 'data_extraction'
+    | 'image_detection'
+    | 'attachment_extraction'
+    | 'pdf_extraction'
+    | 'youtube_video_analysis'
+    | 'calculate'
+    | 'pdf_form_filling'
+    | 'image_generator'
+    | 'video_generator'
+    | 'connect_data'
+    | 'download_data'
+    | 'web_search'
+    | 'fetch_url'
+    | 'company_prospect_researcher'
+    | 'people_prospect_researcher'
+    | string
+    | ToolsAPI.Tool
+    | ToolsAPI.Tool
+  > | null;
 }
 
 export interface AgentListParams extends CursorIDPageParams {}
