@@ -50,7 +50,6 @@ export {
   type MessageMetadata,
   type RowMetadata,
   type TableMetadata,
-  type KnowledgeUpdateResponse,
   type KnowledgeCreateParams,
   type KnowledgeUpdateParams,
   type KnowledgeListParams,

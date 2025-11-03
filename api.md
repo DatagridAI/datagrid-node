@@ -19,13 +19,12 @@ Types:
 - <code><a href="./src/resources/knowledge.ts">MessageMetadata</a></code>
 - <code><a href="./src/resources/knowledge.ts">RowMetadata</a></code>
 - <code><a href="./src/resources/knowledge.ts">TableMetadata</a></code>
-- <code><a href="./src/resources/knowledge.ts">KnowledgeUpdateResponse</a></code>
 
 Methods:
 
 - <code title="post /knowledge">client.knowledge.<a href="./src/resources/knowledge.ts">create</a>({ ...params }) -> Knowledge</code>
 - <code title="get /knowledge/{knowledge_id}">client.knowledge.<a href="./src/resources/knowledge.ts">retrieve</a>(knowledgeId) -> Knowledge</code>
-- <code title="patch /knowledge/{knowledge_id}">client.knowledge.<a href="./src/resources/knowledge.ts">update</a>(knowledgeId, { ...params }) -> KnowledgeUpdateResponse</code>
+- <code title="patch /knowledge/{knowledge_id}">client.knowledge.<a href="./src/resources/knowledge.ts">update</a>(knowledgeId, { ...params }) -> Knowledge</code>
 - <code title="get /knowledge">client.knowledge.<a href="./src/resources/knowledge.ts">list</a>({ ...params }) -> KnowledgesCursorIDPage</code>
 - <code title="delete /knowledge/{knowledge_id}">client.knowledge.<a href="./src/resources/knowledge.ts">delete</a>(knowledgeId) -> void</code>
 - <code title="post /knowledge/connect">client.knowledge.<a href="./src/resources/knowledge.ts">connect</a>({ ...params }) -> RedirectURLResponse</code>
