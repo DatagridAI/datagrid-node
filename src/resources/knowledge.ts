@@ -35,8 +35,11 @@ export class KnowledgeResource extends APIResource {
     knowledgeId: string,
     body: KnowledgeUpdateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<KnowledgeUpdateResponse> {
-    return this._client.patch(`/knowledge/${knowledgeId}`, { body, ...options });
+  ): Core.APIPromise<Knowledge> {
+    return this._client.patch(
+      `/knowledge/${knowledgeId}`,
+      Core.multipartFormRequestOptions({ body, ...options }),
+    );
   }
 
   /**
@@ -449,14 +452,10 @@ export interface TableMetadata {
   url: string;
 }
 
-export interface KnowledgeUpdateResponse {
-  name?: string;
-}
-
 export interface KnowledgeCreateParams {
   /**
    * The files to be uploaded and learned. Supported media types are `pdf`, `json`,
-   * `csv`, `text`, `png`, `jpeg`, `excel`, `google sheets`.
+   * `csv`, `text`, `png`, `jpeg`, `excel`, `google sheets`, `docx`, `pptx`.
    */
   files: Array<Core.Uploadable>;
 
@@ -467,7 +466,18 @@ export interface KnowledgeCreateParams {
 }
 
 export interface KnowledgeUpdateParams {
-  name: string;
+  /**
+   * The files to replace existing knowledge. When provided, all existing data will
+   * be removed from the knowledge and replaced with these files. Supported media
+   * types are `pdf`, `json`, `csv`, `text`, `png`, `jpeg`, `excel`, `google sheets`,
+   * `docx`, `pptx`.
+   */
+  files?: Array<Core.Uploadable> | null;
+
+  /**
+   * The new name for the `knowledge`.
+   */
+  name?: string | null;
 }
 
 export interface KnowledgeListParams extends CursorIDPageParams {}
@@ -489,7 +499,6 @@ export declare namespace KnowledgeResource {
     type MessageMetadata as MessageMetadata,
     type RowMetadata as RowMetadata,
     type TableMetadata as TableMetadata,
-    type KnowledgeUpdateResponse as KnowledgeUpdateResponse,
     KnowledgesCursorIDPage as KnowledgesCursorIDPage,
     type KnowledgeCreateParams as KnowledgeCreateParams,
     type KnowledgeUpdateParams as KnowledgeUpdateParams,

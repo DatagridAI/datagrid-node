@@ -47,8 +47,8 @@ describe('resource knowledge', () => {
     ).rejects.toThrow(Datagrid.NotFoundError);
   });
 
-  test('update: only required params', async () => {
-    const responsePromise = client.knowledge.update('knowledge_id', { name: 'name' });
+  test('update', async () => {
+    const responsePromise = client.knowledge.update('knowledge_id', {});
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -56,10 +56,6 @@ describe('resource knowledge', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('update: required and optional params', async () => {
-    const response = await client.knowledge.update('knowledge_id', { name: 'name' });
   });
 
   test('list', async () => {
