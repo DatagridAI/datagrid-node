@@ -173,10 +173,8 @@ export interface ClientOptions {
  */
 export class Datagrid extends Core.APIClient {
   apiKey: string;
-  teamspace: string | null
-;
-  private _options: ClientOptions
-;
+  teamspace: string | null;
+  private _options: ClientOptions;
   /**
    * API Client for interfacing with the Datagrid API.
    *
@@ -223,30 +221,18 @@ export class Datagrid extends Core.APIClient {
     this.apiKey = apiKey;
     this.teamspace = teamspace;
   }
-  knowledge: API.KnowledgeResource = new API.KnowledgeResource(this)
-;
-  connections: API.Connections = new API.Connections(this)
-;
-  connectors: API.Connectors = new API.Connectors(this)
-;
-  files: API.Files = new API.Files(this)
-;
-  secrets: API.Secrets = new API.Secrets(this)
-;
-  search: API.Search = new API.Search(this)
-;
-  agents: API.Agents = new API.Agents(this)
-;
-  tools: API.Tools = new API.Tools(this)
-;
-  memory: API.Memory = new API.Memory(this)
-;
-  iFrameEvents: API.IFrameEvents = new API.IFrameEvents(this)
-;
-  organization: API.Organization = new API.Organization(this)
-;
-  conversations: API.Conversations = new API.Conversations(this)
-;
+  knowledge: API.KnowledgeResource = new API.KnowledgeResource(this);
+  connections: API.Connections = new API.Connections(this);
+  connectors: API.Connectors = new API.Connectors(this);
+  files: API.Files = new API.Files(this);
+  secrets: API.Secrets = new API.Secrets(this);
+  search: API.Search = new API.Search(this);
+  agents: API.Agents = new API.Agents(this);
+  tools: API.Tools = new API.Tools(this);
+  memory: API.Memory = new API.Memory(this);
+  iFrameEvents: API.IFrameEvents = new API.IFrameEvents(this);
+  organization: API.Organization = new API.Organization(this);
+  conversations: API.Conversations = new API.Conversations(this);
   /**
    * Check whether the base URL is set to its default.
    */
@@ -259,10 +245,8 @@ export class Datagrid extends Core.APIClient {
   converse(
     body: ConverseNonStreamParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<TopLevelAPI.ConverseResponse>
-;
-  converse(body: ConverseStreamParams, options?: Core.RequestOptions): Core.APIPromise<Stream<ConverseEvent>>
-;
+  ): Core.APIPromise<TopLevelAPI.ConverseResponse>;
+  converse(body: ConverseStreamParams, options?: Core.RequestOptions): Core.APIPromise<Stream<ConverseEvent>>;
   converse(
     body: TopLevelAPI.ConverseParams,
     options?: Core.RequestOptions,
@@ -290,42 +274,25 @@ export class Datagrid extends Core.APIClient {
   protected override authHeaders(opts: Core.FinalRequestOptions): Core.Headers {
     return { Authorization: `Bearer ${this.apiKey}` };
   }
-  static Datagrid = this
-;
-  static DEFAULT_TIMEOUT = 60000
-;
-// 30 minutes
-  static DatagridError = Errors.DatagridError
-;
-  static APIError = Errors.APIError
-;
-  static APIConnectionError = Errors.APIConnectionError
-;
-  static APIConnectionTimeoutError = Errors.APIConnectionTimeoutError
-;
-  static APIUserAbortError = Errors.APIUserAbortError
-;
-  static NotFoundError = Errors.NotFoundError
-;
-  static ConflictError = Errors.ConflictError
-;
-  static RateLimitError = Errors.RateLimitError
-;
-  static BadRequestError = Errors.BadRequestError
-;
-  static AuthenticationError = Errors.AuthenticationError
-;
-  static InternalServerError = Errors.InternalServerError
-;
-  static PermissionDeniedError = Errors.PermissionDeniedError
-;
-  static UnprocessableEntityError = Errors.UnprocessableEntityError
-;
-  static toFile = Uploads.toFile
-;
-  static fileFromPath = Uploads.fileFromPath
-;
-// 1 minute
+  static Datagrid = this;
+  static DEFAULT_TIMEOUT = 60000;
+  // 30 minutes
+  static DatagridError = Errors.DatagridError;
+  static APIError = Errors.APIError;
+  static APIConnectionError = Errors.APIConnectionError;
+  static APIConnectionTimeoutError = Errors.APIConnectionTimeoutError;
+  static APIUserAbortError = Errors.APIUserAbortError;
+  static NotFoundError = Errors.NotFoundError;
+  static ConflictError = Errors.ConflictError;
+  static RateLimitError = Errors.RateLimitError;
+  static BadRequestError = Errors.BadRequestError;
+  static AuthenticationError = Errors.AuthenticationError;
+  static InternalServerError = Errors.InternalServerError;
+  static PermissionDeniedError = Errors.PermissionDeniedError;
+  static UnprocessableEntityError = Errors.UnprocessableEntityError;
+  static toFile = Uploads.toFile;
+  static fileFromPath = Uploads.fileFromPath;
+  // 1 minute
 }
 
 Datagrid.KnowledgeResource = KnowledgeResource;
