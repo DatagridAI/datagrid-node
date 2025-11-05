@@ -266,19 +266,16 @@ export class Datagrid extends Core.APIClient {
   converse(
     body: TopLevelAPI.ConverseParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<TopLevelAPI.ConverseResponse> | Core.APIPromise<Stream<ConverseEvent>>
-;
+  ): Core.APIPromise<TopLevelAPI.ConverseResponse> | Core.APIPromise<Stream<ConverseEvent>>;
   converse(
     body: AllConverseParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<TopLevelAPI.ConverseResponse> | Core.APIPromise<Stream<ConverseEvent>> {
-    return  this.post('/converse', {
+    return this.post('/converse', {
       body,
-      timeout: (this._client as any)._options.timeout ?? 1800000,
+      timeout: this._options.timeout ?? 1800000,
       ...options,
-    }) as
-      | Core.APIPromise<TopLevelAPI.ConverseResponse>
-      | Core.APIPromise<Stream<ConverseEvent>>;
+    }) as Core.APIPromise<TopLevelAPI.ConverseResponse> | Core.APIPromise<Stream<ConverseEvent>>;
   }
   protected override defaultQuery(): Core.DefaultQuery | undefined {
     return this._options.defaultQuery;
