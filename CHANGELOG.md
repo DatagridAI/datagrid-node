@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.2.0 (2025-11-05)
+
+Full Changelog: [v0.1.0...v0.2.0](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0...v0.2.0)
+
+### Features
+
+* **api:** api update ([594bdad](https://github.com/DatagridAI/datagrid-node/commit/594bdadccf51e2f43a26c9ebfcf6932432d5b630))
+* **api:** api update ([d15bd6a](https://github.com/DatagridAI/datagrid-node/commit/d15bd6a0ab77b3213fa30ffef1c2e5e39b1df755))
+* **api:** api update ([c028c10](https://github.com/DatagridAI/datagrid-node/commit/c028c1010d3979fd588d23e4abf83be8bd5d24e4))
+
+
+### Bug Fixes
+
+* coerce nullable values to undefined ([d56d2e5](https://github.com/DatagridAI/datagrid-node/commit/d56d2e50a46227dd5e51189d535b15824d0defdd))
+
+
+### Performance Improvements
+
+* faster formatting ([2ed4d0f](https://github.com/DatagridAI/datagrid-node/commit/2ed4d0f7c43b2149a4029ed65acec85a8154f92c))
+
+
+### Chores
+
+* ci build action ([af7a274](https://github.com/DatagridAI/datagrid-node/commit/af7a274dd77a9ca21cfd4c007cd6befe60efc5e3))
+* do not install brew dependencies in ./scripts/bootstrap by default ([04be7aa](https://github.com/DatagridAI/datagrid-node/commit/04be7aa85f7af09beacf214da599af25e0d7afe2))
+* **internal:** codegen related update ([64274c8](https://github.com/DatagridAI/datagrid-node/commit/64274c8e83a275f08b2fabe61a725a440b6a654b))
+* **internal:** fix incremental formatting in some cases ([517d1fe](https://github.com/DatagridAI/datagrid-node/commit/517d1fefd0a4c5a7a46dfc15e4339b61eb113209))
+* **internal:** ignore .eslintcache ([4a367d9](https://github.com/DatagridAI/datagrid-node/commit/4a367d90e893b39f1249f3329668a6e6deaa2533))
+* **internal:** remove .eslintcache ([c8633a7](https://github.com/DatagridAI/datagrid-node/commit/c8633a709abf4b235a2af827ac0019a939f30e07))
+* **internal:** remove deprecated `compilerOptions.baseUrl` from tsconfig.json ([67e0ebb](https://github.com/DatagridAI/datagrid-node/commit/67e0ebb4d58b8710b6d251d26f7c1a448398bc3c))
+* **internal:** use npm pack for build uploads ([6a5c235](https://github.com/DatagridAI/datagrid-node/commit/6a5c235e22a622e237260ae02da47e8eef3279c7))
+
 ## 0.1.0 (2025-08-29)
 
 Full Changelog: [v0.1.0-alpha.10...v0.1.0](https://github.com/DatagridAI/datagrid-node/compare/v0.1.0-alpha.10...v0.1.0)
