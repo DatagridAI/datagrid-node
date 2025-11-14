@@ -8,6 +8,7 @@ export {
   type AgentUpdateParams,
   type AgentListParams,
 } from './agents';
+export { Beta } from './beta/beta';
 export {
   ConnectionsCursorIDPage,
   Connections,
