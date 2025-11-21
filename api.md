@@ -28,6 +28,7 @@ Methods:
 - <code title="get /knowledge">client.knowledge.<a href="./src/resources/knowledge.ts">list</a>({ ...params }) -> KnowledgesCursorIDPage</code>
 - <code title="delete /knowledge/{knowledge_id}">client.knowledge.<a href="./src/resources/knowledge.ts">delete</a>(knowledgeId) -> void</code>
 - <code title="post /knowledge/connect">client.knowledge.<a href="./src/resources/knowledge.ts">connect</a>({ ...params }) -> RedirectURLResponse</code>
+- <code title="post /knowledge/{knowledge_id}/reindex">client.knowledge.<a href="./src/resources/knowledge.ts">reindex</a>(knowledgeId) -> void</code>
 
 # Connections
 
@@ -232,3 +233,16 @@ Methods:
 
 - <code title="get /conversations/{conversation_id}/messages/{message_id}">client.conversations.messages.<a href="./src/resources/conversations/messages.ts">retrieve</a>(conversationId, messageId) -> Message</code>
 - <code title="get /conversations/{conversation_id}/messages">client.conversations.messages.<a href="./src/resources/conversations/messages.ts">list</a>(conversationId, { ...params }) -> MessagesCursorIDPage</code>
+
+# Beta
+
+## Rewrite
+
+Types:
+
+- <code><a href="./src/resources/beta/rewrite.ts">RewriteRequest</a></code>
+- <code><a href="./src/resources/beta/rewrite.ts">RewriteResponse</a></code>
+
+Methods:
+
+- <code title="post /beta/rewrite">client.beta.rewrite.<a href="./src/resources/beta/rewrite.ts">rewriteText</a>({ ...params }) -> RewriteResponse</code>

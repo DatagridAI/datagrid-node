@@ -79,6 +79,16 @@ export class KnowledgeResource extends APIResource {
   ): Core.APIPromise<ConnectionsAPI.RedirectURLResponse> {
     return this._client.post('/knowledge/connect', { body, ...options });
   }
+
+  /**
+   * Manually trigger a full re-indexing of the knowledge.
+   */
+  reindex(knowledgeId: string, options?: Core.RequestOptions): Core.APIPromise<void> {
+    return this._client.post(`/knowledge/${knowledgeId}/reindex`, {
+      ...options,
+      headers: { Accept: '*/*', ...options?.headers },
+    });
+  }
 }
 
 export class KnowledgesCursorIDPage extends CursorIDPage<Knowledge> {}

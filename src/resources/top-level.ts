@@ -280,8 +280,8 @@ export interface ConverseParams {
 
   /**
    * Contains the format property used to specify the structured output schema.
-   * Structured output is currently only supported by the default agent model,
-   * magpie-1.1.
+   * Structured output is not supported only supported by the default agent model,
+   * magpie-1.1 and magpie-2.0.
    */
   text?: ConverseParams.Text | null;
 }
@@ -386,13 +386,13 @@ export namespace ConverseParams {
       | 'create_dataset'
       | 'find_files'
       | 'read_file_contents'
+      | 'file_analysis'
       | 'calendar'
       | 'email'
       | 'schedule_recurring_message_tool'
       | 'procore'
       | 'egnyte'
       | 'notion'
-      | 'google_sheets'
       | 'slack'
       | 'microsoft_teams'
       | 'sharepoint'
@@ -411,12 +411,15 @@ export namespace ConverseParams {
       | 'linkedin'
       | 'google_docs'
       | 'google_slides'
+      | 'google_sheets'
+      | 'avoma'
       | 'code_tool'
       | 'data_classification'
       | 'data_extraction'
       | 'image_detection'
       | 'attachment_extraction'
       | 'pdf_extraction'
+      | 'pdf_page_info'
       | 'youtube_video_analysis'
       | 'calculate'
       | 'pdf_form_filling'
@@ -438,7 +441,8 @@ export namespace ConverseParams {
     custom_prompt?: string | null;
 
     /**
-     * @deprecated Deprecated, use disabled_tools instead
+     * @deprecated Deprecated, use disabled_tools instead. If not provided - no tools
+     * are disabled.
      */
     disabled_agent_tools?: Array<
       | 'data_analysis'
@@ -449,13 +453,13 @@ export namespace ConverseParams {
       | 'create_dataset'
       | 'find_files'
       | 'read_file_contents'
+      | 'file_analysis'
       | 'calendar'
       | 'email'
       | 'schedule_recurring_message_tool'
       | 'procore'
       | 'egnyte'
       | 'notion'
-      | 'google_sheets'
       | 'slack'
       | 'microsoft_teams'
       | 'sharepoint'
@@ -474,12 +478,15 @@ export namespace ConverseParams {
       | 'linkedin'
       | 'google_docs'
       | 'google_slides'
+      | 'google_sheets'
+      | 'avoma'
       | 'code_tool'
       | 'data_classification'
       | 'data_extraction'
       | 'image_detection'
       | 'attachment_extraction'
       | 'pdf_extraction'
+      | 'pdf_page_info'
       | 'youtube_video_analysis'
       | 'calculate'
       | 'pdf_form_filling'
@@ -511,13 +518,13 @@ export namespace ConverseParams {
       | 'create_dataset'
       | 'find_files'
       | 'read_file_contents'
+      | 'file_analysis'
       | 'calendar'
       | 'email'
       | 'schedule_recurring_message_tool'
       | 'procore'
       | 'egnyte'
       | 'notion'
-      | 'google_sheets'
       | 'slack'
       | 'microsoft_teams'
       | 'sharepoint'
@@ -536,12 +543,15 @@ export namespace ConverseParams {
       | 'linkedin'
       | 'google_docs'
       | 'google_slides'
+      | 'google_sheets'
+      | 'avoma'
       | 'code_tool'
       | 'data_classification'
       | 'data_extraction'
       | 'image_detection'
       | 'attachment_extraction'
       | 'pdf_extraction'
+      | 'pdf_page_info'
       | 'youtube_video_analysis'
       | 'calculate'
       | 'pdf_form_filling'
@@ -653,13 +663,13 @@ export namespace ConverseParams {
       | 'create_dataset'
       | 'find_files'
       | 'read_file_contents'
+      | 'file_analysis'
       | 'calendar'
       | 'email'
       | 'schedule_recurring_message_tool'
       | 'procore'
       | 'egnyte'
       | 'notion'
-      | 'google_sheets'
       | 'slack'
       | 'microsoft_teams'
       | 'sharepoint'
@@ -678,12 +688,15 @@ export namespace ConverseParams {
       | 'linkedin'
       | 'google_docs'
       | 'google_slides'
+      | 'google_sheets'
+      | 'avoma'
       | 'code_tool'
       | 'data_classification'
       | 'data_extraction'
       | 'image_detection'
       | 'attachment_extraction'
       | 'pdf_extraction'
+      | 'pdf_page_info'
       | 'youtube_video_analysis'
       | 'calculate'
       | 'pdf_form_filling'
@@ -703,8 +716,8 @@ export namespace ConverseParams {
 
   /**
    * Contains the format property used to specify the structured output schema.
-   * Structured output is currently only supported by the default agent model,
-   * magpie-1.1.
+   * Structured output is not supported only supported by the default agent model,
+   * magpie-1.1 and magpie-2.0.
    */
   export interface Text {
     /**
