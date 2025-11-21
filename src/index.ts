@@ -80,6 +80,7 @@ import {
   SecretsCursorIDPage,
 } from './resources/secrets';
 import { Tool, ToolDef, ToolDefsCursorNamePage, ToolListParams, ToolName, Tools } from './resources/tools';
+import { Beta } from './resources/beta/beta';
 import {
   Conversation,
   ConversationCreateParams,
@@ -233,6 +234,8 @@ export class Datagrid extends Core.APIClient {
   iFrameEvents: API.IFrameEvents = new API.IFrameEvents(this);
   organization: API.Organization = new API.Organization(this);
   conversations: API.Conversations = new API.Conversations(this);
+  beta: API.Beta = new API.Beta(this);
+
   /**
    * Check whether the base URL is set to its default.
    */
@@ -316,6 +319,7 @@ Datagrid.IFrameEvents = IFrameEvents;
 Datagrid.Organization = Organization;
 Datagrid.Conversations = Conversations;
 Datagrid.ConversationsCursorIDPage = ConversationsCursorIDPage;
+Datagrid.Beta = Beta;
 
 export declare namespace Datagrid {
   export type RequestOptions = Core.RequestOptions;
@@ -434,6 +438,8 @@ export declare namespace Datagrid {
     type ConversationCreateParams as ConversationCreateParams,
     type ConversationListParams as ConversationListParams,
   };
+
+  export { Beta as Beta };
 }
 
 export { toFile, fileFromPath } from './uploads';
