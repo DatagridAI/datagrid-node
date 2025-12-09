@@ -100,6 +100,7 @@ export interface Agent {
    * The LLM used to generate responses.
    */
   llm_model:
+    | 'gemini-3-pro-preview'
     | 'gemini-2.5-pro'
     | 'gemini-2.5-pro-preview-05-06'
     | 'gemini-2.5-flash'
@@ -209,11 +210,13 @@ export interface AgentCreateParams {
     | 'nec'
     | 'github'
     | 'trimble_project_site'
+    | 'trimble'
     | 'linkedin'
     | 'google_docs'
     | 'google_slides'
     | 'google_sheets'
     | 'avoma'
+    | 'content_writer'
     | 'code_tool'
     | 'data_classification'
     | 'data_extraction'
@@ -246,6 +249,7 @@ export interface AgentCreateParams {
    * The LLM used to generate responses.
    */
   llm_model?:
+    | 'gemini-3-pro-preview'
     | 'gemini-2.5-pro'
     | 'gemini-2.5-pro-preview-05-06'
     | 'gemini-2.5-flash'
@@ -360,11 +364,13 @@ export interface AgentCreateParams {
     | 'nec'
     | 'github'
     | 'trimble_project_site'
+    | 'trimble'
     | 'linkedin'
     | 'google_docs'
     | 'google_slides'
     | 'google_sheets'
     | 'avoma'
+    | 'content_writer'
     | 'code_tool'
     | 'data_classification'
     | 'data_extraction'
@@ -451,11 +457,13 @@ export interface AgentUpdateParams {
     | 'nec'
     | 'github'
     | 'trimble_project_site'
+    | 'trimble'
     | 'linkedin'
     | 'google_docs'
     | 'google_slides'
     | 'google_sheets'
     | 'avoma'
+    | 'content_writer'
     | 'code_tool'
     | 'data_classification'
     | 'data_extraction'
@@ -488,6 +496,7 @@ export interface AgentUpdateParams {
    * The LLM used to generate responses.
    */
   llm_model?:
+    | 'gemini-3-pro-preview'
     | 'gemini-2.5-pro'
     | 'gemini-2.5-pro-preview-05-06'
     | 'gemini-2.5-flash'
@@ -602,11 +611,13 @@ export interface AgentUpdateParams {
     | 'nec'
     | 'github'
     | 'trimble_project_site'
+    | 'trimble'
     | 'linkedin'
     | 'google_docs'
     | 'google_slides'
     | 'google_sheets'
     | 'avoma'
+    | 'content_writer'
     | 'code_tool'
     | 'data_classification'
     | 'data_extraction'
