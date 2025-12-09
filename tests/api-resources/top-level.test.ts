@@ -31,7 +31,7 @@ describe('top level methods', () => {
         disabled_agent_tools: ['data_analysis'],
         disabled_tools: ['data_analysis'],
         knowledge_ids: ['string'],
-        llm_model: 'gemini-2.5-pro',
+        llm_model: 'gemini-3-pro-preview',
         planning_prompt: 'planning_prompt',
         system_prompt: 'system_prompt',
         tools: ['data_analysis'],
