@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.4.0 (2025-12-15)
+
+Full Changelog: [v0.3.0...v0.4.0](https://github.com/DatagridAI/datagrid-node/compare/v0.3.0...v0.4.0)
+
+### Features
+
+* **api:** api update ([8bc2d6f](https://github.com/DatagridAI/datagrid-node/commit/8bc2d6f3a68dce25bf2a4fc2089a7bd6b5dc38b4))
+* **api:** api update ([6ebde38](https://github.com/DatagridAI/datagrid-node/commit/6ebde3898ddd72e156e1e1c758fc41f0a1e2d5ce))
+
+
+### Bug Fixes
+
+* **mcp:** correct code tool API endpoint ([099e0c6](https://github.com/DatagridAI/datagrid-node/commit/099e0c6746bfbdaddb24525caf05868314e8cd38))
+* **mcp:** return correct lines on typescript errors ([6612c06](https://github.com/DatagridAI/datagrid-node/commit/6612c06931cb803441f7c1eb6a75dcee7e66679c))
+
+
+### Chores
+
+* **internal:** codegen related update ([6ed144e](https://github.com/DatagridAI/datagrid-node/commit/6ed144e51eb7972461aab98ce60fb56a487a7216))
+* **internal:** codegen related update ([abfab5d](https://github.com/DatagridAI/datagrid-node/commit/abfab5d75c69f070578803371446142deed3aafa))
+
 ## 0.3.0 (2025-11-22)
 
 Full Changelog: [v0.2.0...v0.3.0](https://github.com/DatagridAI/datagrid-node/compare/v0.2.0...v0.3.0)
