@@ -88,6 +88,13 @@ import {
   Conversations,
   ConversationsCursorIDPage,
 } from './resources/conversations/conversations';
+import {
+  DataView,
+  DataViewCreateParams,
+  DataViewListParams,
+  DataViewListResponse,
+  DataViews,
+} from './resources/data-views/data-views';
 import { Memory } from './resources/memory/memory';
 import { Organization } from './resources/organization/organization';
 
@@ -234,6 +241,7 @@ export class Datagrid extends Core.APIClient {
   iFrameEvents: API.IFrameEvents = new API.IFrameEvents(this);
   organization: API.Organization = new API.Organization(this);
   conversations: API.Conversations = new API.Conversations(this);
+  dataViews: API.DataViews = new API.DataViews(this);
   beta: API.Beta = new API.Beta(this);
 
   /**
@@ -319,6 +327,7 @@ Datagrid.IFrameEvents = IFrameEvents;
 Datagrid.Organization = Organization;
 Datagrid.Conversations = Conversations;
 Datagrid.ConversationsCursorIDPage = ConversationsCursorIDPage;
+Datagrid.DataViews = DataViews;
 Datagrid.Beta = Beta;
 
 export declare namespace Datagrid {
@@ -437,6 +446,14 @@ export declare namespace Datagrid {
     ConversationsCursorIDPage as ConversationsCursorIDPage,
     type ConversationCreateParams as ConversationCreateParams,
     type ConversationListParams as ConversationListParams,
+  };
+
+  export {
+    DataViews as DataViews,
+    type DataView as DataView,
+    type DataViewListResponse as DataViewListResponse,
+    type DataViewCreateParams as DataViewCreateParams,
+    type DataViewListParams as DataViewListParams,
   };
 
   export { Beta as Beta };
