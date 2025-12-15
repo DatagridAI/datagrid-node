@@ -234,6 +234,34 @@ Methods:
 - <code title="get /conversations/{conversation_id}/messages/{message_id}">client.conversations.messages.<a href="./src/resources/conversations/messages.ts">retrieve</a>(conversationId, messageId) -> Message</code>
 - <code title="get /conversations/{conversation_id}/messages">client.conversations.messages.<a href="./src/resources/conversations/messages.ts">list</a>(conversationId, { ...params }) -> MessagesCursorIDPage</code>
 
+# DataViews
+
+Types:
+
+- <code><a href="./src/resources/data-views/data-views.ts">DataView</a></code>
+- <code><a href="./src/resources/data-views/data-views.ts">DataViewListResponse</a></code>
+
+Methods:
+
+- <code title="post /data-views">client.dataViews.<a href="./src/resources/data-views/data-views.ts">create</a>({ ...params }) -> DataView</code>
+- <code title="get /data-views">client.dataViews.<a href="./src/resources/data-views/data-views.ts">list</a>({ ...params }) -> DataViewListResponse</code>
+- <code title="delete /data-views/{data_view_id}">client.dataViews.<a href="./src/resources/data-views/data-views.ts">delete</a>(dataViewId) -> void</code>
+
+## ServiceAccounts
+
+Types:
+
+- <code><a href="./src/resources/data-views/service-accounts.ts">ServiceAccount</a></code>
+- <code><a href="./src/resources/data-views/service-accounts.ts">ServiceAccountCredentials</a></code>
+- <code><a href="./src/resources/data-views/service-accounts.ts">ServiceAccountListResponse</a></code>
+
+Methods:
+
+- <code title="post /data-views/service-accounts">client.dataViews.serviceAccounts.<a href="./src/resources/data-views/service-accounts.ts">create</a>({ ...params }) -> ServiceAccount</code>
+- <code title="get /data-views/service-accounts">client.dataViews.serviceAccounts.<a href="./src/resources/data-views/service-accounts.ts">list</a>({ ...params }) -> ServiceAccountListResponse</code>
+- <code title="delete /data-views/service-accounts/{service_account_id}">client.dataViews.serviceAccounts.<a href="./src/resources/data-views/service-accounts.ts">delete</a>(serviceAccountId) -> void</code>
+- <code title="get /data-views/service-accounts/{service_account_id}/credentials">client.dataViews.serviceAccounts.<a href="./src/resources/data-views/service-accounts.ts">credentials</a>(serviceAccountId) -> ServiceAccountCredentials</code>
+
 # Beta
 
 ## Rewrite

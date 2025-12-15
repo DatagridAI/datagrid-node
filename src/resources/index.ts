@@ -27,6 +27,13 @@ export {
   type ConversationListParams,
 } from './conversations/conversations';
 export {
+  DataViews,
+  type DataView,
+  type DataViewListResponse,
+  type DataViewCreateParams,
+  type DataViewListParams,
+} from './data-views/data-views';
+export {
   FileObjectsCursorIDPage,
   Files,
   type FileObject,

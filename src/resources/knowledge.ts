@@ -22,7 +22,7 @@ export class KnowledgeResource extends APIResource {
   }
 
   /**
-   * Retrieves a knowledge by id.
+   * Retrieves knowledge by id.
    */
   retrieve(knowledgeId: string, options?: Core.RequestOptions): Core.APIPromise<Knowledge> {
     return this._client.get(`/knowledge/${knowledgeId}`, options);
@@ -43,7 +43,7 @@ export class KnowledgeResource extends APIResource {
   }
 
   /**
-   * Returns the list of knowledge.
+   * Returns a list of knowledge.
    */
   list(
     query?: KnowledgeListParams,
@@ -184,6 +184,11 @@ export interface Knowledge {
    */
   status: 'pending' | 'partial' | 'ready';
 
+  /**
+   * Sync information for knowledge that syncs data from a connection
+   */
+  sync: Knowledge.Sync | null;
+
   credits?: Knowledge.Credits;
 
   /**
@@ -211,6 +216,53 @@ export namespace Knowledge {
      * The total number of rows in the knowledge.
      */
     total: number;
+  }
+
+  /**
+   * Sync information for knowledge that syncs data from a connection
+   */
+  export interface Sync {
+    /**
+     * The ID of the connection used for syncing data to this knowledge
+     */
+    connection_id: string;
+
+    /**
+     * Whether data syncing from the connection is enabled
+     */
+    enabled: boolean;
+
+    /**
+     * The cron schedule configuration for syncing data from the connection.
+     */
+    trigger?: Sync.Trigger | null;
+  }
+
+  export namespace Sync {
+    /**
+     * The cron schedule configuration for syncing data from the connection.
+     */
+    export interface Trigger {
+      /**
+       * Cron expression (e.g., '0 0 \* \* \*' for daily at midnight)
+       */
+      cron_expression: string;
+
+      /**
+       * The trigger type, which is always `cron`.
+       */
+      type: 'cron';
+
+      /**
+       * Human-readable description of the schedule
+       */
+      description?: string | null;
+
+      /**
+       * IANA timezone (e.g., 'America/New_York'). Defaults to 'UTC' if not provided.
+       */
+      timezone?: string;
+    }
   }
 
   export interface Credits {
@@ -488,6 +540,59 @@ export interface KnowledgeUpdateParams {
    * The new name for the `knowledge`.
    */
   name?: string | null;
+
+  /**
+   * Sync configuration updates. Note: For multipart/form-data, this should be sent
+   * as a JSON string.
+   */
+  sync?: KnowledgeUpdateParams.Sync | null;
+}
+
+export namespace KnowledgeUpdateParams {
+  /**
+   * Sync configuration updates. Note: For multipart/form-data, this should be sent
+   * as a JSON string.
+   */
+  export interface Sync {
+    /**
+     * Enable or disable syncing data from the connection
+     */
+    enabled?: boolean;
+
+    /**
+     * Update the trigger to a cron schedule. Only CronBasedTrigger is supported for
+     * updates.
+     */
+    trigger?: Sync.Trigger;
+  }
+
+  export namespace Sync {
+    /**
+     * Update the trigger to a cron schedule. Only CronBasedTrigger is supported for
+     * updates.
+     */
+    export interface Trigger {
+      /**
+       * Cron expression (e.g., '0 0 \* \* \*' for daily at midnight)
+       */
+      cron_expression: string;
+
+      /**
+       * The trigger type, which is always `cron`.
+       */
+      type: 'cron';
+
+      /**
+       * Human-readable description of the schedule
+       */
+      description?: string | null;
+
+      /**
+       * IANA timezone (e.g., 'America/New_York'). Defaults to 'UTC' if not provided.
+       */
+      timezone?: string;
+    }
+  }
 }
 
 export interface KnowledgeListParams extends CursorIDPageParams {}
