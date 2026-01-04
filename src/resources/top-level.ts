@@ -284,6 +284,12 @@ export interface ConverseParams {
    * magpie-1.1 and magpie-2.0.
    */
   text?: ConverseParams.Text | null;
+
+  /**
+   * User information override for converse calls. All fields are optional - only
+   * provided fields will override the default user information.
+   */
+  user?: ConverseParams.User | null;
 }
 
 export namespace ConverseParams {
@@ -771,6 +777,27 @@ export namespace ConverseParams {
      * ```
      */
     format?: unknown;
+  }
+
+  /**
+   * User information override for converse calls. All fields are optional - only
+   * provided fields will override the default user information.
+   */
+  export interface User {
+    /**
+     * Override the user's email for this converse call.
+     */
+    email?: string | null;
+
+    /**
+     * Override the user's first name for this converse call.
+     */
+    first_name?: string | null;
+
+    /**
+     * Override the user's last name for this converse call.
+     */
+    last_name?: string | null;
   }
 }
 
