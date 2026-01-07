@@ -72,7 +72,12 @@ describe('resource users', () => {
     await expect(
       client.organization.teamspaces.users.list(
         'teamspace_id',
-        { after: 'after', before: 'before', limit: 1, search: 'search' },
+        {
+          after: 'after',
+          before: 'before',
+          limit: 1,
+          search: 'search',
+        },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Datagrid.NotFoundError);
