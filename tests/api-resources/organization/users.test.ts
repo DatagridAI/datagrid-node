@@ -64,7 +64,12 @@ describe('resource users', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.organization.users.list(
-        { after: 'after', before: 'before', limit: 1, search: 'search' },
+        {
+          after: 'after',
+          before: 'before',
+          limit: 1,
+          search: 'search',
+        },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Datagrid.NotFoundError);
