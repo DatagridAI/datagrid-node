@@ -52,7 +52,11 @@ describe('resource messages', () => {
     await expect(
       client.conversations.messages.list(
         'conversation_id',
-        { after: 'after', before: 'before', limit: 1 },
+        {
+          after: 'after',
+          before: 'before',
+          limit: 1,
+        },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Datagrid.NotFoundError);

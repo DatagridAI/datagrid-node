@@ -21,6 +21,10 @@ describe('resource search', () => {
   });
 
   test('search: required and optional params', async () => {
-    const response = await client.search.search({ query: 'query', limit: 1, next: 'next' });
+    const response = await client.search.search({
+      query: 'query',
+      limit: 1,
+      next: 'next',
+    });
   });
 });
