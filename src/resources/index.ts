@@ -62,15 +62,15 @@ export {
   type KnowledgeUpdateParams,
   type KnowledgeListParams,
   type KnowledgeConnectParams,
-} from './knowledge';
+} from './knowledge/knowledge';
 export { Memory } from './memory/memory';
 export { Organization } from './organization/organization';
 export {
-  SearchResultItemsCursorPage,
   Search,
   type SearchResultItem,
   type SearchResultResource,
   type SearchResultResourceType,
+  type SearchSearchResponse,
   type SearchSearchParams,
 } from './search';
 export {

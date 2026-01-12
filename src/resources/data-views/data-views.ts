@@ -52,6 +52,11 @@ export interface DataView {
   id: string;
 
   /**
+   * The name of the BigQuery dataset containing views to the data.
+   */
+  bigquery_dataset_name: string;
+
+  /**
    * The ISO string for when the data view was created.
    */
   created_at: string;
@@ -83,14 +88,15 @@ export interface DataViewListResponse {
 
 export interface DataViewCreateParams {
   /**
+   * The name of the BigQuery dataset containing views to the data. Your
+   * organization's domain will be automatically prepended to the name.
+   */
+  bigquery_dataset_name: string;
+
+  /**
    * The id of the knowledge to create a data view for.
    */
   knowledge_id: string;
-
-  /**
-   * The name of the data view.
-   */
-  name: string;
 
   /**
    * The id of the service account that will access this data view.

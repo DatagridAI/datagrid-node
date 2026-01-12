@@ -2,22 +2,16 @@
 
 import { APIResource } from '../resource';
 import * as Core from '../core';
-import * as KnowledgeAPI from './knowledge';
-import { CursorPage, type CursorPageParams } from '../pagination';
+import * as KnowledgeAPI from './knowledge/knowledge';
 
 export class Search extends APIResource {
   /**
    * [BETA] Search across knowledge.
    */
-  search(
-    query: SearchSearchParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<SearchResultItemsCursorPage, SearchResultItem> {
-    return this._client.getAPIList('/search', SearchResultItemsCursorPage, { query, ...options });
+  search(query: SearchSearchParams, options?: Core.RequestOptions): Core.APIPromise<SearchSearchResponse> {
+    return this._client.get('/search', { query, ...options });
   }
 }
-
-export class SearchResultItemsCursorPage extends CursorPage<SearchResultItem> {}
 
 export interface SearchResultItem {
   /**
@@ -73,18 +67,41 @@ export type SearchResultResourceType =
   | 'attachment_metadata'
   | 'message_metadata';
 
-export interface SearchSearchParams extends CursorPageParams {
-  query: string;
+export interface SearchSearchResponse {
+  /**
+   * An array containing the found search items.
+   */
+  data: Array<SearchResultItem>;
+
+  object: 'list';
+
+  /**
+   * Cursor for fetching the next page of results.
+   */
+  next?: string;
 }
 
-Search.SearchResultItemsCursorPage = SearchResultItemsCursorPage;
+export interface SearchSearchParams {
+  query: string;
+
+  /**
+   * The limit on the number of objects to return, ranging between 1 and 100.
+   */
+  limit?: number;
+
+  /**
+   * A cursor to use in pagination to continue a query from the previous request.
+   * This is automatically added when the request has more results to fetch.
+   */
+  next?: string;
+}
 
 export declare namespace Search {
   export {
     type SearchResultItem as SearchResultItem,
     type SearchResultResource as SearchResultResource,
     type SearchResultResourceType as SearchResultResourceType,
-    SearchResultItemsCursorPage as SearchResultItemsCursorPage,
+    type SearchSearchResponse as SearchSearchResponse,
     type SearchSearchParams as SearchSearchParams,
   };
 }
