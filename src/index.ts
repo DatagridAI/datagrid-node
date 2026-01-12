@@ -51,26 +51,12 @@ import {
   ResizePayload,
 } from './resources/i-frame-events';
 import {
-  AttachmentMetadata,
-  Knowledge,
-  KnowledgeConnectParams,
-  KnowledgeCreateParams,
-  KnowledgeListParams,
-  KnowledgeMetadata,
-  KnowledgeResource,
-  KnowledgeUpdateParams,
-  KnowledgesCursorIDPage,
-  MessageMetadata,
-  RowMetadata,
-  TableMetadata,
-} from './resources/knowledge';
-import {
   Search,
   SearchResultItem,
-  SearchResultItemsCursorPage,
   SearchResultResource,
   SearchResultResourceType,
   SearchSearchParams,
+  SearchSearchResponse,
 } from './resources/search';
 import {
   Secret,
@@ -95,6 +81,20 @@ import {
   DataViewListResponse,
   DataViews,
 } from './resources/data-views/data-views';
+import {
+  AttachmentMetadata,
+  Knowledge,
+  KnowledgeConnectParams,
+  KnowledgeCreateParams,
+  KnowledgeListParams,
+  KnowledgeMetadata,
+  KnowledgeResource,
+  KnowledgeUpdateParams,
+  KnowledgesCursorIDPage,
+  MessageMetadata,
+  RowMetadata,
+  TableMetadata,
+} from './resources/knowledge/knowledge';
 import { Memory } from './resources/memory/memory';
 import { Organization } from './resources/organization/organization';
 
@@ -308,7 +308,6 @@ Datagrid.FileObjectsCursorIDPage = FileObjectsCursorIDPage;
 Datagrid.Secrets = Secrets;
 Datagrid.SecretsCursorIDPage = SecretsCursorIDPage;
 Datagrid.Search = Search;
-Datagrid.SearchResultItemsCursorPage = SearchResultItemsCursorPage;
 Datagrid.Agents = Agents;
 Datagrid.AgentsCursorIDPage = AgentsCursorIDPage;
 Datagrid.Tools = Tools;
@@ -324,9 +323,6 @@ Datagrid.Beta = Beta;
 export declare namespace Datagrid {
   export type RequestOptions = Core.RequestOptions;
 
-  export import CursorPage = Pagination.CursorPage;
-  export { type CursorPageParams as CursorPageParams, type CursorPageResponse as CursorPageResponse };
-
   export import CursorIDPage = Pagination.CursorIDPage;
   export { type CursorIDPageParams as CursorIDPageParams, type CursorIDPageResponse as CursorIDPageResponse };
 
@@ -335,6 +331,9 @@ export declare namespace Datagrid {
     type CursorNamePageParams as CursorNamePageParams,
     type CursorNamePageResponse as CursorNamePageResponse,
   };
+
+  export import CursorPage = Pagination.CursorPage;
+  export { type CursorPageParams as CursorPageParams, type CursorPageResponse as CursorPageResponse };
 
   export {
     type ConverseResponse as ConverseResponse,
@@ -395,7 +394,7 @@ export declare namespace Datagrid {
     type SearchResultItem as SearchResultItem,
     type SearchResultResource as SearchResultResource,
     type SearchResultResourceType as SearchResultResourceType,
-    SearchResultItemsCursorPage as SearchResultItemsCursorPage,
+    type SearchSearchResponse as SearchSearchResponse,
     type SearchSearchParams as SearchSearchParams,
   };
 

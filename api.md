@@ -13,22 +13,43 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/knowledge.ts">AttachmentMetadata</a></code>
-- <code><a href="./src/resources/knowledge.ts">Knowledge</a></code>
-- <code><a href="./src/resources/knowledge.ts">KnowledgeMetadata</a></code>
-- <code><a href="./src/resources/knowledge.ts">MessageMetadata</a></code>
-- <code><a href="./src/resources/knowledge.ts">RowMetadata</a></code>
-- <code><a href="./src/resources/knowledge.ts">TableMetadata</a></code>
+- <code><a href="./src/resources/knowledge/knowledge.ts">AttachmentMetadata</a></code>
+- <code><a href="./src/resources/knowledge/knowledge.ts">Knowledge</a></code>
+- <code><a href="./src/resources/knowledge/knowledge.ts">KnowledgeMetadata</a></code>
+- <code><a href="./src/resources/knowledge/knowledge.ts">MessageMetadata</a></code>
+- <code><a href="./src/resources/knowledge/knowledge.ts">RowMetadata</a></code>
+- <code><a href="./src/resources/knowledge/knowledge.ts">TableMetadata</a></code>
 
 Methods:
 
-- <code title="post /knowledge">client.knowledge.<a href="./src/resources/knowledge.ts">create</a>({ ...params }) -> Knowledge</code>
-- <code title="get /knowledge/{knowledge_id}">client.knowledge.<a href="./src/resources/knowledge.ts">retrieve</a>(knowledgeId) -> Knowledge</code>
-- <code title="patch /knowledge/{knowledge_id}">client.knowledge.<a href="./src/resources/knowledge.ts">update</a>(knowledgeId, { ...params }) -> Knowledge</code>
-- <code title="get /knowledge">client.knowledge.<a href="./src/resources/knowledge.ts">list</a>({ ...params }) -> KnowledgesCursorIDPage</code>
-- <code title="delete /knowledge/{knowledge_id}">client.knowledge.<a href="./src/resources/knowledge.ts">delete</a>(knowledgeId) -> void</code>
-- <code title="post /knowledge/connect">client.knowledge.<a href="./src/resources/knowledge.ts">connect</a>({ ...params }) -> RedirectURLResponse</code>
-- <code title="post /knowledge/{knowledge_id}/reindex">client.knowledge.<a href="./src/resources/knowledge.ts">reindex</a>(knowledgeId) -> void</code>
+- <code title="post /knowledge">client.knowledge.<a href="./src/resources/knowledge/knowledge.ts">create</a>({ ...params }) -> Knowledge</code>
+- <code title="get /knowledge/{knowledge_id}">client.knowledge.<a href="./src/resources/knowledge/knowledge.ts">retrieve</a>(knowledgeId) -> Knowledge</code>
+- <code title="patch /knowledge/{knowledge_id}">client.knowledge.<a href="./src/resources/knowledge/knowledge.ts">update</a>(knowledgeId, { ...params }) -> Knowledge</code>
+- <code title="get /knowledge">client.knowledge.<a href="./src/resources/knowledge/knowledge.ts">list</a>({ ...params }) -> KnowledgesCursorIDPage</code>
+- <code title="delete /knowledge/{knowledge_id}">client.knowledge.<a href="./src/resources/knowledge/knowledge.ts">delete</a>(knowledgeId) -> void</code>
+- <code title="post /knowledge/connect">client.knowledge.<a href="./src/resources/knowledge/knowledge.ts">connect</a>({ ...params }) -> RedirectURLResponse</code>
+- <code title="post /knowledge/{knowledge_id}/reindex">client.knowledge.<a href="./src/resources/knowledge/knowledge.ts">reindex</a>(knowledgeId) -> void</code>
+
+## Tables
+
+Types:
+
+- <code><a href="./src/resources/knowledge/tables/tables.ts">Table</a></code>
+
+Methods:
+
+- <code title="get /tables/{table_id}">client.knowledge.tables.<a href="./src/resources/knowledge/tables/tables.ts">retrieve</a>(tableId) -> Table</code>
+- <code title="get /tables">client.knowledge.tables.<a href="./src/resources/knowledge/tables/tables.ts">list</a>({ ...params }) -> TablesCursorIDPage</code>
+
+### Records
+
+Types:
+
+- <code><a href="./src/resources/knowledge/tables/records.ts">Record</a></code>
+
+Methods:
+
+- <code title="get /tables/{table_id}/records">client.knowledge.tables.records.<a href="./src/resources/knowledge/tables/records.ts">list</a>(tableId, { ...params }) -> RecordsCursorPage</code>
 
 # Connections
 
@@ -89,10 +110,11 @@ Types:
 - <code><a href="./src/resources/search.ts">SearchResultItem</a></code>
 - <code><a href="./src/resources/search.ts">SearchResultResource</a></code>
 - <code><a href="./src/resources/search.ts">SearchResultResourceType</a></code>
+- <code><a href="./src/resources/search.ts">SearchSearchResponse</a></code>
 
 Methods:
 
-- <code title="get /search">client.search.<a href="./src/resources/search.ts">search</a>({ ...params }) -> SearchResultItemsCursorPage</code>
+- <code title="get /search">client.search.<a href="./src/resources/search.ts">search</a>({ ...params }) -> SearchSearchResponse</code>
 
 # Agents
 

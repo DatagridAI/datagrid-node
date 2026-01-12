@@ -11,8 +11,8 @@ const client = new Datagrid({
 describe('resource dataViews', () => {
   test('create: only required params', async () => {
     const responsePromise = client.dataViews.create({
+      bigquery_dataset_name: 'bigquery_dataset_name',
       knowledge_id: 'knowledge_id',
-      name: 'name',
       service_account_id: 'service_account_id',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -26,8 +26,8 @@ describe('resource dataViews', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.dataViews.create({
+      bigquery_dataset_name: 'bigquery_dataset_name',
       knowledge_id: 'knowledge_id',
-      name: 'name',
       service_account_id: 'service_account_id',
     });
   });
