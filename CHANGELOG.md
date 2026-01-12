@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.6.0 (2026-01-12)
+
+Full Changelog: [v0.5.0...v0.6.0](https://github.com/DatagridAI/datagrid-node/compare/v0.5.0...v0.6.0)
+
+### Features
+
+* **api:** api update ([829c046](https://github.com/DatagridAI/datagrid-node/commit/829c0467912980f53d2f5ce8750a7ae9fefba688))
+
+
+### Chores
+
+* break long lines in snippets into multiline ([33f9cb7](https://github.com/DatagridAI/datagrid-node/commit/33f9cb7ce53d10f26a190ef9a125dd71182ad40b))
+
 ## 0.5.0 (2026-01-04)
 
 Full Changelog: [v0.4.0...v0.5.0](https://github.com/DatagridAI/datagrid-node/compare/v0.4.0...v0.5.0)
