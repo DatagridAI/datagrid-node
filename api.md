@@ -130,6 +130,20 @@ Methods:
 - <code title="get /agents">client.agents.<a href="./src/resources/agents.ts">list</a>({ ...params }) -> AgentsCursorIDPage</code>
 - <code title="delete /agents/{agent_id}">client.agents.<a href="./src/resources/agents.ts">delete</a>(agentId) -> void</code>
 
+# Pages
+
+Types:
+
+- <code><a href="./src/resources/pages.ts">Page</a></code>
+
+Methods:
+
+- <code title="post /pages">client.pages.<a href="./src/resources/pages.ts">create</a>({ ...params }) -> Page</code>
+- <code title="get /pages/{page_id}">client.pages.<a href="./src/resources/pages.ts">retrieve</a>(pageId) -> Page</code>
+- <code title="patch /pages/{page_id}">client.pages.<a href="./src/resources/pages.ts">update</a>(pageId, { ...params }) -> Page</code>
+- <code title="get /pages">client.pages.<a href="./src/resources/pages.ts">list</a>({ ...params }) -> PagesCursorIDPage</code>
+- <code title="delete /pages/{page_id}">client.pages.<a href="./src/resources/pages.ts">delete</a>(pageId) -> void</code>
+
 # Tools
 
 Types:

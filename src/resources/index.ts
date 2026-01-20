@@ -66,6 +66,14 @@ export {
 export { Memory } from './memory/memory';
 export { Organization } from './organization/organization';
 export {
+  PagesCursorIDPage,
+  Pages,
+  type Page,
+  type PageCreateParams,
+  type PageUpdateParams,
+  type PageListParams,
+} from './pages';
+export {
   Search,
   type SearchResultItem,
   type SearchResultResource,
