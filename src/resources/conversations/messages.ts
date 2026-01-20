@@ -61,8 +61,8 @@ export interface Message {
   agent_id: string;
 
   /**
-   * Array of citations that provide knowledges for factual statements in the
-   * response. Each citation includes the referenced text and its knowledges.
+   * Array of citations that provide sources for factual statements in the response.
+   * Each citation includes the referenced text and its sources.
    */
   citations: Array<Message.Citation> | null;
 
@@ -102,29 +102,34 @@ export namespace Message {
     citation: string;
 
     /**
-     * Array of knowledges that support this citation.
+     * Array of sources that support this citation.
      */
-    knowledges: Array<Citation.Knowledge>;
+    sources: Array<Citation.Source>;
   }
 
   export namespace Citation {
-    export interface Knowledge {
+    export interface Source {
       /**
-       * An array of text snippets from the knowledge that confirm the citation.
+       * An array of text snippets from the source that confirm the citation.
        */
       confirmations: Array<string>;
 
       /**
-       * Name of the knowledge.
+       * Name of the source.
        */
-      knowledge_name: string;
+      source_name: string;
 
       type: 'image' | 'pdf_page' | 'record' | 'web_search' | 'sql_query_result' | 'action';
 
       /**
-       * Id of the knowledge.
+       * Id of the source.
        */
-      knowledge_id?: string;
+      source_id?: string;
+
+      /**
+       * URI of the source.
+       */
+      source_uri?: string;
     }
   }
 

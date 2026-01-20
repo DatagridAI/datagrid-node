@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { type Agent } from './_shims/index';
+import * as qs from './internal/qs';
 import * as Core from './core';
 import * as Errors from './error';
 import * as Pagination from './pagination';
@@ -50,6 +51,14 @@ import {
   KnowledgeCreatedPayload,
   ResizePayload,
 } from './resources/i-frame-events';
+import {
+  Page,
+  PageCreateParams,
+  PageListParams,
+  PageUpdateParams,
+  Pages,
+  PagesCursorIDPage,
+} from './resources/pages';
 import {
   Search,
   SearchResultItem,
@@ -231,6 +240,7 @@ export class Datagrid extends Core.APIClient {
   secrets: API.Secrets = new API.Secrets(this);
   search: API.Search = new API.Search(this);
   agents: API.Agents = new API.Agents(this);
+  pages: API.Pages = new API.Pages(this);
   tools: API.Tools = new API.Tools(this);
   memory: API.Memory = new API.Memory(this);
   iFrameEvents: API.IFrameEvents = new API.IFrameEvents(this);
@@ -276,6 +286,10 @@ export class Datagrid extends Core.APIClient {
     return { Authorization: `Bearer ${this.apiKey}` };
   }
 
+  protected override stringifyQuery(query: Record<string, unknown>): string {
+    return qs.stringify(query, { arrayFormat: 'comma' });
+  }
+
   static Datagrid = this;
   static DEFAULT_TIMEOUT = 60000; // 1 minute
 
@@ -310,6 +324,8 @@ Datagrid.SecretsCursorIDPage = SecretsCursorIDPage;
 Datagrid.Search = Search;
 Datagrid.Agents = Agents;
 Datagrid.AgentsCursorIDPage = AgentsCursorIDPage;
+Datagrid.Pages = Pages;
+Datagrid.PagesCursorIDPage = PagesCursorIDPage;
 Datagrid.Tools = Tools;
 Datagrid.ToolDefsCursorNamePage = ToolDefsCursorNamePage;
 Datagrid.Memory = Memory;
@@ -405,6 +421,15 @@ export declare namespace Datagrid {
     type AgentCreateParams as AgentCreateParams,
     type AgentUpdateParams as AgentUpdateParams,
     type AgentListParams as AgentListParams,
+  };
+
+  export {
+    Pages as Pages,
+    type Page as Page,
+    PagesCursorIDPage as PagesCursorIDPage,
+    type PageCreateParams as PageCreateParams,
+    type PageUpdateParams as PageUpdateParams,
+    type PageListParams as PageListParams,
   };
 
   export {
