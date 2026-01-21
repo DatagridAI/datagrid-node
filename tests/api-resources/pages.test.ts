@@ -56,8 +56,7 @@ describe('resource pages', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // There is an issue with the Prism mock of the parent parameter.
-  test.skip('list', async () => {
+  test('list', async () => {
     const responsePromise = client.pages.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);

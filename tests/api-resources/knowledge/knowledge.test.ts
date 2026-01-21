@@ -67,8 +67,7 @@ describe('resource knowledge', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // There is an issue with the Prism mock of the parent parameter.
-  test.skip('list', async () => {
+  test('list', async () => {
     const responsePromise = client.knowledge.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
