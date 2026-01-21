@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.8.0 (2026-01-21)
+
+Full Changelog: [v0.6.0...v0.8.0](https://github.com/DatagridAI/datagrid-node/compare/v0.6.0...v0.8.0)
+
+### Features
+
+* **api:** api update ([058c8f3](https://github.com/DatagridAI/datagrid-node/commit/058c8f32e643fc3516d3073ecd3fb40e92210646))
+
+
+### Chores
+
+* **internal:** update `actions/checkout` version ([18fcabc](https://github.com/DatagridAI/datagrid-node/commit/18fcabc770f0f2564804e93e2f1d09aa90b2540b))
+* **internal:** upgrade babel, qs, js-yaml ([7b3679a](https://github.com/DatagridAI/datagrid-node/commit/7b3679acfc10b8c35841ae5004c4eccce5a7a909))
+
 ## 0.6.0 (2026-01-12)
 
 Full Changelog: [v0.5.0...v0.6.0](https://github.com/DatagridAI/datagrid-node/compare/v0.5.0...v0.6.0)
