@@ -76,6 +76,12 @@ export interface Agent {
   agent_model: 'magpie-1.1' | 'magpie-1.1-flash' | 'magpie-1' | 'magpie-2.0' | (string & {});
 
   /**
+   * Array of corpus items the agent should use during the converse. When omitted,
+   * all knowledge is used.
+   */
+  corpus: Array<Agent.CorpusKnowledgeItem | Agent.CorpusPageItem> | null;
+
+  /**
    * The ISO string for when the agent was created
    */
   created_at: string;
@@ -91,8 +97,8 @@ export interface Agent {
   description: string | null;
 
   /**
-   * Array of Knowledge IDs the agent should use during the converse. When ommited,
-   * all knowledge is used.
+   * @deprecated Deprecated, use corpus instead. Array of Knowledge IDs the agent
+   * should use during the converse. When omitted, all knowledge is used.
    */
   knowledge_ids: Array<string> | null;
 
@@ -148,6 +154,32 @@ export interface Agent {
   tools: Array<ToolsAPI.Tool>;
 }
 
+export namespace Agent {
+  export interface CorpusKnowledgeItem {
+    /**
+     * The ID of the knowledge to include in the corpus.
+     */
+    knowledge_id: string;
+
+    /**
+     * The type of the corpus item. Always 'knowledge' for knowledge items.
+     */
+    type: 'knowledge';
+  }
+
+  export interface CorpusPageItem {
+    /**
+     * The ID of the page to include in the corpus.
+     */
+    page_id: string;
+
+    /**
+     * The type of the corpus item. Always 'page' for page items.
+     */
+    type: 'page';
+  }
+}
+
 export interface AgentCreateParams {
   /**
    * The version of Datagrid's agent brain.
@@ -161,6 +193,12 @@ export interface AgentCreateParams {
    *   capabilities.
    */
   agent_model?: 'magpie-1.1' | 'magpie-1.1-flash' | 'magpie-1' | 'magpie-2.0' | (string & {}) | null;
+
+  /**
+   * Array of corpus items the agent should use during the converse. When omitted,
+   * all knowledge is used.
+   */
+  corpus?: Array<AgentCreateParams.CorpusKnowledgeItem | AgentCreateParams.CorpusPageItem> | null;
 
   /**
    * Use custom prompt to instruct the style and formatting of the agent's response
@@ -241,8 +279,8 @@ export interface AgentCreateParams {
   > | null;
 
   /**
-   * Array of Knowledge IDs the agent should use during the converse. When ommited,
-   * all knowledge is used.
+   * @deprecated Deprecated, use corpus instead. Array of Knowledge IDs the agent
+   * should use during the converse. When omitted, all knowledge is used.
    */
   knowledge_ids?: Array<string> | null;
 
@@ -397,6 +435,32 @@ export interface AgentCreateParams {
   > | null;
 }
 
+export namespace AgentCreateParams {
+  export interface CorpusKnowledgeItem {
+    /**
+     * The ID of the knowledge to include in the corpus.
+     */
+    knowledge_id: string;
+
+    /**
+     * The type of the corpus item. Always 'knowledge' for knowledge items.
+     */
+    type: 'knowledge';
+  }
+
+  export interface CorpusPageItem {
+    /**
+     * The ID of the page to include in the corpus.
+     */
+    page_id: string;
+
+    /**
+     * The type of the corpus item. Always 'page' for page items.
+     */
+    type: 'page';
+  }
+}
+
 export interface AgentUpdateParams {
   /**
    * The version of Datagrid's agent brain.
@@ -410,6 +474,12 @@ export interface AgentUpdateParams {
    *   capabilities.
    */
   agent_model?: 'magpie-1.1' | 'magpie-1.1-flash' | 'magpie-1' | 'magpie-2.0' | (string & {}) | null;
+
+  /**
+   * Array of corpus items the agent should use during the converse. When omitted,
+   * all knowledge is used.
+   */
+  corpus?: Array<AgentUpdateParams.CorpusKnowledgeItem | AgentUpdateParams.CorpusPageItem> | null;
 
   /**
    * Use custom prompt to instruct the style and formatting of the agent's response
@@ -490,8 +560,8 @@ export interface AgentUpdateParams {
   > | null;
 
   /**
-   * Array of Knowledge IDs the agent should use during the converse. When ommited,
-   * all knowledge is used.
+   * @deprecated Deprecated, use corpus instead. Array of Knowledge IDs the agent
+   * should use during the converse. When omitted, all knowledge is used.
    */
   knowledge_ids?: Array<string> | null;
 
@@ -644,6 +714,32 @@ export interface AgentUpdateParams {
     | ToolsAPI.Tool
     | ToolsAPI.Tool
   > | null;
+}
+
+export namespace AgentUpdateParams {
+  export interface CorpusKnowledgeItem {
+    /**
+     * The ID of the knowledge to include in the corpus.
+     */
+    knowledge_id: string;
+
+    /**
+     * The type of the corpus item. Always 'knowledge' for knowledge items.
+     */
+    type: 'knowledge';
+  }
+
+  export interface CorpusPageItem {
+    /**
+     * The ID of the page to include in the corpus.
+     */
+    page_id: string;
+
+    /**
+     * The type of the corpus item. Always 'page' for page items.
+     */
+    type: 'page';
+  }
 }
 
 export interface AgentListParams extends CursorIDPageParams {}

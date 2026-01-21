@@ -174,6 +174,11 @@ export interface Knowledge {
   object: 'knowledge';
 
   /**
+   * The parent object, indicating where the object is located in the hierarchy
+   */
+  parent: Knowledge.ParentPage | Knowledge.RootPage;
+
+  /**
    * Row count statistics for the knowledge.
    */
   row_counts: Knowledge.RowCounts;
@@ -202,6 +207,31 @@ export interface Knowledge {
 }
 
 export namespace Knowledge {
+  /**
+   * The parent page reference, indicating where this page is nested
+   */
+  export interface ParentPage {
+    /**
+     * The ID of the parent page. Required when type is 'page'
+     */
+    page_id: string;
+
+    /**
+     * The type of parent. 'page' indicates nested under a specific page
+     */
+    type: 'page';
+  }
+
+  /**
+   * The root level object
+   */
+  export interface RootPage {
+    /**
+     * The type of parent. 'root' indicates at the root level
+     */
+    type: 'root';
+  }
+
   /**
    * Row count statistics for the knowledge.
    */
@@ -529,6 +559,39 @@ export interface KnowledgeCreateParams {
    * The name of the knowledge.
    */
   name?: string | null;
+
+  /**
+   * The parent page to nest this knowledge under. If not provided, knowledge will be
+   * created at the root level.
+   */
+  parent?: KnowledgeCreateParams.ParentPage | KnowledgeCreateParams.RootPage | null;
+}
+
+export namespace KnowledgeCreateParams {
+  /**
+   * The parent page reference, indicating where this page is nested
+   */
+  export interface ParentPage {
+    /**
+     * The ID of the parent page. Required when type is 'page'
+     */
+    page_id: string;
+
+    /**
+     * The type of parent. 'page' indicates nested under a specific page
+     */
+    type: 'page';
+  }
+
+  /**
+   * The root level object
+   */
+  export interface RootPage {
+    /**
+     * The type of parent. 'root' indicates at the root level
+     */
+    type: 'root';
+  }
 }
 
 export interface KnowledgeUpdateParams {
@@ -546,6 +609,11 @@ export interface KnowledgeUpdateParams {
   name?: string | null;
 
   /**
+   * Move the knowledge to a different parent page.
+   */
+  parent?: KnowledgeUpdateParams.ParentPage | KnowledgeUpdateParams.RootPage | null;
+
+  /**
    * Sync configuration updates. Note: For multipart/form-data, this should be sent
    * as a JSON string.
    */
@@ -553,6 +621,31 @@ export interface KnowledgeUpdateParams {
 }
 
 export namespace KnowledgeUpdateParams {
+  /**
+   * The parent page reference, indicating where this page is nested
+   */
+  export interface ParentPage {
+    /**
+     * The ID of the parent page. Required when type is 'page'
+     */
+    page_id: string;
+
+    /**
+     * The type of parent. 'page' indicates nested under a specific page
+     */
+    type: 'page';
+  }
+
+  /**
+   * The root level object
+   */
+  export interface RootPage {
+    /**
+     * The type of parent. 'root' indicates at the root level
+     */
+    type: 'root';
+  }
+
   /**
    * Sync configuration updates. Note: For multipart/form-data, this should be sent
    * as a JSON string.
@@ -599,7 +692,41 @@ export namespace KnowledgeUpdateParams {
   }
 }
 
-export interface KnowledgeListParams extends CursorIDPageParams {}
+export interface KnowledgeListParams extends CursorIDPageParams {
+  /**
+   * Filter knowledge by parent. Pass `{"type":"root"}` to get root-level knowledge,
+   * or `{"type":"page","page_id":"page_123"}` to get knowledge nested under a
+   * specific page. If not specified, returns all knowledge.
+   */
+  parent?: KnowledgeListParams.ParentPage | KnowledgeListParams.RootPage;
+}
+
+export namespace KnowledgeListParams {
+  /**
+   * The parent page reference, indicating where this page is nested
+   */
+  export interface ParentPage {
+    /**
+     * The ID of the parent page. Required when type is 'page'
+     */
+    page_id: string;
+
+    /**
+     * The type of parent. 'page' indicates nested under a specific page
+     */
+    type: 'page';
+  }
+
+  /**
+   * The root level object
+   */
+  export interface RootPage {
+    /**
+     * The type of parent. 'root' indicates at the root level
+     */
+    type: 'root';
+  }
+}
 
 export interface KnowledgeConnectParams {
   /**

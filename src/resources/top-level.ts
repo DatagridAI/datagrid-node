@@ -18,8 +18,8 @@ export interface ConverseResponse {
   agent_id: string;
 
   /**
-   * Array of citations that provide knowledges for factual statements in the
-   * response. Each citation includes the referenced text and its knowledges.
+   * Array of citations that provide sources for factual statements in the response.
+   * Each citation includes the referenced text and its sources.
    */
   citations: Array<ConverseResponse.Citation> | null;
 
@@ -59,29 +59,34 @@ export namespace ConverseResponse {
     citation: string;
 
     /**
-     * Array of knowledges that support this citation.
+     * Array of sources that support this citation.
      */
-    knowledges: Array<Citation.Knowledge>;
+    sources: Array<Citation.Source>;
   }
 
   export namespace Citation {
-    export interface Knowledge {
+    export interface Source {
       /**
-       * An array of text snippets from the knowledge that confirm the citation.
+       * An array of text snippets from the source that confirm the citation.
        */
       confirmations: Array<string>;
 
       /**
-       * Name of the knowledge.
+       * Name of the source.
        */
-      knowledge_name: string;
+      source_name: string;
 
       type: 'image' | 'pdf_page' | 'record' | 'web_search' | 'sql_query_result' | 'action';
 
       /**
-       * Id of the knowledge.
+       * Id of the source.
        */
-      knowledge_id?: string;
+      source_id?: string;
+
+      /**
+       * URI of the source.
+       */
+      source_uri?: string;
     }
   }
 
@@ -133,8 +138,8 @@ export namespace Properties {
       status: string;
 
       /**
-       * Array of citations that provide knowledges for factual statements in the
-       * response. Each citation includes the referenced text and its knowledges.
+       * Array of citations that provide sources for factual statements in the response.
+       * Each citation includes the referenced text and its sources.
        */
       citations?: Array<Data.Citation>;
     }
@@ -147,29 +152,34 @@ export namespace Properties {
         citation: string;
 
         /**
-         * Array of knowledges that support this citation.
+         * Array of sources that support this citation.
          */
-        knowledges: Array<Citation.Knowledge>;
+        sources: Array<Citation.Source>;
       }
 
       export namespace Citation {
-        export interface Knowledge {
+        export interface Source {
           /**
-           * An array of text snippets from the knowledge that confirm the citation.
+           * An array of text snippets from the source that confirm the citation.
            */
           confirmations: Array<string>;
 
           /**
-           * Name of the knowledge.
+           * Name of the source.
            */
-          knowledge_name: string;
+          source_name: string;
 
           type: 'image' | 'pdf_page' | 'record' | 'web_search' | 'sql_query_result' | 'action';
 
           /**
-           * Id of the knowledge.
+           * Id of the source.
            */
-          knowledge_id?: string;
+          source_id?: string;
+
+          /**
+           * URI of the source.
+           */
+          source_uri?: string;
         }
       }
     }
@@ -302,7 +312,15 @@ export namespace ConverseParams {
     /**
      * Text, file or secret input to the agent.
      */
-    content: string | Array<InputItemList.InputText | InputItemList.InputFile | InputItemList.InputSecret>;
+    content:
+      | string
+      | Array<
+          | InputItemList.InputText
+          | InputItemList.InputFile
+          | InputItemList.InputSecret
+          | InputItemList.InputKnowledge
+          | InputItemList.InputPage
+        >;
 
     /**
      * The role of the message input. Always `user`.
@@ -359,6 +377,43 @@ export namespace ConverseParams {
        * The type of the input item. Always `input_secret`.
        */
       type: 'input_secret';
+    }
+
+    /**
+     * A knowledge reference input to the model. This references knowledge by ID. The
+     * knowledge will be made accessible to the agent, and will be included in the
+     * prompt provided to the agent. The position of this reference relative to other
+     * text of the input impact the agent's interpretation.
+     */
+    export interface InputKnowledge {
+      /**
+       * The ID of the knowledge to be referenced.
+       */
+      knowledge_id: string;
+
+      /**
+       * The type of the input item. Always `input_knowledge`.
+       */
+      type: 'input_knowledge';
+    }
+
+    /**
+     * A page reference input to the model. This references a page by ID. The page, and
+     * all knowledge under it, will be made accessible to the agent, and a reference to
+     * the page will be included in the prompt provided to the agent. The position of
+     * this reference relative to other text of the input will impact the agent's
+     * interpretation.
+     */
+    export interface InputPage {
+      /**
+       * The ID of the page to be referenced.
+       */
+      page_id: string;
+
+      /**
+       * The type of the input item. Always `input_page`.
+       */
+      type: 'input_page';
     }
   }
 
@@ -443,6 +498,12 @@ export namespace ConverseParams {
       | string
       | ToolsAPI.Tool
     > | null;
+
+    /**
+     * Array of corpus items the agent should use during the converse. When omitted,
+     * all knowledge is used.
+     */
+    corpus?: Array<Config.CorpusKnowledgeItem | Config.CorpusPageItem> | null;
 
     /**
      * Use custom prompt to instruct the style and formatting of the agent's response
@@ -583,8 +644,8 @@ export namespace ConverseParams {
     > | null;
 
     /**
-     * Array of Knowledge IDs the agent should use during the converse. When ommited,
-     * all knowledge is used.
+     * @deprecated Deprecated, use corpus instead. Array of Knowledge IDs the agent
+     * should use during the converse. When omitted, all knowledge is used.
      */
     knowledge_ids?: Array<string> | null;
 
@@ -732,6 +793,32 @@ export namespace ConverseParams {
       | ToolsAPI.Tool
       | ToolsAPI.Tool
     > | null;
+  }
+
+  export namespace Config {
+    export interface CorpusKnowledgeItem {
+      /**
+       * The ID of the knowledge to include in the corpus.
+       */
+      knowledge_id: string;
+
+      /**
+       * The type of the corpus item. Always 'knowledge' for knowledge items.
+       */
+      type: 'knowledge';
+    }
+
+    export interface CorpusPageItem {
+      /**
+       * The ID of the page to include in the corpus.
+       */
+      page_id: string;
+
+      /**
+       * The type of the corpus item. Always 'page' for page items.
+       */
+      type: 'page';
+    }
   }
 
   /**
