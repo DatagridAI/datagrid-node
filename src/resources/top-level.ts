@@ -677,6 +677,15 @@ export namespace ConverseParams {
       | null;
 
     /**
+     * **BETA**: This feature is in beta and the schema may change.
+     *
+     * Array of MCP (Model Context Protocol) server configurations to enable for this
+     * converse call. Each MCP server provides additional tools that the agent can use
+     * during the conversation.
+     */
+    mcp_servers?: Array<Config.McpServer> | null;
+
+    /**
      * Define the planning strategy your AI Agent should use when breaking down tasks
      * and solving problems
      */
@@ -819,6 +828,40 @@ export namespace ConverseParams {
        * The type of the corpus item. Always 'page' for page items.
        */
       type: 'page';
+    }
+
+    /**
+     * Configuration for an MCP (Model Context Protocol) server passed directly in the
+     * request. MCP servers provide additional tools that extend the agent's
+     * capabilities.
+     */
+    export interface McpServer {
+      /**
+       * A unique label to identify this MCP server. Used for tool namespacing.
+       */
+      server_label: string;
+
+      /**
+       * The HTTPS URL of the MCP server endpoint.
+       */
+      server_url: string;
+
+      /**
+       * The type of MCP server configuration. Use 'inline_mcp' for server configs passed
+       * directly in the request.
+       */
+      type: 'inline_mcp';
+
+      /**
+       * Value sent in the `Authorization` header when calling the MCP server (e.g.,
+       * 'Bearer <token>').
+       */
+      authorization?: string | null;
+
+      /**
+       * Optional description of what this MCP server provides.
+       */
+      server_description?: string | null;
     }
   }
 
