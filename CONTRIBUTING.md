@@ -60,7 +60,7 @@ $ yarn link datagrid-ai
 # With pnpm
 $ pnpm link --global
 $ cd ../my-package
-$ pnpm link -—global datagrid-ai
+$ pnpm link --global datagrid-ai
 ```
 
 ## Running tests
