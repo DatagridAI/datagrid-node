@@ -682,6 +682,10 @@ export namespace ConverseParams {
      * Array of MCP (Model Context Protocol) server configurations to enable for this
      * converse call. Each MCP server provides additional tools that the agent can use
      * during the conversation.
+     *
+     * Datagrid handles the full MCP lifecycle automatically: `initialize`,
+     * `notifications/initialized`, then `tools/list` / `tools/call` with
+     * `MCP-Session-Id` and `MCP-Protocol-Version` headers.
      */
     mcp_servers?: Array<Config.McpServer> | null;
 
@@ -833,7 +837,9 @@ export namespace ConverseParams {
     /**
      * Configuration for an MCP (Model Context Protocol) server passed directly in the
      * request. MCP servers provide additional tools that extend the agent's
-     * capabilities.
+     * capabilities. Servers must implement the MCP streamable HTTP transport,
+     * including `initialize`, `notifications/initialized`, `tools/list`, and
+     * `tools/call`.
      */
     export interface McpServer {
       /**
@@ -842,7 +848,7 @@ export namespace ConverseParams {
       server_label: string;
 
       /**
-       * The HTTPS URL of the MCP server endpoint.
+       * The HTTPS URL of the MCP streamable HTTP endpoint.
        */
       server_url: string;
 
