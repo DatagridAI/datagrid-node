@@ -11,7 +11,7 @@ const client = new Datagrid({
 describe('resource files', () => {
   test('create: only required params', async () => {
     const responsePromise = client.files.create({
-      file: await toFile(Buffer.from('# my file contents'), 'README.md'),
+      file: await toFile(Buffer.from('Example data'), 'README.md'),
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -24,7 +24,7 @@ describe('resource files', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.files.create({
-      file: await toFile(Buffer.from('# my file contents'), 'README.md'),
+      file: await toFile(Buffer.from('Example data'), 'README.md'),
     });
   });
 
