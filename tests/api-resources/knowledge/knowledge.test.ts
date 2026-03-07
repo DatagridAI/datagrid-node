@@ -12,7 +12,7 @@ describe('resource knowledge', () => {
   // There is a trouble on the Prism mock side with validation for the array of files.
   test.skip('create: only required params', async () => {
     const responsePromise = client.knowledge.create({
-      files: [await toFile(Buffer.from('# my file contents'), 'README.md')],
+      files: [await toFile(Buffer.from('Example data'), 'README.md')],
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -32,7 +32,7 @@ describe('resource knowledge', () => {
 
   test.skip('create: required and optional params', async () => {
     const response = await client.knowledge.create({
-      files: [await toFile(Buffer.from('# my file contents'), 'README.md')],
+      files: [await toFile(Buffer.from('Example data'), 'README.md')],
       name: 'name',
       parent: { page_id: 'page_id', type: 'page' },
     });
