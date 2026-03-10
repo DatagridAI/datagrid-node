@@ -10,6 +10,14 @@ export {
 } from './agents';
 export { Beta } from './beta/beta';
 export {
+  ConnectionProvidersCursorIDPage,
+  ConnectionProviders,
+  type ConnectionProvider,
+  type ConnectionProviderCreateParams,
+  type ConnectionProviderUpdateParams,
+  type ConnectionProviderListParams,
+} from './connection-providers';
+export {
   ConnectionsCursorIDPage,
   Connections,
   type Connection,
@@ -23,6 +31,7 @@ export {
   ConversationsCursorIDPage,
   Conversations,
   type Conversation,
+  type ConversationSortField,
   type ConversationCreateParams,
   type ConversationListParams,
 } from './conversations/conversations';

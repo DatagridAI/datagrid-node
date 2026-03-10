@@ -85,6 +85,11 @@ export interface Conversation {
   name?: string;
 }
 
+/**
+ * The field to sort the conversations by.
+ */
+export type ConversationSortField = 'created_at' | 'updated_at';
+
 export interface ConversationCreateParams {
   /**
    * Name for the conversation.
@@ -92,7 +97,17 @@ export interface ConversationCreateParams {
   name?: string | null;
 }
 
-export interface ConversationListParams extends CursorIDPageParams {}
+export interface ConversationListParams extends CursorIDPageParams {
+  /**
+   * The direction to sort the results.
+   */
+  direction?: 'asc' | 'desc';
+
+  /**
+   * The field to sort the conversations by.
+   */
+  sort?: ConversationSortField;
+}
 
 Conversations.ConversationsCursorIDPage = ConversationsCursorIDPage;
 Conversations.Messages = Messages;
@@ -101,6 +116,7 @@ Conversations.MessagesCursorIDPage = MessagesCursorIDPage;
 export declare namespace Conversations {
   export {
     type Conversation as Conversation,
+    type ConversationSortField as ConversationSortField,
     ConversationsCursorIDPage as ConversationsCursorIDPage,
     type ConversationCreateParams as ConversationCreateParams,
     type ConversationListParams as ConversationListParams,

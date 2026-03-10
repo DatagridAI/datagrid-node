@@ -47,6 +47,28 @@ export interface Connector {
    * The object type, which is always `connector`.
    */
   object: 'connector';
+
+  /**
+   * Connector's OAuth app settings requirements.
+   */
+  oauth_app_settings?: Connector.OAuthAppSettings | null;
+}
+
+export namespace Connector {
+  /**
+   * Connector's OAuth app settings requirements.
+   */
+  export interface OAuthAppSettings {
+    /**
+     * The OAuth redirect URI that must be configured in your OAuth app settings
+     */
+    redirect_uri: string;
+
+    /**
+     * The OAuth scopes that must be granted when configuring your OAuth app.
+     */
+    scopes?: Array<string> | null;
+  }
 }
 
 export interface ConnectorListParams extends CursorIDPageParams {}

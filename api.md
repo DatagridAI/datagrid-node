@@ -66,6 +66,20 @@ Methods:
 - <code title="get /connections">client.connections.<a href="./src/resources/connections.ts">list</a>({ ...params }) -> ConnectionsCursorIDPage</code>
 - <code title="delete /connections/{connection_id}">client.connections.<a href="./src/resources/connections.ts">delete</a>(connectionId) -> void</code>
 
+# ConnectionProviders
+
+Types:
+
+- <code><a href="./src/resources/connection-providers.ts">ConnectionProvider</a></code>
+
+Methods:
+
+- <code title="post /connection-providers">client.connectionProviders.<a href="./src/resources/connection-providers.ts">create</a>({ ...params }) -> ConnectionProvider</code>
+- <code title="get /connection-providers/{connection_provider_id}">client.connectionProviders.<a href="./src/resources/connection-providers.ts">retrieve</a>(connectionProviderId) -> ConnectionProvider</code>
+- <code title="patch /connection-providers/{connection_provider_id}">client.connectionProviders.<a href="./src/resources/connection-providers.ts">update</a>(connectionProviderId, { ...params }) -> ConnectionProvider</code>
+- <code title="get /connection-providers">client.connectionProviders.<a href="./src/resources/connection-providers.ts">list</a>({ ...params }) -> ConnectionProvidersCursorIDPage</code>
+- <code title="delete /connection-providers/{connection_provider_id}">client.connectionProviders.<a href="./src/resources/connection-providers.ts">delete</a>(connectionProviderId) -> void</code>
+
 # Connectors
 
 Types:
@@ -251,6 +265,7 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/conversations/conversations.ts">Conversation</a></code>
+- <code><a href="./src/resources/conversations/conversations.ts">ConversationSortField</a></code>
 
 Methods:
 

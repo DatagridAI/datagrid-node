@@ -24,6 +24,7 @@ describe('top level methods', () => {
     const response = await client.converse({
       prompt: 'string',
       agent_id: 'agent_id',
+      agent_routing: { mode: 'auto' },
       config: {
         agent_model: 'magpie-1.1',
         agent_tools: ['data_analysis'],
