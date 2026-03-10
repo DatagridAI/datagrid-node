@@ -259,6 +259,12 @@ export interface ConverseParams {
   agent_id?: string | null;
 
   /**
+   * Controls how the API selects which agent to use when routing is needed. This
+   * field is mutually exclusive with agent_id.
+   */
+  agent_routing?: ConverseParams.Auto | ConverseParams.Manual | null;
+
+  /**
    * Override the agent config for this converse call. This is applied as a partial
    * override.
    */
@@ -418,6 +424,313 @@ export namespace ConverseParams {
   }
 
   /**
+   * The API automatically selects the best agent from the entire Teamspace.
+   */
+  export interface Auto {
+    /**
+     * The API selects the best agent from the entire Teamspace.
+     */
+    mode: 'auto';
+  }
+
+  /**
+   * The API selects the best agent from the specific list you provide.
+   */
+  export interface Manual {
+    /**
+     * The API selects the best agent from the specific list you provide.
+     */
+    mode: 'manual';
+
+    /**
+     * Limit the selection pool to these specific agents. Each item may be an agent ID
+     * string or an inline agent config object.
+     */
+    targets: Array<string | Manual.AgentConfigWithID>;
+  }
+
+  export namespace Manual {
+    export interface AgentConfigWithID {
+      /**
+       * The ID of the agent to use for routing.
+       */
+      agent_id?: string;
+
+      /**
+       * The version of Datagrid's agent brain.
+       *
+       * - magpie-1.1 is the default and most powerful model.
+       * - magpie-1.1-flash is a faster model useful for RAG usecases, it currently only
+       *   supports semantic_search tool. Structured outputs are not supported with this
+       *   model.
+       * - Can also accept any custom string value for future model versions.
+       * - Magpie-2.0 our latest agentic model with more proactive planning and reasoning
+       *   capabilities.
+       */
+      agent_model?: 'magpie-1.1' | 'magpie-1.1-flash' | 'magpie-1' | 'magpie-2.0' | (string & {}) | null;
+
+      /**
+       * Array of corpus items the agent should use during the converse. When omitted,
+       * all knowledge is used.
+       */
+      corpus?: Array<AgentConfigWithID.CorpusKnowledgeItem | AgentConfigWithID.CorpusPageItem> | null;
+
+      /**
+       * Use custom prompt to instruct the style and formatting of the agent's response
+       */
+      custom_prompt?: string | null;
+
+      /**
+       * Array of the agent tools to disable. Disabling is performed after the
+       * 'agent_tools' rules are applied. For example, agent_tools: null and
+       * disabled_tools: [data_analysis] will enable everything but the data_analysis
+       * tool. If nothing or [] is provided, nothing is disabled and therefore only the
+       * agent_tools setting is relevant.
+       */
+      disabled_tools?: Array<
+        | 'data_analysis'
+        | 'semantic_search'
+        | 'agent_memory'
+        | 'schema_info'
+        | 'table_info'
+        | 'create_dataset'
+        | 'find_files'
+        | 'read_file_contents'
+        | 'file_analysis'
+        | 'calendar'
+        | 'email'
+        | 'schedule_recurring_message_tool'
+        | 'procore'
+        | 'egnyte'
+        | 'notion'
+        | 'slack'
+        | 'microsoft_teams'
+        | 'sharepoint'
+        | 'drive'
+        | 'fieldwire'
+        | 'planner'
+        | 'webbrowser'
+        | 'pdf_manipulation'
+        | 'document_generator'
+        | 'pdf_generator'
+        | 'acc'
+        | 'docusign'
+        | 'webflow'
+        | 'hubspot'
+        | 'nec'
+        | 'github'
+        | 'trimble_project_site'
+        | 'trimble'
+        | 'linkedin'
+        | 'google_docs'
+        | 'google_slides'
+        | 'google_sheets'
+        | 'avoma'
+        | 'content_writer'
+        | 'code_tool'
+        | 'data_classification'
+        | 'data_extraction'
+        | 'image_detection'
+        | 'attachment_extraction'
+        | 'pdf_extraction'
+        | 'pdf_page_info'
+        | 'youtube_video_analysis'
+        | 'calculate'
+        | 'pdf_form_filling'
+        | 'image_generator'
+        | 'video_generator'
+        | 'connect_data'
+        | 'download_data'
+        | 'web_search'
+        | 'fetch_url'
+        | 'company_prospect_researcher'
+        | 'people_prospect_researcher'
+        | string
+        | ToolsAPI.Tool
+      > | null;
+
+      /**
+       * @deprecated Deprecated, use corpus instead. Array of Knowledge IDs the agent
+       * should use during the converse. When omitted, all knowledge is used.
+       */
+      knowledge_ids?: Array<string> | null;
+
+      /**
+       * The LLM used to generate responses.
+       */
+      llm_model?:
+        | 'gemini-3-pro-preview'
+        | 'gemini-3-flash-preview'
+        | 'gemini-2.5-pro'
+        | 'gemini-2.5-pro-preview-05-06'
+        | 'gemini-2.5-flash'
+        | 'gemini-2.5-flash-preview-04-17'
+        | 'gemini-2.5-flash-lite'
+        | 'gpt-5'
+        | 'gpt-5.1'
+        | 'gemini-2.0-flash-001'
+        | 'gemini-2.0-flash'
+        | 'gemini-1.5-pro-001'
+        | 'gemini-1.5-pro-002'
+        | 'gemini-1.5-flash-002'
+        | 'gemini-1.5-flash-001'
+        | 'chatgpt-4o-latest'
+        | 'gpt-4o'
+        | 'gpt-4'
+        | 'gpt-4-turbo'
+        | 'gpt-4o-mini'
+        | (string & {})
+        | null;
+
+      /**
+       * Define the planning strategy your AI Agent should use when breaking down tasks
+       * and solving problems
+       */
+      planning_prompt?: string | null;
+
+      /**
+       * Directs your AI Agent's operational behavior.
+       */
+      system_prompt?: string | null;
+
+      /**
+       * Array of the agent tools to enable. If not provided - default tools of the agent
+       * are used. If empty list provided - none of the tools are used. If null
+       * provided - all tools are used. When connection_id is set for a tool, it will use
+       * that specific connection instead of the default one.
+       *
+       * Knowledge management tools:
+       *
+       * - data_analysis: Answer statistical or analytical questions like "Show my
+       *   quarterly revenue growth"
+       * - semantic_search: Search knowledge through natural language queries.
+       * - agent_memory: Agents can remember experiences, conversations and user
+       *   preferences.
+       * - schema_info: Helps the Agent understand column names and dataset purpose.
+       *   Avoid disabling
+       * - table_info: Allow the AI Agent to get information about datasets and schemas
+       * - create_dataset: Agents respond with data tables
+       *
+       * Actions:
+       *
+       * - calendar: Allow the Agent to access and make changes to your Google Calendar
+       * - schedule_recurring_message_tool: Eliminate busywork such as: "Send a summary
+       *   of today's meetings at 5pm on workdays"
+       *
+       * Data processing tools:
+       *
+       * - data_classification: Agents handle queries like "Label these emails as high,
+       *   medium, or low priority"
+       * - data_extraction: Helps the agent understand data from other tools. Avoid
+       *   disabling
+       * - image_detection: Extract information from images using AI
+       * - pdf_extraction: Extraction of information from PDFs using AI
+       *
+       * Enhanced response tools:
+       *
+       * - connect_data: Agents provide buttons to import data in response to queries
+       *   like "Connect Hubspot"
+       * - download_data: Agents handle queries like "download the table as CSV"
+       *
+       * Web tools:
+       *
+       * - web_search: Agents search the internet, and provide links to their sources
+       * - fetch_url: Fetch URL content
+       * - company_prospect_researcher: Agents provide information about companies
+       * - people_prospect_researcher: Agents provide information about people
+       */
+      tools?: Array<
+        | 'data_analysis'
+        | 'semantic_search'
+        | 'agent_memory'
+        | 'schema_info'
+        | 'table_info'
+        | 'create_dataset'
+        | 'find_files'
+        | 'read_file_contents'
+        | 'file_analysis'
+        | 'calendar'
+        | 'email'
+        | 'schedule_recurring_message_tool'
+        | 'procore'
+        | 'egnyte'
+        | 'notion'
+        | 'slack'
+        | 'microsoft_teams'
+        | 'sharepoint'
+        | 'drive'
+        | 'fieldwire'
+        | 'planner'
+        | 'webbrowser'
+        | 'pdf_manipulation'
+        | 'document_generator'
+        | 'pdf_generator'
+        | 'acc'
+        | 'docusign'
+        | 'webflow'
+        | 'hubspot'
+        | 'nec'
+        | 'github'
+        | 'trimble_project_site'
+        | 'trimble'
+        | 'linkedin'
+        | 'google_docs'
+        | 'google_slides'
+        | 'google_sheets'
+        | 'avoma'
+        | 'content_writer'
+        | 'code_tool'
+        | 'data_classification'
+        | 'data_extraction'
+        | 'image_detection'
+        | 'attachment_extraction'
+        | 'pdf_extraction'
+        | 'pdf_page_info'
+        | 'youtube_video_analysis'
+        | 'calculate'
+        | 'pdf_form_filling'
+        | 'image_generator'
+        | 'video_generator'
+        | 'connect_data'
+        | 'download_data'
+        | 'web_search'
+        | 'fetch_url'
+        | 'company_prospect_researcher'
+        | 'people_prospect_researcher'
+        | string
+        | ToolsAPI.Tool
+        | ToolsAPI.Tool
+      > | null;
+    }
+
+    export namespace AgentConfigWithID {
+      export interface CorpusKnowledgeItem {
+        /**
+         * The ID of the knowledge to include in the corpus.
+         */
+        knowledge_id: string;
+
+        /**
+         * The type of the corpus item. Always 'knowledge' for knowledge items.
+         */
+        type: 'knowledge';
+      }
+
+      export interface CorpusPageItem {
+        /**
+         * The ID of the page to include in the corpus.
+         */
+        page_id: string;
+
+        /**
+         * The type of the corpus item. Always 'page' for page items.
+         */
+        type: 'page';
+      }
+    }
+  }
+
+  /**
    * Override the agent config for this converse call. This is applied as a partial
    * override.
    */
@@ -462,6 +775,7 @@ export namespace ConverseParams {
       | 'planner'
       | 'webbrowser'
       | 'pdf_manipulation'
+      | 'document_generator'
       | 'pdf_generator'
       | 'acc'
       | 'docusign'
@@ -538,6 +852,7 @@ export namespace ConverseParams {
       | 'planner'
       | 'webbrowser'
       | 'pdf_manipulation'
+      | 'document_generator'
       | 'pdf_generator'
       | 'acc'
       | 'docusign'
@@ -606,6 +921,7 @@ export namespace ConverseParams {
       | 'planner'
       | 'webbrowser'
       | 'pdf_manipulation'
+      | 'document_generator'
       | 'pdf_generator'
       | 'acc'
       | 'docusign'
@@ -770,6 +1086,7 @@ export namespace ConverseParams {
       | 'planner'
       | 'webbrowser'
       | 'pdf_manipulation'
+      | 'document_generator'
       | 'pdf_generator'
       | 'acc'
       | 'docusign'

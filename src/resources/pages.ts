@@ -85,6 +85,18 @@ export interface Page {
    * The parent object, indicating where the object is located in the hierarchy
    */
   parent: Page.ParentPage | Page.RootPage;
+
+  /**
+   * The visibility scope of the knowledge. 'teamspace' means visible only within the
+   * owning teamspace. 'organization' means visible across all teamspaces in the same
+   * organization.
+   */
+  scope: 'teamspace' | 'organization';
+
+  /**
+   * The ID of the teamspace that owns this page.
+   */
+  teamspace_id: string;
 }
 
 export namespace Page {
@@ -164,6 +176,13 @@ export interface PageUpdateParams {
    * Move the page to a different parent.
    */
   parent?: PageUpdateParams.ParentPage | PageUpdateParams.RootPage | null;
+
+  /**
+   * The visibility scope of the knowledge. 'teamspace' means visible only within the
+   * owning teamspace. 'organization' means visible across all teamspaces in the same
+   * organization.
+   */
+  scope?: 'teamspace' | 'organization' | null;
 }
 
 export namespace PageUpdateParams {

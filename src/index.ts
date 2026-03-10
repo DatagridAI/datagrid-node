@@ -26,6 +26,14 @@ import {
   AgentsCursorIDPage,
 } from './resources/agents';
 import {
+  ConnectionProvider,
+  ConnectionProviderCreateParams,
+  ConnectionProviderListParams,
+  ConnectionProviderUpdateParams,
+  ConnectionProviders,
+  ConnectionProvidersCursorIDPage,
+} from './resources/connection-providers';
+import {
   Connection,
   ConnectionCreateParams,
   ConnectionListParams,
@@ -80,6 +88,7 @@ import {
   Conversation,
   ConversationCreateParams,
   ConversationListParams,
+  ConversationSortField,
   Conversations,
   ConversationsCursorIDPage,
 } from './resources/conversations/conversations';
@@ -235,6 +244,7 @@ export class Datagrid extends Core.APIClient {
 
   knowledge: API.KnowledgeResource = new API.KnowledgeResource(this);
   connections: API.Connections = new API.Connections(this);
+  connectionProviders: API.ConnectionProviders = new API.ConnectionProviders(this);
   connectors: API.Connectors = new API.Connectors(this);
   files: API.Files = new API.Files(this);
   secrets: API.Secrets = new API.Secrets(this);
@@ -315,6 +325,8 @@ Datagrid.KnowledgeResource = KnowledgeResource;
 Datagrid.KnowledgesCursorIDPage = KnowledgesCursorIDPage;
 Datagrid.Connections = Connections;
 Datagrid.ConnectionsCursorIDPage = ConnectionsCursorIDPage;
+Datagrid.ConnectionProviders = ConnectionProviders;
+Datagrid.ConnectionProvidersCursorIDPage = ConnectionProvidersCursorIDPage;
 Datagrid.Connectors = Connectors;
 Datagrid.ConnectorsCursorIDPage = ConnectorsCursorIDPage;
 Datagrid.Files = Files;
@@ -380,6 +392,15 @@ export declare namespace Datagrid {
     type ConnectionCreateParams as ConnectionCreateParams,
     type ConnectionUpdateParams as ConnectionUpdateParams,
     type ConnectionListParams as ConnectionListParams,
+  };
+
+  export {
+    ConnectionProviders as ConnectionProviders,
+    type ConnectionProvider as ConnectionProvider,
+    ConnectionProvidersCursorIDPage as ConnectionProvidersCursorIDPage,
+    type ConnectionProviderCreateParams as ConnectionProviderCreateParams,
+    type ConnectionProviderUpdateParams as ConnectionProviderUpdateParams,
+    type ConnectionProviderListParams as ConnectionProviderListParams,
   };
 
   export {
@@ -458,6 +479,7 @@ export declare namespace Datagrid {
   export {
     Conversations as Conversations,
     type Conversation as Conversation,
+    type ConversationSortField as ConversationSortField,
     ConversationsCursorIDPage as ConversationsCursorIDPage,
     type ConversationCreateParams as ConversationCreateParams,
     type ConversationListParams as ConversationListParams,

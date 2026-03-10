@@ -97,6 +97,11 @@ export interface Agent {
   description: string | null;
 
   /**
+   * The emoji of the agent
+   */
+  emoji: string | null;
+
+  /**
    * @deprecated Deprecated, use corpus instead. Array of Knowledge IDs the agent
    * should use during the converse. When omitted, all knowledge is used.
    */
@@ -242,6 +247,7 @@ export interface AgentCreateParams {
     | 'planner'
     | 'webbrowser'
     | 'pdf_manipulation'
+    | 'document_generator'
     | 'pdf_generator'
     | 'acc'
     | 'docusign'
@@ -398,6 +404,7 @@ export interface AgentCreateParams {
     | 'planner'
     | 'webbrowser'
     | 'pdf_manipulation'
+    | 'document_generator'
     | 'pdf_generator'
     | 'acc'
     | 'docusign'
@@ -524,6 +531,7 @@ export interface AgentUpdateParams {
     | 'planner'
     | 'webbrowser'
     | 'pdf_manipulation'
+    | 'document_generator'
     | 'pdf_generator'
     | 'acc'
     | 'docusign'
@@ -560,6 +568,11 @@ export interface AgentUpdateParams {
     | string
     | ToolsAPI.Tool
   > | null;
+
+  /**
+   * The emoji of the agent
+   */
+  emoji?: string | null;
 
   /**
    * @deprecated Deprecated, use corpus instead. Array of Knowledge IDs the agent
@@ -680,6 +693,7 @@ export interface AgentUpdateParams {
     | 'planner'
     | 'webbrowser'
     | 'pdf_manipulation'
+    | 'document_generator'
     | 'pdf_generator'
     | 'acc'
     | 'docusign'

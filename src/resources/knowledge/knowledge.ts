@@ -33,7 +33,8 @@ export class KnowledgeResource extends APIResource {
   }
 
   /**
-   * Update a knowledge's attributes.
+   * Update a knowledge's attributes. Each request can include either `files` or
+   * `sync`, but not both.
    */
   update(
     knowledgeId: string,
@@ -85,7 +86,9 @@ export class KnowledgeResource extends APIResource {
   }
 
   /**
-   * Manually trigger a full re-indexing of the knowledge.
+   * Manually trigger a full re-indexing of the knowledge. The reindex runs
+   * **asynchronously**: the API returns as soon as the job is enqueued. Re-indexing
+   * is not performed immediately.
    */
   reindex(knowledgeId: string, options?: Core.RequestOptions): Core.APIPromise<void> {
     return this._client.post(`/knowledge/${knowledgeId}/reindex`, {
@@ -184,6 +187,13 @@ export interface Knowledge {
   row_counts: Knowledge.RowCounts;
 
   /**
+   * The visibility scope of the knowledge. 'teamspace' means visible only within the
+   * owning teamspace. 'organization' means visible across all teamspaces in the same
+   * organization.
+   */
+  scope: 'teamspace' | 'organization';
+
+  /**
    * The current knowledge status can be one of three values: `pending`, `partial`,
    * or `ready`. `pending` indicates that the knowledge is awaiting learning and will
    * not be used by the agent when responding. `partial` indicates that the knowledge
@@ -197,6 +207,11 @@ export interface Knowledge {
    * Sync information for knowledge that syncs data from a connection
    */
   sync: Knowledge.Sync | null;
+
+  /**
+   * The ID of the teamspace that owns this knowledge.
+   */
+  teamspace_id: string;
 
   credits?: Knowledge.Credits;
 
@@ -599,7 +614,7 @@ export interface KnowledgeUpdateParams {
    * The files to replace existing knowledge. When provided, all existing data will
    * be removed from the knowledge and replaced with these files. Supported media
    * types are `pdf`, `json`, `csv`, `text`, `png`, `jpeg`, `excel`, `google sheets`,
-   * `docx`, `pptx`.
+   * `docx`, `pptx`. Cannot be used together with `sync` in the same request.
    */
   files?: Array<Core.Uploadable> | null;
 
@@ -614,8 +629,16 @@ export interface KnowledgeUpdateParams {
   parent?: KnowledgeUpdateParams.ParentPage | KnowledgeUpdateParams.RootPage | null;
 
   /**
-   * Sync configuration updates. Note: For multipart/form-data, this should be sent
-   * as a JSON string.
+   * The visibility scope of the knowledge. 'teamspace' means visible only within the
+   * owning teamspace. 'organization' means visible across all teamspaces in the same
+   * organization.
+   */
+  scope?: 'teamspace' | 'organization' | null;
+
+  /**
+   * Sync configuration updates for knowledge created from a connection. Note: For
+   * multipart/form-data, this should be sent as a JSON string. Cannot be used
+   * together with `files` in the same request.
    */
   sync?: KnowledgeUpdateParams.Sync | null;
 }
@@ -647,8 +670,9 @@ export namespace KnowledgeUpdateParams {
   }
 
   /**
-   * Sync configuration updates. Note: For multipart/form-data, this should be sent
-   * as a JSON string.
+   * Sync configuration updates for knowledge created from a connection. Note: For
+   * multipart/form-data, this should be sent as a JSON string. Cannot be used
+   * together with `files` in the same request.
    */
   export interface Sync {
     /**
