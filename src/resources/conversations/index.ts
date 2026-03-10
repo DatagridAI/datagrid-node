@@ -4,6 +4,7 @@ export {
   ConversationsCursorIDPage,
   Conversations,
   type Conversation,
+  type ConversationSortField,
   type ConversationCreateParams,
   type ConversationListParams,
 } from './conversations';

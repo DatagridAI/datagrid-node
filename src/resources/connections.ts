@@ -133,6 +133,12 @@ export interface ConnectionCreateParams {
    * The connector ID for the third-party service to connect to.
    */
   connector_id: string;
+
+  /**
+   * Optional connection provider ID to use custom OAuth credentials for this
+   * connection.
+   */
+  connection_provider_id?: string | null;
 }
 
 export interface ConnectionUpdateParams {

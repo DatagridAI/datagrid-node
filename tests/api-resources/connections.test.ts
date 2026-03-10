@@ -21,7 +21,10 @@ describe('resource connections', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.connections.create({ connector_id: 'connector_id' });
+    const response = await client.connections.create({
+      connector_id: 'connector_id',
+      connection_provider_id: 'connection_provider_id',
+    });
   });
 
   test('retrieve', async () => {
