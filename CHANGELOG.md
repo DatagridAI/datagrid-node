@@ -1,5 +1,51 @@
 # Changelog
 
+## 0.9.0 (2026-04-01)
+
+Full Changelog: [v0.8.0...v0.9.0](https://github.com/DatagridAI/datagrid-node/compare/v0.8.0...v0.9.0)
+
+### Features
+
+* **api:** api update ([1f85851](https://github.com/DatagridAI/datagrid-node/commit/1f8585156feb397e50fb8d1671acc54dd109da65))
+* **api:** api update ([51dde60](https://github.com/DatagridAI/datagrid-node/commit/51dde601c3eaaee95fcc207a211ae5add4adbf7a))
+* **api:** api update ([8457378](https://github.com/DatagridAI/datagrid-node/commit/8457378b0c968756762eb8c49b251bdcb7ab646f))
+* **api:** api update ([5b552e5](https://github.com/DatagridAI/datagrid-node/commit/5b552e5fc9487c5ce137effd0224b7e65c7d5819))
+* **api:** api update ([fba85aa](https://github.com/DatagridAI/datagrid-node/commit/fba85aab621a003ef811ab0de8935ee58bb5a766))
+
+
+### Bug Fixes
+
+* **client:** preserve URL params already embedded in path ([35d7b32](https://github.com/DatagridAI/datagrid-node/commit/35d7b32873662575b93c8dd6416e6f565eefbecf))
+* **docs/contributing:** correct pnpm link command ([ec2ff38](https://github.com/DatagridAI/datagrid-node/commit/ec2ff3827ede56257c26afc5b3c9543290383dc6))
+* fix request delays for retrying to be more respectful of high requested delays ([466a5fd](https://github.com/DatagridAI/datagrid-node/commit/466a5fd2300d661c2681bd5103789b45d99a9859))
+* **internal:** skip tests that depend on mock server ([097f8f2](https://github.com/DatagridAI/datagrid-node/commit/097f8f2e3680959c8f37f11885dc89041d8a25c4))
+
+
+### Chores
+
+* **ci:** skip lint on metadata-only changes ([e5da419](https://github.com/DatagridAI/datagrid-node/commit/e5da419b29607361424ac5e6ac247b6e133451a5))
+* **ci:** skip uploading artifacts on stainless-internal branches ([df25774](https://github.com/DatagridAI/datagrid-node/commit/df2577482d3b946ceb7c3921d09eecfa4007cc89))
+* **ci:** upgrade `actions/github-script` ([e174f0d](https://github.com/DatagridAI/datagrid-node/commit/e174f0de6210f7b3ad48937476e588a949a13f41))
+* **client:** do not parse responses with empty content-length ([8dbba6c](https://github.com/DatagridAI/datagrid-node/commit/8dbba6cbc1a5aa5b48d0eff367687f07a413cb77))
+* **internal:** move stringifyQuery implementation to internal function ([5ae2174](https://github.com/DatagridAI/datagrid-node/commit/5ae21743c17ef0c58519cfb94462ddbd8f890556))
+* **internal:** tweak CI branches ([8ac29f1](https://github.com/DatagridAI/datagrid-node/commit/8ac29f1b09e38b5fbcef57a0715054dbfcca54fe))
+* **internal:** update gitignore ([4366073](https://github.com/DatagridAI/datagrid-node/commit/436607337bdfeb342a212c54b9f7be8d87f17181))
+* **internal:** update multipart form array serialization ([8ac5c6d](https://github.com/DatagridAI/datagrid-node/commit/8ac5c6d257717f3b9d1b991749b9e7e9ee5f19a3))
+* **test:** do not count install time for mock server timeout ([14e8c16](https://github.com/DatagridAI/datagrid-node/commit/14e8c16f070f28406d571adf7e2e74b0f8d77c85))
+* **tests:** bump steady to v0.19.4 ([2922e70](https://github.com/DatagridAI/datagrid-node/commit/2922e709e6b89208202620f910ce75337b005118))
+* **tests:** bump steady to v0.19.5 ([8615a80](https://github.com/DatagridAI/datagrid-node/commit/8615a801ee0ddf69c51ac1af9d3cd871b4e12845))
+* **tests:** bump steady to v0.19.6 ([bf02cd5](https://github.com/DatagridAI/datagrid-node/commit/bf02cd5db0ab8526bb04e53f052d377025927f79))
+* **tests:** bump steady to v0.19.7 ([6689f8f](https://github.com/DatagridAI/datagrid-node/commit/6689f8fe71ec40128a3373f9493e917e5f4b7b9c))
+* **tests:** bump steady to v0.20.1 ([024dbfa](https://github.com/DatagridAI/datagrid-node/commit/024dbfa97afb5e0f99cc684d51758ddc8f51086f))
+* **tests:** bump steady to v0.20.2 ([5a6b7d3](https://github.com/DatagridAI/datagrid-node/commit/5a6b7d39e1b0ff8fcde05a6b7ffe66e231992e97))
+* update mock server docs ([4bde56d](https://github.com/DatagridAI/datagrid-node/commit/4bde56d0fb9238d97fe02702ff8b10ff85c2f69e))
+* update placeholder string ([7862f65](https://github.com/DatagridAI/datagrid-node/commit/7862f6573e76e17553514a0c30c690f89370a2e4))
+
+
+### Refactors
+
+* **tests:** switch from prism to steady ([21583ad](https://github.com/DatagridAI/datagrid-node/commit/21583ad63109b03016121f4981ad1100ad865bcc))
+
 ## 0.8.0 (2026-01-21)
 
 Full Changelog: [v0.6.0...v0.8.0](https://github.com/DatagridAI/datagrid-node/compare/v0.6.0...v0.8.0)
