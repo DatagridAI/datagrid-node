@@ -33,11 +33,13 @@ export {
   type Conversation,
   type ConversationSortField,
   type ConversationCreateParams,
+  type ConversationUpdateParams,
   type ConversationListParams,
 } from './conversations/conversations';
 export {
   DataViews,
   type DataView,
+  type DataViewCreateResponse,
   type DataViewListResponse,
   type DataViewCreateParams,
   type DataViewListParams,
@@ -47,6 +49,7 @@ export {
   Files,
   type FileObject,
   type FileCreateParams,
+  type FileUpdateParams,
   type FileListParams,
 } from './files';
 export {
@@ -58,6 +61,7 @@ export {
   type KnowledgeCreatedPayload,
   type ResizePayload,
 } from './i-frame-events';
+export { IdentityResource, type Identity, type IdentityTeamspace } from './identity';
 export {
   KnowledgesCursorIDPage,
   KnowledgeResource,
@@ -84,11 +88,17 @@ export {
 } from './pages';
 export {
   Search,
+  type AISource,
+  type SearchAIRequestBody,
+  type SearchAIResult,
   type SearchResultItem,
   type SearchResultResource,
   type SearchResultResourceType,
+  type SearchTreeResult,
   type SearchSearchResponse,
   type SearchSearchParams,
+  type SearchSearchAIParams,
+  type SearchSearchTreeParams,
 } from './search';
 export {
   SecretsCursorIDPage,
@@ -105,4 +115,11 @@ export {
   type ToolName,
   type ToolListParams,
 } from './tools';
+export {
+  Voice,
+  type VoiceSessionRequest,
+  type VoiceSessionResponse,
+  type VoiceWebsocketMessage,
+  type VoiceStartSessionParams,
+} from './voice';
 export { type ConverseResponse, type Properties, type ConverseParams } from './top-level';

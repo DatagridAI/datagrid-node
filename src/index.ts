@@ -48,6 +48,7 @@ import {
   FileListParams,
   FileObject,
   FileObjectsCursorIDPage,
+  FileUpdateParams,
   Files,
 } from './resources/files';
 import {
@@ -59,6 +60,7 @@ import {
   KnowledgeCreatedPayload,
   ResizePayload,
 } from './resources/i-frame-events';
+import { Identity, IdentityResource, IdentityTeamspace } from './resources/identity';
 import {
   Page,
   PageCreateParams,
@@ -68,12 +70,18 @@ import {
   PagesCursorIDPage,
 } from './resources/pages';
 import {
+  AISource,
   Search,
+  SearchAIRequestBody,
+  SearchAIResult,
   SearchResultItem,
   SearchResultResource,
   SearchResultResourceType,
+  SearchSearchAIParams,
   SearchSearchParams,
   SearchSearchResponse,
+  SearchSearchTreeParams,
+  SearchTreeResult,
 } from './resources/search';
 import {
   Secret,
@@ -83,18 +91,27 @@ import {
   SecretsCursorIDPage,
 } from './resources/secrets';
 import { Tool, ToolDef, ToolDefsCursorNamePage, ToolListParams, ToolName, Tools } from './resources/tools';
+import {
+  Voice,
+  VoiceSessionRequest,
+  VoiceSessionResponse,
+  VoiceStartSessionParams,
+  VoiceWebsocketMessage,
+} from './resources/voice';
 import { Beta } from './resources/beta/beta';
 import {
   Conversation,
   ConversationCreateParams,
   ConversationListParams,
   ConversationSortField,
+  ConversationUpdateParams,
   Conversations,
   ConversationsCursorIDPage,
 } from './resources/conversations/conversations';
 import {
   DataView,
   DataViewCreateParams,
+  DataViewCreateResponse,
   DataViewListParams,
   DataViewListResponse,
   DataViews,
@@ -255,6 +272,7 @@ export class Datagrid extends Core.APIClient {
   secrets: API.Secrets = new API.Secrets(this);
   search: API.Search = new API.Search(this);
   agents: API.Agents = new API.Agents(this);
+  identity: API.IdentityResource = new API.IdentityResource(this);
   pages: API.Pages = new API.Pages(this);
   tools: API.Tools = new API.Tools(this);
   memory: API.Memory = new API.Memory(this);
@@ -263,6 +281,7 @@ export class Datagrid extends Core.APIClient {
   conversations: API.Conversations = new API.Conversations(this);
   dataViews: API.DataViews = new API.DataViews(this);
   beta: API.Beta = new API.Beta(this);
+  voice: API.Voice = new API.Voice(this);
 
   /**
    * Check whether the base URL is set to its default.
@@ -346,6 +365,7 @@ Datagrid.SecretsCursorIDPage = SecretsCursorIDPage;
 Datagrid.Search = Search;
 Datagrid.Agents = Agents;
 Datagrid.AgentsCursorIDPage = AgentsCursorIDPage;
+Datagrid.IdentityResource = IdentityResource;
 Datagrid.Pages = Pages;
 Datagrid.PagesCursorIDPage = PagesCursorIDPage;
 Datagrid.Tools = Tools;
@@ -357,6 +377,7 @@ Datagrid.Conversations = Conversations;
 Datagrid.ConversationsCursorIDPage = ConversationsCursorIDPage;
 Datagrid.DataViews = DataViews;
 Datagrid.Beta = Beta;
+Datagrid.Voice = Voice;
 
 export declare namespace Datagrid {
   export type RequestOptions = Core.RequestOptions;
@@ -425,6 +446,7 @@ export declare namespace Datagrid {
     type FileObject as FileObject,
     FileObjectsCursorIDPage as FileObjectsCursorIDPage,
     type FileCreateParams as FileCreateParams,
+    type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,
   };
 
@@ -438,11 +460,17 @@ export declare namespace Datagrid {
 
   export {
     Search as Search,
+    type AISource as AISource,
+    type SearchAIRequestBody as SearchAIRequestBody,
+    type SearchAIResult as SearchAIResult,
     type SearchResultItem as SearchResultItem,
     type SearchResultResource as SearchResultResource,
     type SearchResultResourceType as SearchResultResourceType,
+    type SearchTreeResult as SearchTreeResult,
     type SearchSearchResponse as SearchSearchResponse,
     type SearchSearchParams as SearchSearchParams,
+    type SearchSearchAIParams as SearchSearchAIParams,
+    type SearchSearchTreeParams as SearchSearchTreeParams,
   };
 
   export {
@@ -452,6 +480,12 @@ export declare namespace Datagrid {
     type AgentCreateParams as AgentCreateParams,
     type AgentUpdateParams as AgentUpdateParams,
     type AgentListParams as AgentListParams,
+  };
+
+  export {
+    IdentityResource as IdentityResource,
+    type Identity as Identity,
+    type IdentityTeamspace as IdentityTeamspace,
   };
 
   export {
@@ -492,18 +526,28 @@ export declare namespace Datagrid {
     type ConversationSortField as ConversationSortField,
     ConversationsCursorIDPage as ConversationsCursorIDPage,
     type ConversationCreateParams as ConversationCreateParams,
+    type ConversationUpdateParams as ConversationUpdateParams,
     type ConversationListParams as ConversationListParams,
   };
 
   export {
     DataViews as DataViews,
     type DataView as DataView,
+    type DataViewCreateResponse as DataViewCreateResponse,
     type DataViewListResponse as DataViewListResponse,
     type DataViewCreateParams as DataViewCreateParams,
     type DataViewListParams as DataViewListParams,
   };
 
   export { Beta as Beta };
+
+  export {
+    Voice as Voice,
+    type VoiceSessionRequest as VoiceSessionRequest,
+    type VoiceSessionResponse as VoiceSessionResponse,
+    type VoiceWebsocketMessage as VoiceWebsocketMessage,
+    type VoiceStartSessionParams as VoiceStartSessionParams,
+  };
 }
 
 export { toFile, fileFromPath } from './uploads';

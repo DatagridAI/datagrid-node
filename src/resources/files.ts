@@ -8,7 +8,10 @@ import { type Response } from '../_shims/index';
 
 export class Files extends APIResource {
   /**
-   * Create files which can be passed as input to agents.
+   * Create files which can be passed as input to agents. This endpoint consumes a
+   * flat credit charge per upload. The response includes a `credits` field with the
+   * amount consumed, or `null` if the billing write fails — the upload still
+   * succeeds in that case.
    */
   create(body: FileCreateParams, options?: Core.RequestOptions): Core.APIPromise<FileObject> {
     return this._client.post(
@@ -26,6 +29,22 @@ export class Files extends APIResource {
    */
   retrieve(fileId: string, options?: Core.RequestOptions): Core.APIPromise<FileObject> {
     return this._client.get(`/files/${fileId}`, options);
+  }
+
+  /**
+   * Update file metadata.
+   */
+  update(fileId: string, body?: FileUpdateParams, options?: Core.RequestOptions): Core.APIPromise<FileObject>;
+  update(fileId: string, options?: Core.RequestOptions): Core.APIPromise<FileObject>;
+  update(
+    fileId: string,
+    body: FileUpdateParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<FileObject> {
+    if (isRequestOptions(body)) {
+      return this.update(fileId, {}, body);
+    }
+    return this._client.patch(`/files/${fileId}`, { body, ...options });
   }
 
   /**
@@ -98,10 +117,48 @@ export interface FileObject {
    * The object type, which is always `file`.
    */
   object: 'file';
+
+  /**
+   * Credit consumption for this file upload. `null` when the billing lookup fails.
+   */
+  credits?: FileObject.Credits | null;
+
+  /**
+   * The ISO timestamp when the file will expire and be automatically deleted, or
+   * null if the file does not expire.
+   */
+  expires_at?: string | null;
+}
+
+export namespace FileObject {
+  /**
+   * Credit consumption for this file upload. `null` when the billing lookup fails.
+   */
+  export interface Credits {
+    /**
+     * The number of credits consumed by the operation.
+     */
+    consumed: number;
+  }
 }
 
 export interface FileCreateParams {
   file: Core.Uploadable;
+
+  /**
+   * The number of seconds after creation when the file will expire and be
+   * automatically deleted. Must be a positive integer, maximum 6 days (518400s). If
+   * not provided, the file will not expire.
+   */
+  expires_after?: number | null;
+}
+
+export interface FileUpdateParams {
+  /**
+   * Seconds from now until the file expires. Only applies to temporary files. Max 6
+   * days (518400s). Omitted leaves expiration unchanged.
+   */
+  expires_after?: number;
 }
 
 export interface FileListParams extends CursorIDPageParams {}
@@ -113,6 +170,7 @@ export declare namespace Files {
     type FileObject as FileObject,
     FileObjectsCursorIDPage as FileObjectsCursorIDPage,
     type FileCreateParams as FileCreateParams,
+    type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,
   };
 }

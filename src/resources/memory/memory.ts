@@ -2,7 +2,14 @@
 
 import { APIResource } from '../../resource';
 import * as UserAPI from './user';
-import { User, UserCreateParams, UserListParams, UserListResponse, UserMemory } from './user';
+import {
+  User,
+  UserCreateParams,
+  UserCreateResponse,
+  UserListParams,
+  UserListResponse,
+  UserMemory,
+} from './user';
 
 export class Memory extends APIResource {
   user: UserAPI.User = new UserAPI.User(this._client);
@@ -14,6 +21,7 @@ export declare namespace Memory {
   export {
     User as User,
     type UserMemory as UserMemory,
+    type UserCreateResponse as UserCreateResponse,
     type UserListResponse as UserListResponse,
     type UserCreateParams as UserCreateParams,
     type UserListParams as UserListParams,

@@ -3,6 +3,16 @@
 import { APIResource } from '../../resource';
 import * as CreditsAPI from './credits';
 import { Credits, CreditsReport } from './credits';
+import * as McpServersAPI from './mcp-servers';
+import {
+  CreateMcpServerRequest,
+  ListMcpServersResponse,
+  McpServer,
+  McpServerCreateParams,
+  McpServerUpdateParams,
+  McpServers,
+  UpdateMcpServerRequest,
+} from './mcp-servers';
 import * as UsersAPI from './users';
 import {
   OrganizationUser,
@@ -24,6 +34,7 @@ import {
 export class Organization extends APIResource {
   users: UsersAPI.Users = new UsersAPI.Users(this._client);
   teamspaces: TeamspacesAPI.Teamspaces = new TeamspacesAPI.Teamspaces(this._client);
+  mcpServers: McpServersAPI.McpServers = new McpServersAPI.McpServers(this._client);
   credits: CreditsAPI.Credits = new CreditsAPI.Credits(this._client);
 }
 
@@ -31,6 +42,7 @@ Organization.Users = Users;
 Organization.OrganizationUsersCursorIDPage = OrganizationUsersCursorIDPage;
 Organization.Teamspaces = Teamspaces;
 Organization.TeamspacesCursorIDPage = TeamspacesCursorIDPage;
+Organization.McpServers = McpServers;
 Organization.Credits = Credits;
 
 export declare namespace Organization {
@@ -49,6 +61,16 @@ export declare namespace Organization {
     type TeamspaceCreateParams as TeamspaceCreateParams,
     type TeamspaceListParams as TeamspaceListParams,
     type TeamspacePatchParams as TeamspacePatchParams,
+  };
+
+  export {
+    McpServers as McpServers,
+    type CreateMcpServerRequest as CreateMcpServerRequest,
+    type ListMcpServersResponse as ListMcpServersResponse,
+    type McpServer as McpServer,
+    type UpdateMcpServerRequest as UpdateMcpServerRequest,
+    type McpServerCreateParams as McpServerCreateParams,
+    type McpServerUpdateParams as McpServerUpdateParams,
   };
 
   export { Credits as Credits, type CreditsReport as CreditsReport };

@@ -6,6 +6,7 @@ export {
   type Conversation,
   type ConversationSortField,
   type ConversationCreateParams,
+  type ConversationUpdateParams,
   type ConversationListParams,
 } from './conversations';
 export { MessagesCursorIDPage, Messages, type Message, type MessageListParams } from './messages';

@@ -34,7 +34,10 @@ export class KnowledgeResource extends APIResource {
 
   /**
    * Update a knowledge's attributes. Each request can include either `files` or
-   * `sync`, but not both.
+   * `sync`, but not both. When `files` are provided, all existing data is replaced
+   * and a re-processing pipeline runs asynchronously — this consumes credits based
+   * on the volume of data processed. Metadata-only and sync-only updates do not
+   * consume credits and are not blocked by credit eligibility checks.
    */
   update(
     knowledgeId: string,
@@ -76,7 +79,10 @@ export class KnowledgeResource extends APIResource {
   }
 
   /**
-   * Create knowledge from connection which will be learned and leveraged by agents.
+   * Initiates knowledge creation from a connection by returning a redirect URL. The
+   * organization must have enough credits to start this flow. The downstream
+   * ingestion and indexing that follow still run asynchronously, and the actual
+   * credit consumption remains variable based on the volume of data processed.
    */
   connect(
     body: KnowledgeConnectParams,
@@ -88,7 +94,9 @@ export class KnowledgeResource extends APIResource {
   /**
    * Manually trigger a full re-indexing of the knowledge. The reindex runs
    * **asynchronously**: the API returns as soon as the job is enqueued. Re-indexing
-   * is not performed immediately.
+   * is not performed immediately. This endpoint consumes credits — the actual credit
+   * cost is variable, based on the volume of data being re-indexed, and is charged
+   * asynchronously as processing completes.
    */
   reindex(knowledgeId: string, options?: Core.RequestOptions): Core.APIPromise<void> {
     return this._client.post(`/knowledge/${knowledgeId}/reindex`, {
@@ -129,6 +137,11 @@ export interface AttachmentMetadata {
    */
   url: string;
 
+  /**
+   * The data lake item ID of the attachment, used to generate fresh signed URLs.
+   */
+  data_lake_item_id?: string;
+
   page?: AttachmentMetadata.Page;
 }
 
@@ -167,7 +180,16 @@ export interface Knowledge {
   created_at: string;
 
   /**
-   * The name of the knowledge
+   * Credit consumption for this knowledge. `null` when the knowledge is still being
+   * processed and the final cost is not yet known (e.g. immediately after creation
+   * or reindexing), or when the credit lookup fails. When present, `consumed` is the
+   * current summed spend for the knowledge's active tables — it is not necessarily
+   * the cost of the most recent request, nor the full lifetime spend.
+   */
+  credits: Knowledge.Credits | null;
+
+  /**
+   * The name of the knowledge.
    */
   name: string;
 
@@ -213,8 +235,6 @@ export interface Knowledge {
    */
   teamspace_id: string;
 
-  credits?: Knowledge.Credits;
-
   /**
    * The ISO string for when the knowledge was last updated.
    */
@@ -222,6 +242,20 @@ export interface Knowledge {
 }
 
 export namespace Knowledge {
+  /**
+   * Credit consumption for this knowledge. `null` when the knowledge is still being
+   * processed and the final cost is not yet known (e.g. immediately after creation
+   * or reindexing), or when the credit lookup fails. When present, `consumed` is the
+   * current summed spend for the knowledge's active tables — it is not necessarily
+   * the cost of the most recent request, nor the full lifetime spend.
+   */
+  export interface Credits {
+    /**
+     * The number of credits consumed by the operation.
+     */
+    consumed: number;
+  }
+
   /**
    * The parent page reference, indicating where this page is nested
    */
@@ -282,14 +316,14 @@ export namespace Knowledge {
     enabled: boolean;
 
     /**
-     * The cron schedule configuration for syncing data from the connection.
+     * A cron-based schedule for syncing data
      */
     trigger?: Sync.Trigger | null;
   }
 
   export namespace Sync {
     /**
-     * The cron schedule configuration for syncing data from the connection.
+     * A cron-based schedule for syncing data
      */
     export interface Trigger {
       /**
@@ -312,13 +346,6 @@ export namespace Knowledge {
        */
       timezone?: string;
     }
-  }
-
-  export interface Credits {
-    /**
-     * The number of credits consumed by the knowledge.
-     */
-    consumed: number;
   }
 }
 
@@ -718,9 +745,9 @@ export namespace KnowledgeUpdateParams {
 
 export interface KnowledgeListParams extends CursorIDPageParams {
   /**
-   * Filter knowledge by parent. Pass `{"type":"root"}` to get root-level knowledge,
-   * or `{"type":"page","page_id":"page_123"}` to get knowledge nested under a
-   * specific page. If not specified, returns all knowledge.
+   * Filter by parent. Pass `{"type":"root"}` to get root-level items, or
+   * `{"type":"page","page_id":"page_123"}` to get items nested under a specific
+   * page. If not specified, returns all items.
    */
   parent?: KnowledgeListParams.ParentPage | KnowledgeListParams.RootPage;
 }
