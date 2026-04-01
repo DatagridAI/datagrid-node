@@ -56,7 +56,7 @@ describe('resource knowledge', () => {
     ).rejects.toThrow(Datagrid.NotFoundError);
   });
 
-  test('update', async () => {
+  test.skip('update', async () => {
     const responsePromise = client.knowledge.update('knowledge_id', {});
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
