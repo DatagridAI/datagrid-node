@@ -69,6 +69,12 @@ export interface Teamspace {
   id: string;
 
   /**
+   * Cloud provider for this teamspace. Determines storage platform (S3/GCS) and AI
+   * model providers (Bedrock/Vertex). Immutable after creation. Defaults to `gcp`.
+   */
+  cloud_provider: 'aws' | 'gcp';
+
+  /**
    * Open teamspaces allow all organization members to join without admin approval.
    * Access for users who join this way is limited to conversations with agents in
    * this teamspace.
@@ -102,6 +108,13 @@ export interface TeamspaceCreateParams {
    * The name of the teamspace
    */
   name: string;
+
+  /**
+   * Cloud provider for this teamspace. Determines storage (S3/GCS) and model
+   * providers (Bedrock/Vertex). Immutable after creation. Defaults to `gcp` if not
+   * specified.
+   */
+  cloud_provider?: 'aws' | 'gcp' | null;
 }
 
 export interface TeamspaceListParams extends CursorIDPageParams {}

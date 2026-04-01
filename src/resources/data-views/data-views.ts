@@ -17,9 +17,10 @@ export class DataViews extends APIResource {
 
   /**
    * Creates a new data view for a knowledge source, providing controlled access
-   * through a service account.
+   * through a service account. This endpoint requires credits and meters setup work
+   * based on the number of warehouse operations performed for the request.
    */
-  create(body: DataViewCreateParams, options?: Core.RequestOptions): Core.APIPromise<DataView> {
+  create(body: DataViewCreateParams, options?: Core.RequestOptions): Core.APIPromise<DataViewCreateResponse> {
     return this._client.post('/data-views', { body, ...options });
   }
 
@@ -75,6 +76,33 @@ export interface DataView {
    * The id of the service account that can access this data view.
    */
   service_account_id: string;
+}
+
+/**
+ * The `data_view` object represents a view into a knowledge source that can be
+ * accessed through a service account.
+ */
+export interface DataViewCreateResponse extends DataView {
+  /**
+   * Credit consumption for this data-view creation. `consumed` reflects the
+   * warehouse setup work billed for the request. `null` when the billing write fails
+   * after the data view is successfully created.
+   */
+  credits?: DataViewCreateResponse.Credits | null;
+}
+
+export namespace DataViewCreateResponse {
+  /**
+   * Credit consumption for this data-view creation. `consumed` reflects the
+   * warehouse setup work billed for the request. `null` when the billing write fails
+   * after the data view is successfully created.
+   */
+  export interface Credits {
+    /**
+     * The number of credits consumed by the operation.
+     */
+    consumed: number;
+  }
 }
 
 export interface DataViewListResponse {
@@ -134,6 +162,7 @@ DataViews.ServiceAccounts = ServiceAccounts;
 export declare namespace DataViews {
   export {
     type DataView as DataView,
+    type DataViewCreateResponse as DataViewCreateResponse,
     type DataViewListResponse as DataViewListResponse,
     type DataViewCreateParams as DataViewCreateParams,
     type DataViewListParams as DataViewListParams,

@@ -75,6 +75,7 @@ describe('resource agents', () => {
           after: 'after',
           before: 'before',
           limit: 1,
+          search: 'search',
         },
         { path: '/_stainless_unknown_path' },
       ),

@@ -214,9 +214,9 @@ export namespace PageUpdateParams {
 
 export interface PageListParams extends CursorIDPageParams {
   /**
-   * Filter pages by parent. Pass `{"type":"root"}` to get root-level pages, or
-   * `{"type":"page","page_id":"page_123"}` to get pages nested under a specific
-   * page. If not specified, returns all pages.
+   * Filter by parent. Pass `{"type":"root"}` to get root-level items, or
+   * `{"type":"page","page_id":"page_123"}` to get items nested under a specific
+   * page. If not specified, returns all items.
    */
   parent?: PageListParams.ParentPage | PageListParams.RootPage;
 }

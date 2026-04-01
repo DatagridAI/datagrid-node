@@ -6,9 +6,12 @@ import * as Core from '../../core';
 
 export class User extends APIResource {
   /**
-   * Create a user memory
+   * Create a user memory. This endpoint requires credits and meters the actual
+   * embedding work performed for the request. The response includes
+   * `credits.consumed` with the billed amount, or `null` if the billing write fails
+   * after the memory is successfully created.
    */
-  create(body: UserCreateParams, options?: Core.RequestOptions): Core.APIPromise<UserMemory> {
+  create(body: UserCreateParams, options?: Core.RequestOptions): Core.APIPromise<UserCreateResponse> {
     return this._client.post('/user-memories', {
       body,
       timeout: (this._client as any)._options.timeout ?? 120000,
@@ -89,6 +92,29 @@ export interface UserMemory {
   user_prompt: string;
 }
 
+export interface UserCreateResponse extends UserMemory {
+  /**
+   * Credit consumption for this user-memory creation. `consumed` reflects the billed
+   * embedding work for the request. `null` when the billing write fails after the
+   * memory is successfully created.
+   */
+  credits?: UserCreateResponse.Credits | null;
+}
+
+export namespace UserCreateResponse {
+  /**
+   * Credit consumption for this user-memory creation. `consumed` reflects the billed
+   * embedding work for the request. `null` when the billing write fails after the
+   * memory is successfully created.
+   */
+  export interface Credits {
+    /**
+     * The number of credits consumed by the operation.
+     */
+    consumed: number;
+  }
+}
+
 export interface UserListResponse {
   /**
    * An array containing the actual response elements, paginated by any request
@@ -145,6 +171,7 @@ export interface UserListParams {
 export declare namespace User {
   export {
     type UserMemory as UserMemory,
+    type UserCreateResponse as UserCreateResponse,
     type UserListResponse as UserListResponse,
     type UserCreateParams as UserCreateParams,
     type UserListParams as UserListParams,
