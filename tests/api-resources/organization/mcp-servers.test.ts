@@ -8,9 +8,12 @@ const client = new Datagrid({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource teamspaces', () => {
+describe('resource mcpServers', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.organization.teamspaces.create({ access: 'open', name: 'name' });
+    const responsePromise = client.organization.mcpServers.create({
+      base_url: 'https://example.com',
+      name: 'name',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -21,15 +24,19 @@ describe('resource teamspaces', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.organization.teamspaces.create({
-      access: 'open',
+    const response = await client.organization.mcpServers.create({
+      base_url: 'https://example.com',
       name: 'name',
-      cloud_provider: 'aws',
+      authorization: 'authorization',
+      authorization_secret_id: 'authorization_secret_id',
+      icon_url: 'icon_url',
+      protocol_version: 'protocol_version',
+      transport: 'http',
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.organization.teamspaces.retrieve('teamspace_id');
+    const responsePromise = client.organization.mcpServers.retrieve('server_id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -42,12 +49,23 @@ describe('resource teamspaces', () => {
   test('retrieve: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.organization.teamspaces.retrieve('teamspace_id', { path: '/_stainless_unknown_path' }),
+      client.organization.mcpServers.retrieve('server_id', { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(Datagrid.NotFoundError);
   });
 
+  test('update', async () => {
+    const responsePromise = client.organization.mcpServers.update('server_id', {});
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
   test('list', async () => {
-    const responsePromise = client.organization.teamspaces.list();
+    const responsePromise = client.organization.mcpServers.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -59,27 +77,13 @@ describe('resource teamspaces', () => {
 
   test('list: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.organization.teamspaces.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.organization.mcpServers.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
       Datagrid.NotFoundError,
     );
   });
 
-  test('list: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.organization.teamspaces.list(
-        {
-          after: 'after',
-          before: 'before',
-          limit: 1,
-        },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(Datagrid.NotFoundError);
-  });
-
-  test('patch', async () => {
-    const responsePromise = client.organization.teamspaces.patch('teamspace_id', {});
+  test('delete', async () => {
+    const responsePromise = client.organization.mcpServers.delete('server_id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -87,5 +91,12 @@ describe('resource teamspaces', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('delete: request options instead of params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.organization.mcpServers.delete('server_id', { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(Datagrid.NotFoundError);
   });
 });

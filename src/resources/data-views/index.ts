@@ -3,6 +3,7 @@
 export {
   DataViews,
   type DataView,
+  type DataViewCreateResponse,
   type DataViewListResponse,
   type DataViewCreateParams,
   type DataViewListParams,

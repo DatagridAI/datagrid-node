@@ -6,101 +6,82 @@ import * as MessagesAPI from './conversations/messages';
 /**
  * The `conversation.message` object represents a message in a conversation.
  */
-export interface ConverseResponse {
+export interface ConverseResponse extends MessagesAPI.Message {
   /**
-   * The message identifier.
+   * Array of reasoning steps that occurred during this response. Only includes steps
+   * with status completed or failed.
    */
-  id: string;
+  reasoning?: Array<ConverseResponse.Reasoning> | null;
 
   /**
-   * The ID of the agent that sent or responded to the message.
+   * Array of tool calls that were executed during this response.
    */
-  agent_id: string;
-
-  /**
-   * Array of citations that provide sources for factual statements in the response.
-   * Each citation includes the referenced text and its sources.
-   */
-  citations: Array<ConverseResponse.Citation> | null;
-
-  /**
-   * Contents of the message.
-   */
-  content: Array<ConverseResponse.Content>;
-
-  /**
-   * The ID of the conversation the message belongs to.
-   */
-  conversation_id: string;
-
-  /**
-   * The ISO string for when the message was created.
-   */
-  created_at: string;
-
-  credits: ConverseResponse.Credits | null;
-
-  /**
-   * The object type, which is always `conversation.message`.
-   */
-  object: 'conversation.message';
-
-  /**
-   * The role of the message sender - either 'user' or 'agent'.
-   */
-  role: 'user' | 'agent';
+  tool_calls?: Array<ConverseResponse.ToolCall> | null;
 }
 
 export namespace ConverseResponse {
-  export interface Citation {
+  export interface Reasoning {
     /**
-     * The text snippet from the response that is being cited.
+     * The ID of the reasoning step.
      */
-    citation: string;
+    id: string;
 
     /**
-     * Array of sources that support this citation.
+     * The current status of the reasoning step.
      */
-    sources: Array<Citation.Source>;
+    status: 'in_progress' | 'completed' | 'failed';
+
+    /**
+     * The type of the delta, which is always reasoning.
+     */
+    type: 'reasoning';
+
+    /**
+     * Whether this reasoning step was executed in parallel with other steps.
+     */
+    executed_in_parallel?: boolean | null;
+
+    /**
+     * The execution time of the reasoning step in milliseconds.
+     */
+    execution_time_ms?: number | null;
+
+    /**
+     * The output of the reasoning step. Only present when status is completed or
+     * failed.
+     */
+    output?: string | null;
+
+    /**
+     * The task description for this reasoning step.
+     */
+    task?: string | null;
   }
 
-  export namespace Citation {
-    export interface Source {
-      /**
-       * An array of text snippets from the source that confirm the citation.
-       */
-      confirmations: Array<string>;
-
-      /**
-       * Name of the source.
-       */
-      source_name: string;
-
-      type: 'image' | 'pdf_page' | 'record' | 'web_search' | 'sql_query_result' | 'action';
-
-      /**
-       * Id of the source.
-       */
-      source_id?: string;
-
-      /**
-       * URI of the source.
-       */
-      source_uri?: string;
-    }
-  }
-
-  export interface Content {
-    text: string;
-
-    type: 'text';
-  }
-
-  export interface Credits {
+  export interface ToolCall {
     /**
-     * The number of credits consumed by the converse call.
+     * The ID of the tool call.
      */
-    consumed: number;
+    id: string;
+
+    status: 'in_progress' | 'completed' | 'failed';
+
+    /**
+     * The `Tool` object represents a tool that can be used by agents.
+     */
+    tool: ToolsAPI.ToolDef;
+
+    type: 'tool_call';
+
+    /**
+     * Whether this tool call was executed in parallel with other tool calls.
+     */
+    executed_in_parallel?: boolean;
+
+    /**
+     * The output of the tool call.
+     */
+    output?: string;
   }
 }
 
@@ -111,7 +92,8 @@ export type Properties =
   | MessagesAPI.Message
   | Properties.ConverseStatusEvent
   | Properties.ConverseContentMessageDeltaEvent
-  | Properties.ConverseToolCallDeltaEvent;
+  | Properties.ConverseToolCallDeltaEvent
+  | Properties.ConverseReasoningDeltaEvent;
 
 export namespace Properties {
   export interface ConverseStatusEvent {
@@ -215,6 +197,9 @@ export namespace Properties {
   }
 
   export interface ConverseToolCallDeltaEvent {
+    /**
+     * Event emitted when tools are called during the agent's reasoning process.
+     */
     data: ConverseToolCallDeltaEvent.Data;
 
     /**
@@ -224,6 +209,9 @@ export namespace Properties {
   }
 
   export namespace ConverseToolCallDeltaEvent {
+    /**
+     * Event emitted when tools are called during the agent's reasoning process.
+     */
     export interface Data {
       /**
        * The ID of the tool call.
@@ -245,6 +233,64 @@ export namespace Properties {
       output?: string;
     }
   }
+
+  /**
+   * Event emitted for each reasoning steps are executed during the agent's reasoning
+   * process. Two emission rules apply:
+   *
+   * - **Deduplication:** a new event is emitted for a given `id` only when `status`
+   *   or the resolved tool changes.
+   * - **Tool resolution:** a `reasoning` event is always emitted; the corresponding
+   *   `tool_call` event is omitted when the tool cannot be resolved.
+   */
+  export interface ConverseReasoningDeltaEvent {
+    data: ConverseReasoningDeltaEvent.Data;
+
+    /**
+     * Type of the event which is always reasoning
+     */
+    event: 'reasoning';
+  }
+
+  export namespace ConverseReasoningDeltaEvent {
+    export interface Data {
+      /**
+       * The ID of the reasoning step.
+       */
+      id: string;
+
+      /**
+       * The current status of the reasoning step.
+       */
+      status: 'in_progress' | 'completed' | 'failed';
+
+      /**
+       * The type of the delta, which is always reasoning.
+       */
+      type: 'reasoning';
+
+      /**
+       * Whether this reasoning step was executed in parallel with other steps.
+       */
+      executed_in_parallel?: boolean | null;
+
+      /**
+       * The execution time of the reasoning step in milliseconds.
+       */
+      execution_time_ms?: number | null;
+
+      /**
+       * The output of the reasoning step. Only present when status is completed or
+       * failed.
+       */
+      output?: string | null;
+
+      /**
+       * The task description for this reasoning step.
+       */
+      task?: string | null;
+    }
+  }
 }
 
 export interface ConverseParams {
@@ -254,13 +300,15 @@ export interface ConverseParams {
   prompt: string | Array<ConverseParams.InputItemList>;
 
   /**
-   * The ID of the agent that should be used for the converse.
+   * The ID of the agent that should be used for the converse. When omitted and a
+   * `conversation_id` is provided, the conversation's existing agent assignments are
+   * preserved. When omitted without a `conversation_id`, a new conversation is
+   * created with the default agent.
    */
   agent_id?: string | null;
 
   /**
-   * Controls how the API selects which agent to use when routing is needed. This
-   * field is mutually exclusive with agent_id.
+   * Determines how the API routes the converse request to an agent.
    */
   agent_routing?: ConverseParams.Auto | ConverseParams.Manual | null;
 
@@ -277,10 +325,25 @@ export interface ConverseParams {
   conversation_id?: string | null;
 
   /**
+   * A datagrid file URI pointing to content the user is currently viewing on screen
+   * (e.g., a web page, document, or dashboard rendered as markdown). The agent uses
+   * this context to resolve ambiguous queries like 'what is this about?' or 'review
+   * this'. The content is automatically summarized and made available to the agent.
+   */
+  current_view_content?: string | null;
+
+  /**
    * Determines whether the response should include citations. When enabled, the
    * agent will generate citations for factual statements.
    */
   generate_citations?: boolean | null;
+
+  /**
+   * When set to false, tool call and reasoning step events are omitted from SSE
+   * streams. Non-streaming responses always include the tool_calls and reasoning
+   * fields (as null when empty).
+   */
+  include_steps?: boolean | null;
 
   /**
    * Array of secret ID's to be included in the context. The secret value will be
@@ -296,8 +359,9 @@ export interface ConverseParams {
 
   /**
    * Contains the format property used to specify the structured output schema.
-   * Structured output is not supported only supported by the default agent model,
-   * magpie-1.1 and magpie-2.0.
+   * Structured output is supported by the following agent models: `magpie-2.0`
+   * (default), `magpie-2.5`, and `magpie-1.1`. It is not supported by
+   * `magpie-1.1-flash` (Ask mode) or `llm-only` (Fastest mode).
    */
   text?: ConverseParams.Text | null;
 
@@ -457,17 +521,38 @@ export namespace ConverseParams {
       agent_id?: string;
 
       /**
-       * The version of Datagrid's agent brain.
+       * The agent model determines the processing mode for Converse requests. Each model
+       * maps to one of three modes available in the Datagrid UI:
        *
-       * - magpie-1.1 is the default and most powerful model.
-       * - magpie-1.1-flash is a faster model useful for RAG usecases, it currently only
-       *   supports semantic_search tool. Structured outputs are not supported with this
-       *   model.
-       * - Can also accept any custom string value for future model versions.
-       * - Magpie-2.0 our latest agentic model with more proactive planning and reasoning
-       *   capabilities.
+       * **Agentic mode** (full tool use, planning, and multi-step reasoning):
+       *
+       * - `magpie-2.0` — Default. Agentic model with proactive planning and reasoning.
+       * - `magpie-2.5` — Beta. Our latest agentic model — faster, more adaptable, and
+       *   built to handle a broader range of real-world tasks.
+       * - `magpie-1.1` — Previous-generation agentic model.
+       *
+       * **Ask mode** (lightweight, single-turn Q&A):
+       *
+       * - `magpie-1.1-flash` — Fast model optimized for RAG use cases. Only supports the
+       *   `semantic_search` tool. A 400 error will be returned if other tools are
+       *   specified. Structured outputs are not supported.
+       *
+       * **Fastest mode** (direct LLM response, no tool execution):
+       *
+       * - `llm-only` — Runs a direct LLM conversation with no planning or tool calls. A
+       *   400 error will be returned if tools are specified. Structured outputs are not
+       *   supported.
+       *
+       * Can also accept any custom string value for future model versions.
        */
-      agent_model?: 'magpie-1.1' | 'magpie-1.1-flash' | 'magpie-1' | 'magpie-2.0' | (string & {}) | null;
+      agent_model?:
+        | 'magpie-1.1'
+        | 'magpie-1.1-flash'
+        | 'magpie-2.0'
+        | 'magpie-2.5'
+        | 'llm-only'
+        | (string & {})
+        | null;
 
       /**
        * Array of corpus items the agent should use during the converse. When omitted,
@@ -497,6 +582,7 @@ export namespace ConverseParams {
         | 'find_files'
         | 'read_file_contents'
         | 'file_analysis'
+        | 'procore_support_index'
         | 'calendar'
         | 'email'
         | 'schedule_recurring_message_tool'
@@ -560,11 +646,13 @@ export namespace ConverseParams {
        */
       llm_model?:
         | 'gemini-3-pro-preview'
+        | 'gemini-3.1-pro-preview'
         | 'gemini-3-flash-preview'
         | 'gemini-2.5-pro'
         | 'gemini-2.5-pro-preview-05-06'
         | 'gemini-2.5-flash'
         | 'gemini-2.5-flash-preview-04-17'
+        | 'gemini-2.5-flash-native-audio-preview-12-2025'
         | 'gemini-2.5-flash-lite'
         | 'gpt-5'
         | 'gpt-5.1'
@@ -583,6 +671,11 @@ export namespace ConverseParams {
         | null;
 
       /**
+       * Registered MCP servers to enable for this agent.
+       */
+      mcp_servers?: Array<AgentConfigWithID.McpServer> | null;
+
+      /**
        * Define the planning strategy your AI Agent should use when breaking down tasks
        * and solving problems
        */
@@ -594,10 +687,19 @@ export namespace ConverseParams {
       system_prompt?: string | null;
 
       /**
-       * Array of the agent tools to enable. If not provided - default tools of the agent
-       * are used. If empty list provided - none of the tools are used. If null
-       * provided - all tools are used. When connection_id is set for a tool, it will use
-       * that specific connection instead of the default one.
+       * Array of the agent tools to enable. If not provided, or null is provided -
+       * default tools of the agent are used. If empty list provided - none of the tools
+       * are used. When connection_id is set for a tool, it will use that specific
+       * connection instead of the default one.
+       *
+       * **Tool availability by agent model:**
+       *
+       * - **Agentic** (`magpie-2.0`, `magpie-2.5`, `magpie-1.1`): All tools below are
+       *   available.
+       * - **Ask** (`magpie-1.1-flash`): Only `semantic_search` is supported. Requests
+       *   specifying other tools will be rejected with a 400 error.
+       * - **Fastest** (`llm-only`): No tools are executed. Requests specifying tools
+       *   will be rejected with a 400 error.
        *
        * Knowledge management tools:
        *
@@ -649,6 +751,7 @@ export namespace ConverseParams {
         | 'find_files'
         | 'read_file_contents'
         | 'file_analysis'
+        | 'procore_support_index'
         | 'calendar'
         | 'email'
         | 'schedule_recurring_message_tool'
@@ -699,7 +802,6 @@ export namespace ConverseParams {
         | 'people_prospect_researcher'
         | string
         | ToolsAPI.Tool
-        | ToolsAPI.Tool
       > | null;
     }
 
@@ -727,6 +829,12 @@ export namespace ConverseParams {
          */
         type: 'page';
       }
+
+      export interface McpServer {
+        server_id: string;
+
+        credential_id?: string | null;
+      }
     }
   }
 
@@ -736,17 +844,38 @@ export namespace ConverseParams {
    */
   export interface Config {
     /**
-     * The version of Datagrid's agent brain.
+     * The agent model determines the processing mode for Converse requests. Each model
+     * maps to one of three modes available in the Datagrid UI:
      *
-     * - magpie-1.1 is the default and most powerful model.
-     * - magpie-1.1-flash is a faster model useful for RAG usecases, it currently only
-     *   supports semantic_search tool. Structured outputs are not supported with this
-     *   model.
-     * - Can also accept any custom string value for future model versions.
-     * - Magpie-2.0 our latest agentic model with more proactive planning and reasoning
-     *   capabilities.
+     * **Agentic mode** (full tool use, planning, and multi-step reasoning):
+     *
+     * - `magpie-2.0` — Default. Agentic model with proactive planning and reasoning.
+     * - `magpie-2.5` — Beta. Our latest agentic model — faster, more adaptable, and
+     *   built to handle a broader range of real-world tasks.
+     * - `magpie-1.1` — Previous-generation agentic model.
+     *
+     * **Ask mode** (lightweight, single-turn Q&A):
+     *
+     * - `magpie-1.1-flash` — Fast model optimized for RAG use cases. Only supports the
+     *   `semantic_search` tool. A 400 error will be returned if other tools are
+     *   specified. Structured outputs are not supported.
+     *
+     * **Fastest mode** (direct LLM response, no tool execution):
+     *
+     * - `llm-only` — Runs a direct LLM conversation with no planning or tool calls. A
+     *   400 error will be returned if tools are specified. Structured outputs are not
+     *   supported.
+     *
+     * Can also accept any custom string value for future model versions.
      */
-    agent_model?: 'magpie-1.1' | 'magpie-1.1-flash' | 'magpie-1' | 'magpie-2.0' | (string & {}) | null;
+    agent_model?:
+      | 'magpie-1.1'
+      | 'magpie-1.1-flash'
+      | 'magpie-2.0'
+      | 'magpie-2.5'
+      | 'llm-only'
+      | (string & {})
+      | null;
 
     /**
      * @deprecated Deprecated, use tools instead
@@ -761,6 +890,7 @@ export namespace ConverseParams {
       | 'find_files'
       | 'read_file_contents'
       | 'file_analysis'
+      | 'procore_support_index'
       | 'calendar'
       | 'email'
       | 'schedule_recurring_message_tool'
@@ -838,6 +968,7 @@ export namespace ConverseParams {
       | 'find_files'
       | 'read_file_contents'
       | 'file_analysis'
+      | 'procore_support_index'
       | 'calendar'
       | 'email'
       | 'schedule_recurring_message_tool'
@@ -907,6 +1038,7 @@ export namespace ConverseParams {
       | 'find_files'
       | 'read_file_contents'
       | 'file_analysis'
+      | 'procore_support_index'
       | 'calendar'
       | 'email'
       | 'schedule_recurring_message_tool'
@@ -970,11 +1102,13 @@ export namespace ConverseParams {
      */
     llm_model?:
       | 'gemini-3-pro-preview'
+      | 'gemini-3.1-pro-preview'
       | 'gemini-3-flash-preview'
       | 'gemini-2.5-pro'
       | 'gemini-2.5-pro-preview-05-06'
       | 'gemini-2.5-flash'
       | 'gemini-2.5-flash-preview-04-17'
+      | 'gemini-2.5-flash-native-audio-preview-12-2025'
       | 'gemini-2.5-flash-lite'
       | 'gpt-5'
       | 'gpt-5.1'
@@ -1017,10 +1151,19 @@ export namespace ConverseParams {
     system_prompt?: string | null;
 
     /**
-     * Array of the agent tools to enable. If not provided - default tools of the agent
-     * are used. If empty list provided - none of the tools are used. If null
-     * provided - all tools are used. When connection_id is set for a tool, it will use
-     * that specific connection instead of the default one.
+     * Array of the agent tools to enable. If not provided, or null is provided -
+     * default tools of the agent are used. If empty list provided - none of the tools
+     * are used. When connection_id is set for a tool, it will use that specific
+     * connection instead of the default one.
+     *
+     * **Tool availability by agent model:**
+     *
+     * - **Agentic** (`magpie-2.0`, `magpie-2.5`, `magpie-1.1`): All tools below are
+     *   available.
+     * - **Ask** (`magpie-1.1-flash`): Only `semantic_search` is supported. Requests
+     *   specifying other tools will be rejected with a 400 error.
+     * - **Fastest** (`llm-only`): No tools are executed. Requests specifying tools
+     *   will be rejected with a 400 error.
      *
      * Knowledge management tools:
      *
@@ -1072,6 +1215,7 @@ export namespace ConverseParams {
       | 'find_files'
       | 'read_file_contents'
       | 'file_analysis'
+      | 'procore_support_index'
       | 'calendar'
       | 'email'
       | 'schedule_recurring_message_tool'
@@ -1122,7 +1266,6 @@ export namespace ConverseParams {
       | 'people_prospect_researcher'
       | string
       | ToolsAPI.Tool
-      | ToolsAPI.Tool
     > | null;
   }
 
@@ -1151,14 +1294,9 @@ export namespace ConverseParams {
       type: 'page';
     }
 
-    /**
-     * Configuration for an MCP (Model Context Protocol) server passed directly in the
-     * request. MCP servers provide additional tools that extend the agent's
-     * capabilities. Servers must implement the MCP streamable HTTP transport,
-     * including `initialize`, `notifications/initialized`, `tools/list`, and
-     * `tools/call`.
-     */
     export interface McpServer {
+      server_id: string;
+
       /**
        * A unique label to identify this MCP server. Used for tool namespacing.
        */
@@ -1181,6 +1319,8 @@ export namespace ConverseParams {
        */
       authorization?: string | null;
 
+      credential_id?: string | null;
+
       /**
        * Optional description of what this MCP server provides.
        */
@@ -1190,8 +1330,9 @@ export namespace ConverseParams {
 
   /**
    * Contains the format property used to specify the structured output schema.
-   * Structured output is not supported only supported by the default agent model,
-   * magpie-1.1 and magpie-2.0.
+   * Structured output is supported by the following agent models: `magpie-2.0`
+   * (default), `magpie-2.5`, and `magpie-1.1`. It is not supported by
+   * `magpie-1.1-flash` (Ask mode) or `llm-only` (Fastest mode).
    */
   export interface Text {
     /**

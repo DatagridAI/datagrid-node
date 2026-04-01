@@ -63,17 +63,31 @@ export interface Agent {
   id: string;
 
   /**
-   * The version of Datagrid's agent brain.
+   * The agent model determines the processing mode for Converse requests. Each model
+   * maps to one of three modes available in the Datagrid UI:
    *
-   * - magpie-1.1 is the default and most powerful model.
-   * - magpie-1.1-flash is a faster model useful for RAG usecases, it currently only
-   *   supports semantic_search tool. Structured outputs are not supported with this
-   *   model.
-   * - Can also accept any custom string value for future model versions.
-   * - Magpie-2.0 our latest agentic model with more proactive planning and reasoning
-   *   capabilities.
+   * **Agentic mode** (full tool use, planning, and multi-step reasoning):
+   *
+   * - `magpie-2.0` — Default. Agentic model with proactive planning and reasoning.
+   * - `magpie-2.5` — Beta. Our latest agentic model — faster, more adaptable, and
+   *   built to handle a broader range of real-world tasks.
+   * - `magpie-1.1` — Previous-generation agentic model.
+   *
+   * **Ask mode** (lightweight, single-turn Q&A):
+   *
+   * - `magpie-1.1-flash` — Fast model optimized for RAG use cases. Only supports the
+   *   `semantic_search` tool. A 400 error will be returned if other tools are
+   *   specified. Structured outputs are not supported.
+   *
+   * **Fastest mode** (direct LLM response, no tool execution):
+   *
+   * - `llm-only` — Runs a direct LLM conversation with no planning or tool calls. A
+   *   400 error will be returned if tools are specified. Structured outputs are not
+   *   supported.
+   *
+   * Can also accept any custom string value for future model versions.
    */
-  agent_model: 'magpie-1.1' | 'magpie-1.1-flash' | 'magpie-1' | 'magpie-2.0' | (string & {});
+  agent_model: 'magpie-1.1' | 'magpie-1.1-flash' | 'magpie-2.0' | 'magpie-2.5' | 'llm-only' | (string & {});
 
   /**
    * Array of corpus items the agent should use during the converse. When omitted,
@@ -112,11 +126,13 @@ export interface Agent {
    */
   llm_model:
     | 'gemini-3-pro-preview'
+    | 'gemini-3.1-pro-preview'
     | 'gemini-3-flash-preview'
     | 'gemini-2.5-pro'
     | 'gemini-2.5-pro-preview-05-06'
     | 'gemini-2.5-flash'
     | 'gemini-2.5-flash-preview-04-17'
+    | 'gemini-2.5-flash-native-audio-preview-12-2025'
     | 'gemini-2.5-flash-lite'
     | 'gpt-5'
     | 'gpt-5.1'
@@ -132,6 +148,11 @@ export interface Agent {
     | 'gpt-4-turbo'
     | 'gpt-4o-mini'
     | (string & {});
+
+  /**
+   * Registered MCP servers enabled for this agent.
+   */
+  mcp_servers: Array<Agent.McpServer>;
 
   /**
    * The name of the agent
@@ -184,21 +205,60 @@ export namespace Agent {
      */
     type: 'page';
   }
+
+  export interface McpServer {
+    base_url: string;
+
+    credential_id: string | null;
+
+    name: string;
+
+    object: 'agent_mcp_server';
+
+    server_id: string;
+
+    status: string;
+
+    last_synced_at?: string;
+
+    tool_count?: number;
+  }
 }
 
 export interface AgentCreateParams {
   /**
-   * The version of Datagrid's agent brain.
+   * The agent model determines the processing mode for Converse requests. Each model
+   * maps to one of three modes available in the Datagrid UI:
    *
-   * - magpie-1.1 is the default and most powerful model.
-   * - magpie-1.1-flash is a faster model useful for RAG usecases, it currently only
-   *   supports semantic_search tool. Structured outputs are not supported with this
-   *   model.
-   * - Can also accept any custom string value for future model versions.
-   * - Magpie-2.0 our latest agentic model with more proactive planning and reasoning
-   *   capabilities.
+   * **Agentic mode** (full tool use, planning, and multi-step reasoning):
+   *
+   * - `magpie-2.0` — Default. Agentic model with proactive planning and reasoning.
+   * - `magpie-2.5` — Beta. Our latest agentic model — faster, more adaptable, and
+   *   built to handle a broader range of real-world tasks.
+   * - `magpie-1.1` — Previous-generation agentic model.
+   *
+   * **Ask mode** (lightweight, single-turn Q&A):
+   *
+   * - `magpie-1.1-flash` — Fast model optimized for RAG use cases. Only supports the
+   *   `semantic_search` tool. A 400 error will be returned if other tools are
+   *   specified. Structured outputs are not supported.
+   *
+   * **Fastest mode** (direct LLM response, no tool execution):
+   *
+   * - `llm-only` — Runs a direct LLM conversation with no planning or tool calls. A
+   *   400 error will be returned if tools are specified. Structured outputs are not
+   *   supported.
+   *
+   * Can also accept any custom string value for future model versions.
    */
-  agent_model?: 'magpie-1.1' | 'magpie-1.1-flash' | 'magpie-1' | 'magpie-2.0' | (string & {}) | null;
+  agent_model?:
+    | 'magpie-1.1'
+    | 'magpie-1.1-flash'
+    | 'magpie-2.0'
+    | 'magpie-2.5'
+    | 'llm-only'
+    | (string & {})
+    | null;
 
   /**
    * Array of corpus items the agent should use during the converse. When omitted,
@@ -233,6 +293,7 @@ export interface AgentCreateParams {
     | 'find_files'
     | 'read_file_contents'
     | 'file_analysis'
+    | 'procore_support_index'
     | 'calendar'
     | 'email'
     | 'schedule_recurring_message_tool'
@@ -296,11 +357,13 @@ export interface AgentCreateParams {
    */
   llm_model?:
     | 'gemini-3-pro-preview'
+    | 'gemini-3.1-pro-preview'
     | 'gemini-3-flash-preview'
     | 'gemini-2.5-pro'
     | 'gemini-2.5-pro-preview-05-06'
     | 'gemini-2.5-flash'
     | 'gemini-2.5-flash-preview-04-17'
+    | 'gemini-2.5-flash-native-audio-preview-12-2025'
     | 'gemini-2.5-flash-lite'
     | 'gpt-5'
     | 'gpt-5.1'
@@ -319,6 +382,11 @@ export interface AgentCreateParams {
     | null;
 
   /**
+   * Registered MCP servers to enable for this agent.
+   */
+  mcp_servers?: Array<AgentCreateParams.McpServer> | null;
+
+  /**
    * The name of the agent
    */
   name?: string | null;
@@ -335,10 +403,19 @@ export interface AgentCreateParams {
   system_prompt?: string | null;
 
   /**
-   * Array of the agent tools to enable. If not provided - default tools of the agent
-   * are used. If empty list provided - none of the tools are used. If null
-   * provided - all tools are used. When connection_id is set for a tool, it will use
-   * that specific connection instead of the default one.
+   * Array of the agent tools to enable. If not provided, or null is provided -
+   * default tools of the agent are used. If empty list provided - none of the tools
+   * are used. When connection_id is set for a tool, it will use that specific
+   * connection instead of the default one.
+   *
+   * **Tool availability by agent model:**
+   *
+   * - **Agentic** (`magpie-2.0`, `magpie-2.5`, `magpie-1.1`): All tools below are
+   *   available.
+   * - **Ask** (`magpie-1.1-flash`): Only `semantic_search` is supported. Requests
+   *   specifying other tools will be rejected with a 400 error.
+   * - **Fastest** (`llm-only`): No tools are executed. Requests specifying tools
+   *   will be rejected with a 400 error.
    *
    * Knowledge management tools:
    *
@@ -390,6 +467,7 @@ export interface AgentCreateParams {
     | 'find_files'
     | 'read_file_contents'
     | 'file_analysis'
+    | 'procore_support_index'
     | 'calendar'
     | 'email'
     | 'schedule_recurring_message_tool'
@@ -440,7 +518,6 @@ export interface AgentCreateParams {
     | 'people_prospect_researcher'
     | string
     | ToolsAPI.Tool
-    | ToolsAPI.Tool
   > | null;
 }
 
@@ -468,21 +545,48 @@ export namespace AgentCreateParams {
      */
     type: 'page';
   }
+
+  export interface McpServer {
+    server_id: string;
+
+    credential_id?: string | null;
+  }
 }
 
 export interface AgentUpdateParams {
   /**
-   * The version of Datagrid's agent brain.
+   * The agent model determines the processing mode for Converse requests. Each model
+   * maps to one of three modes available in the Datagrid UI:
    *
-   * - magpie-1.1 is the default and most powerful model.
-   * - magpie-1.1-flash is a faster model useful for RAG usecases, it currently only
-   *   supports semantic_search tool. Structured outputs are not supported with this
-   *   model.
-   * - Can also accept any custom string value for future model versions.
-   * - Magpie-2.0 our latest agentic model with more proactive planning and reasoning
-   *   capabilities.
+   * **Agentic mode** (full tool use, planning, and multi-step reasoning):
+   *
+   * - `magpie-2.0` — Default. Agentic model with proactive planning and reasoning.
+   * - `magpie-2.5` — Beta. Our latest agentic model — faster, more adaptable, and
+   *   built to handle a broader range of real-world tasks.
+   * - `magpie-1.1` — Previous-generation agentic model.
+   *
+   * **Ask mode** (lightweight, single-turn Q&A):
+   *
+   * - `magpie-1.1-flash` — Fast model optimized for RAG use cases. Only supports the
+   *   `semantic_search` tool. A 400 error will be returned if other tools are
+   *   specified. Structured outputs are not supported.
+   *
+   * **Fastest mode** (direct LLM response, no tool execution):
+   *
+   * - `llm-only` — Runs a direct LLM conversation with no planning or tool calls. A
+   *   400 error will be returned if tools are specified. Structured outputs are not
+   *   supported.
+   *
+   * Can also accept any custom string value for future model versions.
    */
-  agent_model?: 'magpie-1.1' | 'magpie-1.1-flash' | 'magpie-1' | 'magpie-2.0' | (string & {}) | null;
+  agent_model?:
+    | 'magpie-1.1'
+    | 'magpie-1.1-flash'
+    | 'magpie-2.0'
+    | 'magpie-2.5'
+    | 'llm-only'
+    | (string & {})
+    | null;
 
   /**
    * Array of corpus items the agent should use during the converse. When omitted,
@@ -517,6 +621,7 @@ export interface AgentUpdateParams {
     | 'find_files'
     | 'read_file_contents'
     | 'file_analysis'
+    | 'procore_support_index'
     | 'calendar'
     | 'email'
     | 'schedule_recurring_message_tool'
@@ -585,11 +690,13 @@ export interface AgentUpdateParams {
    */
   llm_model?:
     | 'gemini-3-pro-preview'
+    | 'gemini-3.1-pro-preview'
     | 'gemini-3-flash-preview'
     | 'gemini-2.5-pro'
     | 'gemini-2.5-pro-preview-05-06'
     | 'gemini-2.5-flash'
     | 'gemini-2.5-flash-preview-04-17'
+    | 'gemini-2.5-flash-native-audio-preview-12-2025'
     | 'gemini-2.5-flash-lite'
     | 'gpt-5'
     | 'gpt-5.1'
@@ -608,6 +715,11 @@ export interface AgentUpdateParams {
     | null;
 
   /**
+   * Registered MCP servers to enable for this agent.
+   */
+  mcp_servers?: Array<AgentUpdateParams.McpServer> | null;
+
+  /**
    * The name of the agent
    */
   name?: string | null;
@@ -624,10 +736,19 @@ export interface AgentUpdateParams {
   system_prompt?: string | null;
 
   /**
-   * Array of the agent tools to enable. If not provided - default tools of the agent
-   * are used. If empty list provided - none of the tools are used. If null
-   * provided - all tools are used. When connection_id is set for a tool, it will use
-   * that specific connection instead of the default one.
+   * Array of the agent tools to enable. If not provided, or null is provided -
+   * default tools of the agent are used. If empty list provided - none of the tools
+   * are used. When connection_id is set for a tool, it will use that specific
+   * connection instead of the default one.
+   *
+   * **Tool availability by agent model:**
+   *
+   * - **Agentic** (`magpie-2.0`, `magpie-2.5`, `magpie-1.1`): All tools below are
+   *   available.
+   * - **Ask** (`magpie-1.1-flash`): Only `semantic_search` is supported. Requests
+   *   specifying other tools will be rejected with a 400 error.
+   * - **Fastest** (`llm-only`): No tools are executed. Requests specifying tools
+   *   will be rejected with a 400 error.
    *
    * Knowledge management tools:
    *
@@ -679,6 +800,7 @@ export interface AgentUpdateParams {
     | 'find_files'
     | 'read_file_contents'
     | 'file_analysis'
+    | 'procore_support_index'
     | 'calendar'
     | 'email'
     | 'schedule_recurring_message_tool'
@@ -729,7 +851,6 @@ export interface AgentUpdateParams {
     | 'people_prospect_researcher'
     | string
     | ToolsAPI.Tool
-    | ToolsAPI.Tool
   > | null;
 }
 
@@ -757,9 +878,20 @@ export namespace AgentUpdateParams {
      */
     type: 'page';
   }
+
+  export interface McpServer {
+    server_id: string;
+
+    credential_id?: string | null;
+  }
 }
 
-export interface AgentListParams extends CursorIDPageParams {}
+export interface AgentListParams extends CursorIDPageParams {
+  /**
+   * Optional search string to filter agents by name. Case-insensitive partial match.
+   */
+  search?: string;
+}
 
 Agents.AgentsCursorIDPage = AgentsCursorIDPage;
 

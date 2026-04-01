@@ -4,6 +4,7 @@ export { Memory } from './memory';
 export {
   User,
   type UserMemory,
+  type UserCreateResponse,
   type UserListResponse,
   type UserCreateParams,
   type UserListParams,

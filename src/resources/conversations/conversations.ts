@@ -25,6 +25,17 @@ export class Conversations extends APIResource {
   }
 
   /**
+   * Update a conversation's properties, such as assigned agents or name.
+   */
+  update(
+    conversationId: string,
+    body: ConversationUpdateParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Conversation> {
+    return this._client.patch(`/conversations/${conversationId}`, { body, ...options });
+  }
+
+  /**
    * Returns the list of conversations.
    */
   list(
@@ -80,9 +91,20 @@ export interface Conversation {
   updated_at: string;
 
   /**
+   * Array of agent IDs currently assigned to this conversation.
+   */
+  agent_ids?: Array<string>;
+
+  /**
    * The name of the conversation.
    */
   name?: string;
+
+  /**
+   * Array of agent IDs that have previously responded in this conversation. This
+   * list only grows and is never cleared when agents are reassigned.
+   */
+  participated_agent_ids?: Array<string>;
 }
 
 /**
@@ -95,6 +117,19 @@ export interface ConversationCreateParams {
    * Name for the conversation.
    */
   name?: string | null;
+}
+
+export interface ConversationUpdateParams {
+  /**
+   * Replace the list of agents assigned to this conversation. Pass an empty array to
+   * clear all agent assignments.
+   */
+  agent_ids?: Array<string>;
+
+  /**
+   * Update the conversation name.
+   */
+  name?: string;
 }
 
 export interface ConversationListParams extends CursorIDPageParams {
@@ -119,6 +154,7 @@ export declare namespace Conversations {
     type ConversationSortField as ConversationSortField,
     ConversationsCursorIDPage as ConversationsCursorIDPage,
     type ConversationCreateParams as ConversationCreateParams,
+    type ConversationUpdateParams as ConversationUpdateParams,
     type ConversationListParams as ConversationListParams,
   };
 

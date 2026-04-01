@@ -100,6 +100,7 @@ Methods:
 
 - <code title="post /files">client.files.<a href="./src/resources/files.ts">create</a>({ ...params }) -> FileObject</code>
 - <code title="get /files/{file_id}">client.files.<a href="./src/resources/files.ts">retrieve</a>(fileId) -> FileObject</code>
+- <code title="patch /files/{file_id}">client.files.<a href="./src/resources/files.ts">update</a>(fileId, { ...params }) -> FileObject</code>
 - <code title="get /files">client.files.<a href="./src/resources/files.ts">list</a>({ ...params }) -> FileObjectsCursorIDPage</code>
 - <code title="delete /files/{file_id}">client.files.<a href="./src/resources/files.ts">delete</a>(fileId) -> void</code>
 - <code title="get /files/{file_id}/content">client.files.<a href="./src/resources/files.ts">content</a>(fileId) -> Response</code>
@@ -121,14 +122,20 @@ Methods:
 
 Types:
 
+- <code><a href="./src/resources/search.ts">AISource</a></code>
+- <code><a href="./src/resources/search.ts">SearchAIRequestBody</a></code>
+- <code><a href="./src/resources/search.ts">SearchAIResult</a></code>
 - <code><a href="./src/resources/search.ts">SearchResultItem</a></code>
 - <code><a href="./src/resources/search.ts">SearchResultResource</a></code>
 - <code><a href="./src/resources/search.ts">SearchResultResourceType</a></code>
+- <code><a href="./src/resources/search.ts">SearchTreeResult</a></code>
 - <code><a href="./src/resources/search.ts">SearchSearchResponse</a></code>
 
 Methods:
 
 - <code title="get /search">client.search.<a href="./src/resources/search.ts">search</a>({ ...params }) -> SearchSearchResponse</code>
+- <code title="post /search/ai">client.search.<a href="./src/resources/search.ts">searchAI</a>({ ...params }) -> SearchAIResult</code>
+- <code title="get /search/tree">client.search.<a href="./src/resources/search.ts">searchTree</a>({ ...params }) -> SearchTreeResult</code>
 
 # Agents
 
@@ -143,6 +150,17 @@ Methods:
 - <code title="patch /agents/{agent_id}">client.agents.<a href="./src/resources/agents.ts">update</a>(agentId, { ...params }) -> Agent</code>
 - <code title="get /agents">client.agents.<a href="./src/resources/agents.ts">list</a>({ ...params }) -> AgentsCursorIDPage</code>
 - <code title="delete /agents/{agent_id}">client.agents.<a href="./src/resources/agents.ts">delete</a>(agentId) -> void</code>
+
+# Identity
+
+Types:
+
+- <code><a href="./src/resources/identity.ts">Identity</a></code>
+- <code><a href="./src/resources/identity.ts">IdentityTeamspace</a></code>
+
+Methods:
+
+- <code title="get /identity">client.identity.<a href="./src/resources/identity.ts">retrieve</a>() -> Identity</code>
 
 # Pages
 
@@ -178,11 +196,12 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/memory/user.ts">UserMemory</a></code>
+- <code><a href="./src/resources/memory/user.ts">UserCreateResponse</a></code>
 - <code><a href="./src/resources/memory/user.ts">UserListResponse</a></code>
 
 Methods:
 
-- <code title="post /user-memories">client.memory.user.<a href="./src/resources/memory/user.ts">create</a>({ ...params }) -> UserMemory</code>
+- <code title="post /user-memories">client.memory.user.<a href="./src/resources/memory/user.ts">create</a>({ ...params }) -> UserCreateResponse</code>
 - <code title="get /user-memories">client.memory.user.<a href="./src/resources/memory/user.ts">list</a>({ ...params }) -> UserListResponse</code>
 - <code title="delete /user-memories/{user_memory_id}">client.memory.user.<a href="./src/resources/memory/user.ts">delete</a>(userMemoryId) -> void</code>
 
@@ -250,6 +269,23 @@ Methods:
 - <code title="get /organization/teamspaces/{teamspace_id}/users">client.organization.teamspaces.users.<a href="./src/resources/organization/teamspaces/users.ts">list</a>(teamspaceId, { ...params }) -> TeamspaceUsersCursorIDPage</code>
 - <code title="delete /organization/teamspaces/{teamspace_id}/users/{user_id}">client.organization.teamspaces.users.<a href="./src/resources/organization/teamspaces/users.ts">delete</a>(teamspaceId, userId) -> void</code>
 
+## McpServers
+
+Types:
+
+- <code><a href="./src/resources/organization/mcp-servers.ts">CreateMcpServerRequest</a></code>
+- <code><a href="./src/resources/organization/mcp-servers.ts">ListMcpServersResponse</a></code>
+- <code><a href="./src/resources/organization/mcp-servers.ts">McpServer</a></code>
+- <code><a href="./src/resources/organization/mcp-servers.ts">UpdateMcpServerRequest</a></code>
+
+Methods:
+
+- <code title="post /organization/mcp-servers">client.organization.mcpServers.<a href="./src/resources/organization/mcp-servers.ts">create</a>({ ...params }) -> McpServer</code>
+- <code title="get /organization/mcp-servers/{server_id}">client.organization.mcpServers.<a href="./src/resources/organization/mcp-servers.ts">retrieve</a>(serverId) -> McpServer</code>
+- <code title="patch /organization/mcp-servers/{server_id}">client.organization.mcpServers.<a href="./src/resources/organization/mcp-servers.ts">update</a>(serverId, { ...params }) -> McpServer</code>
+- <code title="get /organization/mcp-servers">client.organization.mcpServers.<a href="./src/resources/organization/mcp-servers.ts">list</a>() -> ListMcpServersResponse</code>
+- <code title="delete /organization/mcp-servers/{server_id}">client.organization.mcpServers.<a href="./src/resources/organization/mcp-servers.ts">delete</a>(serverId) -> void</code>
+
 ## Credits
 
 Types:
@@ -271,6 +307,7 @@ Methods:
 
 - <code title="post /conversations">client.conversations.<a href="./src/resources/conversations/conversations.ts">create</a>({ ...params }) -> Conversation</code>
 - <code title="get /conversations/{conversation_id}">client.conversations.<a href="./src/resources/conversations/conversations.ts">retrieve</a>(conversationId) -> Conversation</code>
+- <code title="patch /conversations/{conversation_id}">client.conversations.<a href="./src/resources/conversations/conversations.ts">update</a>(conversationId, { ...params }) -> Conversation</code>
 - <code title="get /conversations">client.conversations.<a href="./src/resources/conversations/conversations.ts">list</a>({ ...params }) -> ConversationsCursorIDPage</code>
 - <code title="delete /conversations/{conversation_id}">client.conversations.<a href="./src/resources/conversations/conversations.ts">delete</a>(conversationId) -> void</code>
 
@@ -290,11 +327,12 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/data-views/data-views.ts">DataView</a></code>
+- <code><a href="./src/resources/data-views/data-views.ts">DataViewCreateResponse</a></code>
 - <code><a href="./src/resources/data-views/data-views.ts">DataViewListResponse</a></code>
 
 Methods:
 
-- <code title="post /data-views">client.dataViews.<a href="./src/resources/data-views/data-views.ts">create</a>({ ...params }) -> DataView</code>
+- <code title="post /data-views">client.dataViews.<a href="./src/resources/data-views/data-views.ts">create</a>({ ...params }) -> DataViewCreateResponse</code>
 - <code title="get /data-views">client.dataViews.<a href="./src/resources/data-views/data-views.ts">list</a>({ ...params }) -> DataViewListResponse</code>
 - <code title="delete /data-views/{data_view_id}">client.dataViews.<a href="./src/resources/data-views/data-views.ts">delete</a>(dataViewId) -> void</code>
 
@@ -325,3 +363,15 @@ Types:
 Methods:
 
 - <code title="post /beta/rewrite">client.beta.rewrite.<a href="./src/resources/beta/rewrite.ts">rewriteText</a>({ ...params }) -> RewriteResponse</code>
+
+# Voice
+
+Types:
+
+- <code><a href="./src/resources/voice.ts">VoiceSessionRequest</a></code>
+- <code><a href="./src/resources/voice.ts">VoiceSessionResponse</a></code>
+- <code><a href="./src/resources/voice.ts">VoiceWebsocketMessage</a></code>
+
+Methods:
+
+- <code title="post /voice">client.voice.<a href="./src/resources/voice.ts">startSession</a>({ ...params }) -> VoiceSessionResponse</code>
