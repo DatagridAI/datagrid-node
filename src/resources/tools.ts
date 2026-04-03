@@ -9,69 +9,7 @@ export class Tools extends APIResource {
   /**
    * Retrieves a specific tool by its identifier.
    */
-  retrieve(
-    toolName:
-      | 'data_analysis'
-      | 'semantic_search'
-      | 'agent_memory'
-      | 'schema_info'
-      | 'table_info'
-      | 'create_dataset'
-      | 'find_files'
-      | 'read_file_contents'
-      | 'file_analysis'
-      | 'procore_support_index'
-      | 'calendar'
-      | 'email'
-      | 'schedule_recurring_message_tool'
-      | 'procore'
-      | 'egnyte'
-      | 'notion'
-      | 'slack'
-      | 'microsoft_teams'
-      | 'sharepoint'
-      | 'drive'
-      | 'fieldwire'
-      | 'planner'
-      | 'webbrowser'
-      | 'pdf_manipulation'
-      | 'document_generator'
-      | 'pdf_generator'
-      | 'acc'
-      | 'docusign'
-      | 'webflow'
-      | 'hubspot'
-      | 'nec'
-      | 'github'
-      | 'trimble_project_site'
-      | 'trimble'
-      | 'linkedin'
-      | 'google_docs'
-      | 'google_slides'
-      | 'google_sheets'
-      | 'avoma'
-      | 'content_writer'
-      | 'code_tool'
-      | 'data_classification'
-      | 'data_extraction'
-      | 'image_detection'
-      | 'attachment_extraction'
-      | 'pdf_extraction'
-      | 'pdf_page_info'
-      | 'youtube_video_analysis'
-      | 'calculate'
-      | 'pdf_form_filling'
-      | 'image_generator'
-      | 'video_generator'
-      | 'connect_data'
-      | 'download_data'
-      | 'web_search'
-      | 'fetch_url'
-      | 'company_prospect_researcher'
-      | 'people_prospect_researcher'
-      | (string & {}),
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<ToolDef> {
+  retrieve(toolName: ToolName, options?: Core.RequestOptions): Core.APIPromise<ToolDef> {
     return this._client.get(`/tools/${toolName}`, options);
   }
 
@@ -97,6 +35,9 @@ export class Tools extends APIResource {
 export class ToolDefsCursorNamePage extends CursorNamePage<ToolDef> {}
 
 export interface Tool {
+  /**
+   * The unique identifier for a tool.
+   */
   name: ToolName;
 
   /**
@@ -130,66 +71,10 @@ export interface ToolDef {
   object: 'tool';
 }
 
-export type ToolName =
-  | 'data_analysis'
-  | 'semantic_search'
-  | 'agent_memory'
-  | 'schema_info'
-  | 'table_info'
-  | 'create_dataset'
-  | 'find_files'
-  | 'read_file_contents'
-  | 'file_analysis'
-  | 'procore_support_index'
-  | 'calendar'
-  | 'email'
-  | 'schedule_recurring_message_tool'
-  | 'procore'
-  | 'egnyte'
-  | 'notion'
-  | 'slack'
-  | 'microsoft_teams'
-  | 'sharepoint'
-  | 'drive'
-  | 'fieldwire'
-  | 'planner'
-  | 'webbrowser'
-  | 'pdf_manipulation'
-  | 'document_generator'
-  | 'pdf_generator'
-  | 'acc'
-  | 'docusign'
-  | 'webflow'
-  | 'hubspot'
-  | 'nec'
-  | 'github'
-  | 'trimble_project_site'
-  | 'trimble'
-  | 'linkedin'
-  | 'google_docs'
-  | 'google_slides'
-  | 'google_sheets'
-  | 'avoma'
-  | 'content_writer'
-  | 'code_tool'
-  | 'data_classification'
-  | 'data_extraction'
-  | 'image_detection'
-  | 'attachment_extraction'
-  | 'pdf_extraction'
-  | 'pdf_page_info'
-  | 'youtube_video_analysis'
-  | 'calculate'
-  | 'pdf_form_filling'
-  | 'image_generator'
-  | 'video_generator'
-  | 'connect_data'
-  | 'download_data'
-  | 'web_search'
-  | 'fetch_url'
-  | 'company_prospect_researcher'
-  | 'people_prospect_researcher'
-  | (string & {});
+/**
+ * The unique identifier for a tool.
+ */
+export type ToolName = string;
 
 export interface ToolListParams extends CursorNamePageParams {}
 
