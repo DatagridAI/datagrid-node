@@ -10,7 +10,7 @@ const client = new Datagrid({
 
 describe('resource tools', () => {
   test('retrieve', async () => {
-    const responsePromise = client.tools.retrieve('data_analysis');
+    const responsePromise = client.tools.retrieve('string');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -22,9 +22,9 @@ describe('resource tools', () => {
 
   test('retrieve: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.tools.retrieve('data_analysis', { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(Datagrid.NotFoundError);
+    await expect(client.tools.retrieve('string', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+      Datagrid.NotFoundError,
+    );
   });
 
   test('list', async () => {
