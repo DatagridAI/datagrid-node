@@ -78,6 +78,13 @@ export interface VoiceSessionRequest {
   initial_context?: string | null;
 
   /**
+   * Optional initial user message. When provided, the system greeting is skipped and
+   * the AI responds directly to this text (e.g. a suggested prompt). Takes
+   * precedence over initial_context.
+   */
+  initial_message?: string | null;
+
+  /**
    * Array of knowledge IDs to make accessible to the agent.
    */
   knowledge_ids?: Array<string> | null;
@@ -403,6 +410,13 @@ export interface VoiceStartSessionParams {
    * briefly explaining this content before listening for user input.
    */
   initial_context?: string | null;
+
+  /**
+   * Optional initial user message. When provided, the system greeting is skipped and
+   * the AI responds directly to this text (e.g. a suggested prompt). Takes
+   * precedence over initial_context.
+   */
+  initial_message?: string | null;
 
   /**
    * Array of knowledge IDs to make accessible to the agent.
