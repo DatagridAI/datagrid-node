@@ -12,7 +12,10 @@ export class KnowledgeResource extends APIResource {
   tables: TablesAPI.Tables = new TablesAPI.Tables(this._client);
 
   /**
-   * Create knowledge which will be learned and leveraged by agents.
+   * Create knowledge which will be learned and leveraged by agents. Processing
+   * continues asynchronously after the request returns. If the background processing
+   * run later fails, subsequent retrievals surface that terminal state through
+   * `status` and `last_error`.
    */
   create(body: KnowledgeCreateParams, options?: Core.RequestOptions): Core.APIPromise<Knowledge> {
     return this._client.post(
@@ -37,7 +40,9 @@ export class KnowledgeResource extends APIResource {
    * `sync`, but not both. When `files` are provided, all existing data is replaced
    * and a re-processing pipeline runs asynchronously — this consumes credits based
    * on the volume of data processed. Metadata-only and sync-only updates do not
-   * consume credits and are not blocked by credit eligibility checks.
+   * consume credits and are not blocked by credit eligibility checks. If the
+   * asynchronous processing run later fails, subsequent retrievals surface that
+   * terminal state through `status` and `last_error`.
    */
   update(
     knowledgeId: string,
@@ -96,7 +101,9 @@ export class KnowledgeResource extends APIResource {
    * **asynchronously**: the API returns as soon as the job is enqueued. Re-indexing
    * is not performed immediately. This endpoint consumes credits — the actual credit
    * cost is variable, based on the volume of data being re-indexed, and is charged
-   * asynchronously as processing completes.
+   * asynchronously as processing completes. If the background re-index later fails,
+   * subsequent retrievals surface that terminal state through `status` and
+   * `last_error`.
    */
   reindex(knowledgeId: string, options?: Core.RequestOptions): Core.APIPromise<void> {
     return this._client.post(`/knowledge/${knowledgeId}/reindex`, {
@@ -189,6 +196,14 @@ export interface Knowledge {
   credits: Knowledge.Credits | null;
 
   /**
+   * The last terminal processing error for this knowledge, if any. Present when the
+   * latest asynchronous processing or re-index run ended unsuccessfully; `null` when
+   * the knowledge is `failed` only because every row ended in a persistent failed
+   * state.
+   */
+  last_error: Knowledge.LastError | null;
+
+  /**
    * The name of the knowledge.
    */
   name: string;
@@ -216,14 +231,16 @@ export interface Knowledge {
   scope: 'teamspace' | 'organization';
 
   /**
-   * The current knowledge status can be one of three values: `pending`, `partial`,
-   * or `ready`. `pending` indicates that the knowledge is awaiting learning and will
-   * not be used by the agent when responding. `partial` indicates that the knowledge
-   * is partially learned. The agent may use some aspects of it when responding.
-   * `ready` indicates that the knowledge is fully learned and will be completely
-   * utilized in responses.
+   * The current knowledge status. `pending` indicates that processing has started
+   * but no rows have been learned yet. `partial` indicates that some rows are
+   * available, but processing is either still running or ended with incomplete
+   * results. `ready` indicates that processing finished successfully and the
+   * knowledge is fully available. `failed` indicates that no rows are currently
+   * available and the knowledge reached a terminal failure state, either because the
+   * latest asynchronous processing or re-index run ended unsuccessfully before any
+   * rows became available, or because every row ended in a persistent failed state.
    */
-  status: 'pending' | 'partial' | 'ready';
+  status: 'pending' | 'partial' | 'ready' | 'failed';
 
   /**
    * Sync information for knowledge that syncs data from a connection
@@ -254,6 +271,24 @@ export namespace Knowledge {
      * The number of credits consumed by the operation.
      */
     consumed: number;
+  }
+
+  /**
+   * The last terminal processing error for this knowledge, if any. Present when the
+   * latest asynchronous processing or re-index run ended unsuccessfully; `null` when
+   * the knowledge is `failed` only because every row ended in a persistent failed
+   * state.
+   */
+  export interface LastError {
+    /**
+     * A machine-readable error code for the most recent terminal processing failure.
+     */
+    code: 'out_of_credits' | 'unauthorized' | 'processing_error';
+
+    /**
+     * A human-readable description of the most recent terminal processing failure.
+     */
+    message: string;
   }
 
   /**
