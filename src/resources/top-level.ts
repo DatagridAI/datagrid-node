@@ -8,6 +8,12 @@ import * as MessagesAPI from './conversations/messages';
  */
 export interface ConverseResponse extends MessagesAPI.Message {
   /**
+   * The chat mode used for this response. For Auto mode conversations, this is the
+   * mode selected by the router for this turn.
+   */
+  chat_mode?: 'full_agent' | 'light_agent' | 'llm_router' | null;
+
+  /**
    * Array of reasoning steps that occurred during this response. Only includes steps
    * with status completed or failed.
    */
@@ -118,6 +124,12 @@ export namespace Properties {
        * Name of the status
        */
       status: string;
+
+      /**
+       * The chat mode used for this response. Present on `end` events. For Auto mode
+       * conversations, this is the mode selected by the router for this turn.
+       */
+      chat_mode?: 'full_agent' | 'light_agent' | 'llm_router' | null;
 
       /**
        * Array of citations that provide sources for factual statements in the response.
@@ -311,6 +323,15 @@ export interface ConverseParams {
    * Determines how the API routes the converse request to an agent.
    */
   agent_routing?: ConverseParams.Auto | ConverseParams.Manual | null;
+
+  /**
+   * Controls how the agent processes the request for this turn. When set to `auto`,
+   * the router jointly predicts the best agent and concrete mode (full_agent /
+   * light_agent / llm_router) per message. When set to a concrete mode, that mode is
+   * used directly. When omitted, the mode is determined by the agent_model in
+   * config.
+   */
+  chat_mode?: 'auto' | 'full_agent' | 'light_agent' | 'llm_router' | null;
 
   /**
    * Override the agent config for this converse call. This is applied as a partial
