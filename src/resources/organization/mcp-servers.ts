@@ -5,7 +5,8 @@ import * as Core from '../../core';
 
 export class McpServers extends APIResource {
   /**
-   * Register a new MCP server in the current teamspace.
+   * Register a new MCP server in the current teamspace. Each teamspace can have at
+   * most 30 registered MCP servers.
    */
   create(body: McpServerCreateParams, options?: Core.RequestOptions): Core.APIPromise<McpServer> {
     return this._client.post('/organization/mcp-servers', { body, ...options });
