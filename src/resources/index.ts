@@ -122,4 +122,16 @@ export {
   type VoiceWebsocketMessage,
   type VoiceStartSessionParams,
 } from './voice';
+export {
+  WebhooksWebhookCursorPage,
+  Webhooks,
+  type Webhook,
+  type WebhookEvent,
+  type WebhookCreateResponse,
+  type WebhookListActiveForEventResponse,
+  type WebhookCreateParams,
+  type WebhookUpdateParams,
+  type WebhookListParams,
+  type WebhookListActiveForEventParams,
+} from './webhooks';
 export { type ConverseResponse, type Properties, type ConverseParams } from './top-level';
