@@ -118,6 +118,24 @@ Methods:
 - <code title="get /secrets">client.secrets.<a href="./src/resources/secrets.ts">list</a>({ ...params }) -> SecretsCursorIDPage</code>
 - <code title="delete /secrets/{secret_id}">client.secrets.<a href="./src/resources/secrets.ts">delete</a>(secretId) -> void</code>
 
+# Webhooks
+
+Types:
+
+- <code><a href="./src/resources/webhooks.ts">Webhook</a></code>
+- <code><a href="./src/resources/webhooks.ts">WebhookEvent</a></code>
+- <code><a href="./src/resources/webhooks.ts">WebhookCreateResponse</a></code>
+- <code><a href="./src/resources/webhooks.ts">WebhookListActiveForEventResponse</a></code>
+
+Methods:
+
+- <code title="post /webhooks">client.webhooks.<a href="./src/resources/webhooks.ts">create</a>({ ...params }) -> WebhookCreateResponse</code>
+- <code title="get /webhooks/{webhook_id}">client.webhooks.<a href="./src/resources/webhooks.ts">retrieve</a>(webhookId) -> Webhook</code>
+- <code title="patch /webhooks/{webhook_id}">client.webhooks.<a href="./src/resources/webhooks.ts">update</a>(webhookId, { ...params }) -> Webhook</code>
+- <code title="get /webhooks">client.webhooks.<a href="./src/resources/webhooks.ts">list</a>({ ...params }) -> WebhooksWebhookCursorPage</code>
+- <code title="delete /webhooks/{webhook_id}">client.webhooks.<a href="./src/resources/webhooks.ts">delete</a>(webhookId) -> void</code>
+- <code title="get /webhooks/active">client.webhooks.<a href="./src/resources/webhooks.ts">listActiveForEvent</a>({ ...params }) -> WebhookListActiveForEventResponse</code>
+
 # Search
 
 Types:

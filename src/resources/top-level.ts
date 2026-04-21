@@ -8,8 +8,9 @@ import * as MessagesAPI from './conversations/messages';
  */
 export interface ConverseResponse extends MessagesAPI.Message {
   /**
-   * The chat mode used for this response. For Auto mode conversations, this is the
-   * mode selected by the router for this turn.
+   * The chat mode used for this response (web app: Execute = full_agent, Extended =
+   * light_agent, Ask = llm_router). For Auto mode conversations, this is the mode
+   * selected by the router for this turn.
    */
   chat_mode?: 'full_agent' | 'light_agent' | 'llm_router' | null;
 
@@ -126,7 +127,8 @@ export namespace Properties {
       status: string;
 
       /**
-       * The chat mode used for this response. Present on `end` events. For Auto mode
+       * The chat mode used for this response (web app: Execute = full_agent, Extended =
+       * light_agent, Ask = llm_router). Present on `end` events. For Auto mode
        * conversations, this is the mode selected by the router for this turn.
        */
       chat_mode?: 'full_agent' | 'light_agent' | 'llm_router' | null;
@@ -325,11 +327,12 @@ export interface ConverseParams {
   agent_routing?: ConverseParams.Auto | ConverseParams.Manual | null;
 
   /**
-   * Controls how the agent processes the request for this turn. When set to `auto`,
-   * the router jointly predicts the best agent and concrete mode (full_agent /
-   * light_agent / llm_router) per message. When set to a concrete mode, that mode is
-   * used directly. When omitted, the mode is determined by the agent_model in
-   * config.
+   * Controls how the agent processes the request for this turn. Matches the chat
+   * mode selector in the Datagrid web app: **Execute** (`full_agent`), **Extended**
+   * (`light_agent`), **Ask** (`llm_router`). When set to `auto`, the router jointly
+   * predicts the best agent and concrete mode (`full_agent` / `light_agent` /
+   * `llm_router`) per message. When set to a concrete mode, that mode is used
+   * directly. When omitted, the mode is determined by the `agent_model` in `config`.
    */
   chat_mode?: 'auto' | 'full_agent' | 'light_agent' | 'llm_router' | null;
 
@@ -380,11 +383,9 @@ export interface ConverseParams {
 
   /**
    * Contains the format property used to specify the structured output schema
-   * (`text.format`). Structured output is supported for `magpie-2.0` (default),
-   * `magpie-2.5`, `magpie-1.1`, and `llm-only` (Fastest mode)—the same JSON Schema
-   * mechanism applies; `llm-only` uses the direct LLM path without tools, with
-   * structured output behavior comparable to agentic models. It is not supported for
-   * `magpie-1.1-flash` (Ask mode) or legacy `magpie-1`.
+   * (`text.format`). Structured output is supported for all `agent_model` values and
+   * `chat_mode` settings when `text.format` is provided (same JSON Schema mechanism
+   * everywhere). **Ask** in the web app maps to `chat_mode` `magpie-2.5-flash`;.
    */
   text?: ConverseParams.Text | null;
 
@@ -544,28 +545,33 @@ export namespace ConverseParams {
       agent_id?: string;
 
       /**
-       * The agent model determines the processing mode for Converse requests. Each model
-       * maps to one of three modes available in the Datagrid UI:
+       * The agent model determines the processing mode for Converse requests. The
+       * Datagrid web app exposes **Ask**, **Extended**, and **Execute** as Converse
+       * **`chat_mode`** (`llm_router`, `light_agent`, `full_agent`). The values below
+       * set **`config.agent_model`** (model tier and tool limits)—use both fields when
+       * mirroring in-app behavior.
        *
-       * **Agentic mode** (full tool use, planning, and multi-step reasoning):
+       * **Execute** (full tool use, planning, and multi-step reasoning; aligns with
+       * **Execute** in the web app / `full_agent`):
        *
-       * - `magpie-2.0` — Default. Agentic model with proactive planning and reasoning.
-       * - `magpie-2.5` — Beta. Our latest agentic model — faster, more adaptable, and
+       * - `magpie-2.0` — Default. Full agent model with proactive planning and
+       *   reasoning.
+       * - `magpie-2.5` — Beta. Latest full-agent model — faster, more adaptable, and
        *   built to handle a broader range of real-world tasks.
-       * - `magpie-1.1` — Previous-generation agentic model.
+       * - `magpie-1.1` — Previous-generation full agent model.
        *
-       * **Ask mode** (lightweight, single-turn Q&A):
+       * **Extended** (search-focused; aligns with **Extended** in the web app /
+       * `light_agent`; not **Ask**):
        *
        * - `magpie-1.1-flash` — Fast model optimized for RAG use cases. Only supports the
        *   `semantic_search` tool. A 400 error will be returned if other tools are
-       *   specified. Structured outputs are not supported.
+       *   specified.
        *
-       * **Fastest mode** (direct LLM response, no tool execution):
+       * **Direct LLM** (no tool execution; **`agent_model` only**—**Ask** in the web app
+       * is `chat_mode: llm_router`, not `magpie-1.1-flash`):
        *
        * - `llm-only` — Runs a direct LLM conversation with no planning or tool calls. A
-       *   400 error will be returned if tools are specified. On **Converse**, structured
-       *   JSON output via **`text.format`** (JSON Schema) is supported, using the same
-       *   mechanism as agentic models.
+       *   400 error will be returned if tools are specified.
        *
        * Can also accept any custom string value for future model versions.
        */
@@ -574,6 +580,7 @@ export namespace ConverseParams {
         | 'magpie-1.1-flash'
         | 'magpie-2.0'
         | 'magpie-2.5'
+        | 'magpie-2.5-flash'
         | 'llm-only'
         | (string & {})
         | null;
@@ -655,16 +662,19 @@ export namespace ConverseParams {
        * are used. When connection_id is set for a tool, it will use that specific
        * connection instead of the default one.
        *
-       * **Tool availability by agent model:**
+       * **Structured outputs (Converse):** All `agent_model` values support JSON Schema
+       * constrained responses via **`text.format`** on the Converse request.
        *
-       * - **Agentic** (`magpie-2.0`, `magpie-2.5`, `magpie-1.1`): All tools below are
+       * **Tool availability by agent model** (aligned with in-app **Execute** /
+       * **Extended** / direct LLM; see Converse `chat_mode` for **Ask** vs
+       * `agent_model`):
+       *
+       * - **Execute** (`magpie-2.0`, `magpie-2.5`, `magpie-1.1`): All tools below are
        *   available.
-       * - **Ask** (`magpie-1.1-flash`): Only `semantic_search` is supported. Requests
-       *   specifying other tools will be rejected with a 400 error.
-       * - **Fastest** (`llm-only`): No tools are executed. Requests specifying tools
-       *   will be rejected with a 400 error. On **Converse**, structured output via
-       *   **`text.format`** is still supported (same JSON Schema mechanism as agentic
-       *   models).
+       * - **Extended** (`magpie-1.1-flash`): Only `semantic_search` is supported.
+       *   Requests specifying other tools will be rejected with a 400 error.
+       * - **Direct LLM** (`llm-only`): No tools are executed. Requests specifying tools
+       *   will be rejected with a 400 error.
        *
        * Knowledge management tools:
        *
@@ -748,28 +758,33 @@ export namespace ConverseParams {
    */
   export interface Config {
     /**
-     * The agent model determines the processing mode for Converse requests. Each model
-     * maps to one of three modes available in the Datagrid UI:
+     * The agent model determines the processing mode for Converse requests. The
+     * Datagrid web app exposes **Ask**, **Extended**, and **Execute** as Converse
+     * **`chat_mode`** (`llm_router`, `light_agent`, `full_agent`). The values below
+     * set **`config.agent_model`** (model tier and tool limits)—use both fields when
+     * mirroring in-app behavior.
      *
-     * **Agentic mode** (full tool use, planning, and multi-step reasoning):
+     * **Execute** (full tool use, planning, and multi-step reasoning; aligns with
+     * **Execute** in the web app / `full_agent`):
      *
-     * - `magpie-2.0` — Default. Agentic model with proactive planning and reasoning.
-     * - `magpie-2.5` — Beta. Our latest agentic model — faster, more adaptable, and
+     * - `magpie-2.0` — Default. Full agent model with proactive planning and
+     *   reasoning.
+     * - `magpie-2.5` — Beta. Latest full-agent model — faster, more adaptable, and
      *   built to handle a broader range of real-world tasks.
-     * - `magpie-1.1` — Previous-generation agentic model.
+     * - `magpie-1.1` — Previous-generation full agent model.
      *
-     * **Ask mode** (lightweight, single-turn Q&A):
+     * **Extended** (search-focused; aligns with **Extended** in the web app /
+     * `light_agent`; not **Ask**):
      *
      * - `magpie-1.1-flash` — Fast model optimized for RAG use cases. Only supports the
      *   `semantic_search` tool. A 400 error will be returned if other tools are
-     *   specified. Structured outputs are not supported.
+     *   specified.
      *
-     * **Fastest mode** (direct LLM response, no tool execution):
+     * **Direct LLM** (no tool execution; **`agent_model` only**—**Ask** in the web app
+     * is `chat_mode: llm_router`, not `magpie-1.1-flash`):
      *
      * - `llm-only` — Runs a direct LLM conversation with no planning or tool calls. A
-     *   400 error will be returned if tools are specified. On **Converse**, structured
-     *   JSON output via **`text.format`** (JSON Schema) is supported, using the same
-     *   mechanism as agentic models.
+     *   400 error will be returned if tools are specified.
      *
      * Can also accept any custom string value for future model versions.
      */
@@ -778,6 +793,7 @@ export namespace ConverseParams {
       | 'magpie-1.1-flash'
       | 'magpie-2.0'
       | 'magpie-2.5'
+      | 'magpie-2.5-flash'
       | 'llm-only'
       | (string & {})
       | null;
@@ -878,16 +894,19 @@ export namespace ConverseParams {
      * are used. When connection_id is set for a tool, it will use that specific
      * connection instead of the default one.
      *
-     * **Tool availability by agent model:**
+     * **Structured outputs (Converse):** All `agent_model` values support JSON Schema
+     * constrained responses via **`text.format`** on the Converse request.
      *
-     * - **Agentic** (`magpie-2.0`, `magpie-2.5`, `magpie-1.1`): All tools below are
+     * **Tool availability by agent model** (aligned with in-app **Execute** /
+     * **Extended** / direct LLM; see Converse `chat_mode` for **Ask** vs
+     * `agent_model`):
+     *
+     * - **Execute** (`magpie-2.0`, `magpie-2.5`, `magpie-1.1`): All tools below are
      *   available.
-     * - **Ask** (`magpie-1.1-flash`): Only `semantic_search` is supported. Requests
-     *   specifying other tools will be rejected with a 400 error.
-     * - **Fastest** (`llm-only`): No tools are executed. Requests specifying tools
-     *   will be rejected with a 400 error. On **Converse**, structured output via
-     *   **`text.format`** is still supported (same JSON Schema mechanism as agentic
-     *   models).
+     * - **Extended** (`magpie-1.1-flash`): Only `semantic_search` is supported.
+     *   Requests specifying other tools will be rejected with a 400 error.
+     * - **Direct LLM** (`llm-only`): No tools are executed. Requests specifying tools
+     *   will be rejected with a 400 error.
      *
      * Knowledge management tools:
      *
@@ -993,11 +1012,9 @@ export namespace ConverseParams {
 
   /**
    * Contains the format property used to specify the structured output schema
-   * (`text.format`). Structured output is supported for `magpie-2.0` (default),
-   * `magpie-2.5`, `magpie-1.1`, and `llm-only` (Fastest mode)—the same JSON Schema
-   * mechanism applies; `llm-only` uses the direct LLM path without tools, with
-   * structured output behavior comparable to agentic models. It is not supported for
-   * `magpie-1.1-flash` (Ask mode) or legacy `magpie-1`.
+   * (`text.format`). Structured output is supported for all `agent_model` values and
+   * `chat_mode` settings when `text.format` is provided (same JSON Schema mechanism
+   * everywhere). **Ask** in the web app maps to `chat_mode` `magpie-2.5-flash`;.
    */
   export interface Text {
     /**

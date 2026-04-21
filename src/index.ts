@@ -12,6 +12,8 @@ import {
   CursorNamePageResponse,
   type CursorPageParams,
   CursorPageResponse,
+  type WebhookCursorPageParams,
+  WebhookCursorPageResponse,
 } from './pagination';
 import * as Uploads from './uploads';
 import * as API from './resources/index';
@@ -98,6 +100,18 @@ import {
   VoiceStartSessionParams,
   VoiceWebsocketMessage,
 } from './resources/voice';
+import {
+  Webhook,
+  WebhookCreateParams,
+  WebhookCreateResponse,
+  WebhookEvent,
+  WebhookListActiveForEventParams,
+  WebhookListActiveForEventResponse,
+  WebhookListParams,
+  WebhookUpdateParams,
+  Webhooks,
+  WebhooksWebhookCursorPage,
+} from './resources/webhooks';
 import { Beta } from './resources/beta/beta';
 import {
   Conversation,
@@ -265,6 +279,7 @@ export class Datagrid extends Core.APIClient {
   connectors: API.Connectors = new API.Connectors(this);
   files: API.Files = new API.Files(this);
   secrets: API.Secrets = new API.Secrets(this);
+  webhooks: API.Webhooks = new API.Webhooks(this);
   search: API.Search = new API.Search(this);
   agents: API.Agents = new API.Agents(this);
   identity: API.IdentityResource = new API.IdentityResource(this);
@@ -352,6 +367,8 @@ Datagrid.Files = Files;
 Datagrid.FileObjectsCursorIDPage = FileObjectsCursorIDPage;
 Datagrid.Secrets = Secrets;
 Datagrid.SecretsCursorIDPage = SecretsCursorIDPage;
+Datagrid.Webhooks = Webhooks;
+Datagrid.WebhooksWebhookCursorPage = WebhooksWebhookCursorPage;
 Datagrid.Search = Search;
 Datagrid.Agents = Agents;
 Datagrid.AgentsCursorIDPage = AgentsCursorIDPage;
@@ -383,6 +400,12 @@ export declare namespace Datagrid {
 
   export import CursorPage = Pagination.CursorPage;
   export { type CursorPageParams as CursorPageParams, type CursorPageResponse as CursorPageResponse };
+
+  export import WebhookCursorPage = Pagination.WebhookCursorPage;
+  export {
+    type WebhookCursorPageParams as WebhookCursorPageParams,
+    type WebhookCursorPageResponse as WebhookCursorPageResponse,
+  };
 
   export {
     type ConverseResponse as ConverseResponse,
@@ -446,6 +469,19 @@ export declare namespace Datagrid {
     SecretsCursorIDPage as SecretsCursorIDPage,
     type SecretCreateParams as SecretCreateParams,
     type SecretListParams as SecretListParams,
+  };
+
+  export {
+    Webhooks as Webhooks,
+    type Webhook as Webhook,
+    type WebhookEvent as WebhookEvent,
+    type WebhookCreateResponse as WebhookCreateResponse,
+    type WebhookListActiveForEventResponse as WebhookListActiveForEventResponse,
+    WebhooksWebhookCursorPage as WebhooksWebhookCursorPage,
+    type WebhookCreateParams as WebhookCreateParams,
+    type WebhookUpdateParams as WebhookUpdateParams,
+    type WebhookListParams as WebhookListParams,
+    type WebhookListActiveForEventParams as WebhookListActiveForEventParams,
   };
 
   export {
