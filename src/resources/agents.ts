@@ -362,6 +362,12 @@ export interface AgentCreateParams {
   system_prompt?: string | null;
 
   /**
+   * Sampling temperature for model output. Lower values are more deterministic;
+   * higher values are more diverse.
+   */
+  temperature?: number | null;
+
+  /**
    * Array of the agent tools to enable. If not provided, or null is provided -
    * default tools of the agent are used. If empty list provided - none of the tools
    * are used. When connection_id is set for a tool, it will use that specific
@@ -583,6 +589,12 @@ export interface AgentUpdateParams {
    * Directs your AI Agent's operational behavior.
    */
   system_prompt?: string | null;
+
+  /**
+   * Sampling temperature for model output. Lower values are more deterministic;
+   * higher values are more diverse.
+   */
+  temperature?: number | null;
 
   /**
    * Array of the agent tools to enable. If not provided, or null is provided -
