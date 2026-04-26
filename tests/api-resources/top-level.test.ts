@@ -48,6 +48,7 @@ describe('top level methods', () => {
         ],
         planning_prompt: 'planning_prompt',
         system_prompt: 'system_prompt',
+        temperature: 0,
         tools: ['string'],
       },
       conversation_id: 'conversation_id',
