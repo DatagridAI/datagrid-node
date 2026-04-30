@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.12.0 (2026-04-30)
+
+Full Changelog: [v0.11.0...v0.12.0](https://github.com/DatagridAI/datagrid-node/compare/v0.11.0...v0.12.0)
+
+### Features
+
+* **api:** api update ([84a1ca6](https://github.com/DatagridAI/datagrid-node/commit/84a1ca631ebff7ea995098efdf56930697b11609))
+* support setting headers via env ([838cfba](https://github.com/DatagridAI/datagrid-node/commit/838cfbab7f251a339c0391a61067ebe7e17771d5))
+
+
+### Chores
+
+* **internal:** more robust bootstrap script ([56880fd](https://github.com/DatagridAI/datagrid-node/commit/56880fd2b36a2ab5505edff9383301c5b79a583a))
+
 ## 0.11.0 (2026-04-21)
 
 Full Changelog: [v0.10.0...v0.11.0](https://github.com/DatagridAI/datagrid-node/compare/v0.10.0...v0.11.0)
