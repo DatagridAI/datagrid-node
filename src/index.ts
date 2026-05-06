@@ -6,6 +6,8 @@ import * as Core from './core';
 import * as Errors from './error';
 import * as Pagination from './pagination';
 import {
+  type AfterCursorPageParams,
+  AfterCursorPageResponse,
   type CursorIDPageParams,
   CursorIDPageResponse,
   type CursorNamePageParams,
@@ -27,6 +29,18 @@ import {
   Agents,
   AgentsCursorIDPage,
 } from './resources/agents';
+import {
+  BatchPrediction,
+  BatchPredictionCreateParams,
+  BatchPredictionListParams,
+  BatchPredictionRequestCounts,
+  BatchPredictionResultLine,
+  BatchPredictions,
+  BatchPredictionsAfterCursorPage,
+  ProblemDetails,
+  ValidationProblemDetails,
+  ValidationProblemError,
+} from './resources/batch-predictions';
 import {
   ConnectionProvider,
   ConnectionProviderCreateParams,
@@ -295,6 +309,7 @@ export class Datagrid extends Core.APIClient {
   connectionProviders: API.ConnectionProviders = new API.ConnectionProviders(this);
   connectors: API.Connectors = new API.Connectors(this);
   files: API.Files = new API.Files(this);
+  batchPredictions: API.BatchPredictions = new API.BatchPredictions(this);
   secrets: API.Secrets = new API.Secrets(this);
   webhooks: API.Webhooks = new API.Webhooks(this);
   search: API.Search = new API.Search(this);
@@ -387,6 +402,8 @@ Datagrid.Connectors = Connectors;
 Datagrid.ConnectorsCursorIDPage = ConnectorsCursorIDPage;
 Datagrid.Files = Files;
 Datagrid.FileObjectsCursorIDPage = FileObjectsCursorIDPage;
+Datagrid.BatchPredictions = BatchPredictions;
+Datagrid.BatchPredictionsAfterCursorPage = BatchPredictionsAfterCursorPage;
 Datagrid.Secrets = Secrets;
 Datagrid.SecretsCursorIDPage = SecretsCursorIDPage;
 Datagrid.Webhooks = Webhooks;
@@ -427,6 +444,12 @@ export declare namespace Datagrid {
   export {
     type WebhookCursorPageParams as WebhookCursorPageParams,
     type WebhookCursorPageResponse as WebhookCursorPageResponse,
+  };
+
+  export import AfterCursorPage = Pagination.AfterCursorPage;
+  export {
+    type AfterCursorPageParams as AfterCursorPageParams,
+    type AfterCursorPageResponse as AfterCursorPageResponse,
   };
 
   export {
@@ -483,6 +506,19 @@ export declare namespace Datagrid {
     type FileCreateParams as FileCreateParams,
     type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,
+  };
+
+  export {
+    BatchPredictions as BatchPredictions,
+    type BatchPrediction as BatchPrediction,
+    type BatchPredictionRequestCounts as BatchPredictionRequestCounts,
+    type BatchPredictionResultLine as BatchPredictionResultLine,
+    type ProblemDetails as ProblemDetails,
+    type ValidationProblemDetails as ValidationProblemDetails,
+    type ValidationProblemError as ValidationProblemError,
+    BatchPredictionsAfterCursorPage as BatchPredictionsAfterCursorPage,
+    type BatchPredictionCreateParams as BatchPredictionCreateParams,
+    type BatchPredictionListParams as BatchPredictionListParams,
   };
 
   export {

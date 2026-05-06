@@ -105,6 +105,25 @@ Methods:
 - <code title="delete /files/{file_id}">client.files.<a href="./src/resources/files.ts">delete</a>(fileId) -> void</code>
 - <code title="get /files/{file_id}/content">client.files.<a href="./src/resources/files.ts">content</a>(fileId) -> Response</code>
 
+# BatchPredictions
+
+Types:
+
+- <code><a href="./src/resources/batch-predictions.ts">BatchPrediction</a></code>
+- <code><a href="./src/resources/batch-predictions.ts">BatchPredictionRequestCounts</a></code>
+- <code><a href="./src/resources/batch-predictions.ts">BatchPredictionResultLine</a></code>
+- <code><a href="./src/resources/batch-predictions.ts">ProblemDetails</a></code>
+- <code><a href="./src/resources/batch-predictions.ts">ValidationProblemDetails</a></code>
+- <code><a href="./src/resources/batch-predictions.ts">ValidationProblemError</a></code>
+
+Methods:
+
+- <code title="post /batch-predictions">client.batchPredictions.<a href="./src/resources/batch-predictions.ts">create</a>({ ...params }) -> BatchPrediction</code>
+- <code title="get /batch-predictions/{batch_prediction_id}">client.batchPredictions.<a href="./src/resources/batch-predictions.ts">retrieve</a>(batchPredictionId) -> BatchPrediction</code>
+- <code title="get /batch-predictions">client.batchPredictions.<a href="./src/resources/batch-predictions.ts">list</a>({ ...params }) -> BatchPredictionsAfterCursorPage</code>
+- <code title="post /batch-predictions/{batch_prediction_id}/cancel">client.batchPredictions.<a href="./src/resources/batch-predictions.ts">cancel</a>(batchPredictionId) -> BatchPrediction</code>
+- <code title="get /batch-predictions/{batch_prediction_id}/results">client.batchPredictions.<a href="./src/resources/batch-predictions.ts">retrieveResults</a>(batchPredictionId) -> BatchPredictionResultLine</code>
+
 # Secrets
 
 Types:
