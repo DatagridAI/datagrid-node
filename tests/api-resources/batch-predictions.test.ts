@@ -8,11 +8,21 @@ const client = new Datagrid({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource webhooks', () => {
+describe('resource batchPredictions', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.webhooks.create({
-      events: ['batch_prediction.completed', 'batch_prediction.failed'],
-      url: 'https://example.com/webhooks/datagrid',
+    const responsePromise = client.batchPredictions.create({
+      items: [
+        { custom_id: 'drawing_001', file_id: 'file_abc123' },
+        { custom_id: 'drawing_002', file_id: 'file_def456' },
+      ],
+      model: 'gemini-2.5-flash',
+      output_schema: {
+        type: 'bar',
+        additionalProperties: 'bar',
+        properties: 'bar',
+        required: 'bar',
+      },
+      prompt: 'Extract the project name, sheet title, and revision from this drawing.',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -24,14 +34,35 @@ describe('resource webhooks', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.webhooks.create({
-      events: ['batch_prediction.completed', 'batch_prediction.failed'],
-      url: 'https://example.com/webhooks/datagrid',
+    const response = await client.batchPredictions.create({
+      items: [
+        {
+          custom_id: 'drawing_001',
+          file_id: 'file_abc123',
+          page: 1,
+        },
+        {
+          custom_id: 'drawing_002',
+          file_id: 'file_def456',
+          page: 1,
+        },
+      ],
+      model: 'gemini-2.5-flash',
+      output_schema: {
+        type: 'bar',
+        additionalProperties: 'bar',
+        properties: 'bar',
+        required: 'bar',
+      },
+      prompt: 'Extract the project name, sheet title, and revision from this drawing.',
+      completion_window: '24h',
+      metadata: { project: 'alpha' },
+      'Idempotency-Key': 'Idempotency-Key',
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.webhooks.retrieve('webhook_id');
+    const responsePromise = client.batchPredictions.retrieve('batch_prediction_id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -44,23 +75,12 @@ describe('resource webhooks', () => {
   test('retrieve: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.webhooks.retrieve('webhook_id', { path: '/_stainless_unknown_path' }),
+      client.batchPredictions.retrieve('batch_prediction_id', { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(Datagrid.NotFoundError);
   });
 
-  test('update', async () => {
-    const responsePromise = client.webhooks.update('webhook_id', {});
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
   test('list', async () => {
-    const responsePromise = client.webhooks.list();
+    const responsePromise = client.batchPredictions.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -72,7 +92,7 @@ describe('resource webhooks', () => {
 
   test('list: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.webhooks.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.batchPredictions.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
       Datagrid.NotFoundError,
     );
   });
@@ -80,12 +100,19 @@ describe('resource webhooks', () => {
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.webhooks.list({ cursor: 'cursor', limit: 1 }, { path: '/_stainless_unknown_path' }),
+      client.batchPredictions.list(
+        {
+          after: 'after',
+          limit: 1,
+          status: 'validating',
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
     ).rejects.toThrow(Datagrid.NotFoundError);
   });
 
-  test('delete', async () => {
-    const responsePromise = client.webhooks.delete('webhook_id');
+  test('cancel', async () => {
+    const responsePromise = client.batchPredictions.cancel('batch_prediction_id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -95,17 +122,15 @@ describe('resource webhooks', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('delete: request options instead of params are passed correctly', async () => {
+  test('cancel: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.webhooks.delete('webhook_id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
-      Datagrid.NotFoundError,
-    );
+    await expect(
+      client.batchPredictions.cancel('batch_prediction_id', { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(Datagrid.NotFoundError);
   });
 
-  test('listActiveForEvent: only required params', async () => {
-    const responsePromise = client.webhooks.listActiveForEvent({
-      event_type: 'knowledge.processing.completed',
-    });
+  test('retrieveResults', async () => {
+    const responsePromise = client.batchPredictions.retrieveResults('batch_prediction_id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -113,11 +138,5 @@ describe('resource webhooks', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('listActiveForEvent: required and optional params', async () => {
-    const response = await client.webhooks.listActiveForEvent({
-      event_type: 'knowledge.processing.completed',
-    });
   });
 });
