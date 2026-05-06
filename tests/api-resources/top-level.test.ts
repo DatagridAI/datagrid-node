@@ -54,6 +54,7 @@ describe('top level methods', () => {
       conversation_id: 'conversation_id',
       current_view_content: 'current_view_content',
       generate_citations: true,
+      generate_title: true,
       include_steps: true,
       secret_ids: ['string'],
       stream: true,

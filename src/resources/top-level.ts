@@ -15,6 +15,12 @@ export interface ConverseResponse extends MessagesAPI.Message {
   chat_mode?: 'full_agent' | 'light_agent' | 'llm_router' | null;
 
   /**
+   * Auto-generated conversation title for this turn. Null when title generation does
+   * not run or fails.
+   */
+  generated_title?: string | null;
+
+  /**
    * Array of reasoning steps that occurred during this response. Only includes steps
    * with status completed or failed.
    */
@@ -98,6 +104,8 @@ export namespace ConverseResponse {
 export type Properties =
   | MessagesAPI.Message
   | Properties.ConverseStatusEvent
+  | Properties.ConverseCitationsEvent
+  | Properties.ConverseGeneratedTitleEvent
   | Properties.ConverseContentMessageDeltaEvent
   | Properties.ConverseToolCallDeltaEvent
   | Properties.ConverseReasoningDeltaEvent;
@@ -132,12 +140,40 @@ export namespace Properties {
        * conversations, this is the mode selected by the router for this turn.
        */
       chat_mode?: 'full_agent' | 'light_agent' | 'llm_router' | null;
+    }
+  }
+
+  export interface ConverseCitationsEvent {
+    data: ConverseCitationsEvent.Data;
+
+    /**
+     * Type of the event which is always citations
+     */
+    event: 'citations';
+  }
+
+  export namespace ConverseCitationsEvent {
+    export interface Data {
+      /**
+       * The ID of the agent used for the converse.
+       */
+      agent_id: string;
 
       /**
        * Array of citations that provide sources for factual statements in the response.
        * Each citation includes the referenced text and its sources.
        */
-      citations?: Array<Data.Citation>;
+      citations: Array<Data.Citation> | null;
+
+      /**
+       * The ID of the agent conversation.
+       */
+      conversation_id: string;
+
+      /**
+       * The chat mode used for this response turn when available.
+       */
+      chat_mode?: 'full_agent' | 'light_agent' | 'llm_router' | null;
     }
 
     export namespace Data {
@@ -178,6 +214,40 @@ export namespace Properties {
           source_uri?: string;
         }
       }
+    }
+  }
+
+  export interface ConverseGeneratedTitleEvent {
+    data: ConverseGeneratedTitleEvent.Data;
+
+    /**
+     * Type of the event which is always generated_title
+     */
+    event: 'generated_title';
+  }
+
+  export namespace ConverseGeneratedTitleEvent {
+    export interface Data {
+      /**
+       * The ID of the agent used for the converse.
+       */
+      agent_id: string;
+
+      /**
+       * The ID of the agent conversation.
+       */
+      conversation_id: string;
+
+      /**
+       * Auto-generated conversation title for this turn. Null when title generation does
+       * not run or fails.
+       */
+      generated_title: string | null;
+
+      /**
+       * The chat mode used for this response turn when available.
+       */
+      chat_mode?: 'full_agent' | 'light_agent' | 'llm_router' | null;
     }
   }
 
@@ -361,6 +431,12 @@ export interface ConverseParams {
    * agent will generate citations for factual statements.
    */
   generate_citations?: boolean | null;
+
+  /**
+   * Determines whether generated_title metadata should be included. Defaults to
+   * false. generated_title is emitted only when this flag is explicitly true.
+   */
+  generate_title?: boolean | null;
 
   /**
    * When set to false, tool call and reasoning step events are omitted from SSE

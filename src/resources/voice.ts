@@ -184,6 +184,14 @@ export namespace VoiceSessionRequest {
     silence_discard_ratio?: number | null;
 
     /**
+     * When true, the server closes the connection after the client has been
+     * continuously sending audio frames below the speech-detection threshold for 60
+     * seconds. Frames are still required — a fully muted microphone (no frames sent)
+     * pauses the countdown. Disabled by default.
+     */
+    silence_timeout?: boolean | null;
+
+    /**
      * Voice preset to use (e.g., 'sage', 'nova', 'spark'). If not provided, uses the
      * agent's configured voice preset or the default.
      */
@@ -255,7 +263,7 @@ export interface VoiceWebsocketMessage {
     | VoiceWebsocketMessage.UnionMember0
     | VoiceWebsocketMessage.UnionMember1
     | VoiceWebsocketMessage.UnionMember2
-    | VoiceWebsocketMessage.Message
+    | VoiceWebsocketMessage.UnionMember3
     | VoiceWebsocketMessage.UnionMember4
     | VoiceWebsocketMessage.UnionMember5
     | VoiceWebsocketMessage.Text
@@ -316,7 +324,13 @@ export namespace VoiceWebsocketMessage {
   /**
    * For 'error' messages
    */
-  export interface Message {
+  export interface UnionMember3 {
+    /**
+     * Machine-readable error code. Use this for programmatic matching instead of the
+     * message string. Example: 'client_silence_timeout'.
+     */
+    code?: string;
+
     message?: string;
   }
 
@@ -516,6 +530,14 @@ export namespace VoiceStartSessionParams {
      * (90% silence threshold).
      */
     silence_discard_ratio?: number | null;
+
+    /**
+     * When true, the server closes the connection after the client has been
+     * continuously sending audio frames below the speech-detection threshold for 60
+     * seconds. Frames are still required — a fully muted microphone (no frames sent)
+     * pauses the countdown. Disabled by default.
+     */
+    silence_timeout?: boolean | null;
 
     /**
      * Voice preset to use (e.g., 'sage', 'nova', 'spark'). If not provided, uses the

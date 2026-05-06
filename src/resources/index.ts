@@ -8,6 +8,18 @@ export {
   type AgentUpdateParams,
   type AgentListParams,
 } from './agents';
+export {
+  BatchPredictionsAfterCursorPage,
+  BatchPredictions,
+  type BatchPrediction,
+  type BatchPredictionRequestCounts,
+  type BatchPredictionResultLine,
+  type ProblemDetails,
+  type ValidationProblemDetails,
+  type ValidationProblemError,
+  type BatchPredictionCreateParams,
+  type BatchPredictionListParams,
+} from './batch-predictions';
 export { Beta } from './beta/beta';
 export {
   ConnectionProvidersCursorIDPage,

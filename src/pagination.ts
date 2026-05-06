@@ -251,3 +251,60 @@ export class WebhookCursorPage<Item> extends AbstractPage<Item> implements Webho
     };
   }
 }
+
+export interface AfterCursorPageResponse<Item> {
+  data: Array<Item>;
+
+  next_cursor: string | null;
+}
+
+export interface AfterCursorPageParams {
+  after?: string;
+
+  limit?: number;
+}
+
+export class AfterCursorPage<Item> extends AbstractPage<Item> implements AfterCursorPageResponse<Item> {
+  data: Array<Item>;
+
+  next_cursor: string | null;
+
+  constructor(
+    client: APIClient,
+    response: Response,
+    body: AfterCursorPageResponse<Item>,
+    options: FinalRequestOptions,
+  ) {
+    super(client, response, body, options);
+
+    this.data = body.data || [];
+    this.next_cursor = body.next_cursor || null;
+  }
+
+  getPaginatedItems(): Item[] {
+    return this.data ?? [];
+  }
+
+  // @deprecated Please use `nextPageInfo()` instead
+  nextPageParams(): Partial<AfterCursorPageParams> | null {
+    const info = this.nextPageInfo();
+    if (!info) return null;
+    if ('params' in info) return info.params;
+    const params = Object.fromEntries(info.url.searchParams);
+    if (!Object.keys(params).length) return null;
+    return params;
+  }
+
+  nextPageInfo(): PageInfo | null {
+    const cursor = this.next_cursor;
+    if (!cursor) {
+      return null;
+    }
+
+    return {
+      params: {
+        after: cursor,
+      },
+    };
+  }
+}
