@@ -34,7 +34,7 @@ describe('top level methods', () => {
         disabled_agent_tools: ['string'],
         disabled_tools: ['string'],
         knowledge_ids: ['string'],
-        llm_model: 'gemini-3-pro-preview',
+        llm_model: 'gemini-3.1-flash-lite',
         mcp_servers: [
           {
             server_id: 'server_id',
@@ -56,6 +56,7 @@ describe('top level methods', () => {
       generate_citations: true,
       generate_title: true,
       include_steps: true,
+      reference_date: '2019-12-27',
       secret_ids: ['string'],
       stream: true,
       text: { format: {} },

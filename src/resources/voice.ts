@@ -192,6 +192,12 @@ export namespace VoiceSessionRequest {
     silence_timeout?: boolean | null;
 
     /**
+     * When true, skip the launch greeting and start directly in listening mode.
+     * Disabled by default.
+     */
+    silent_start?: boolean | null;
+
+    /**
      * Voice preset to use (e.g., 'sage', 'nova', 'spark'). If not provided, uses the
      * agent's configured voice preset or the default.
      */
@@ -538,6 +544,12 @@ export namespace VoiceStartSessionParams {
      * pauses the countdown. Disabled by default.
      */
     silence_timeout?: boolean | null;
+
+    /**
+     * When true, skip the launch greeting and start directly in listening mode.
+     * Disabled by default.
+     */
+    silent_start?: boolean | null;
 
     /**
      * Voice preset to use (e.g., 'sage', 'nova', 'spark'). If not provided, uses the
