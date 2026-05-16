@@ -138,6 +138,7 @@ export interface Agent {
    * The LLM used to generate responses.
    */
   llm_model:
+    | 'gemini-3.1-flash-lite'
     | 'gemini-3-pro-preview'
     | 'gemini-3.1-pro-preview'
     | 'gemini-3-flash-preview'
@@ -315,6 +316,7 @@ export interface AgentCreateParams {
    * The LLM used to generate responses.
    */
   llm_model?:
+    | 'gemini-3.1-flash-lite'
     | 'gemini-3-pro-preview'
     | 'gemini-3.1-pro-preview'
     | 'gemini-3-flash-preview'
@@ -544,6 +546,7 @@ export interface AgentUpdateParams {
    * The LLM used to generate responses.
    */
   llm_model?:
+    | 'gemini-3.1-flash-lite'
     | 'gemini-3-pro-preview'
     | 'gemini-3.1-pro-preview'
     | 'gemini-3-flash-preview'

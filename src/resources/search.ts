@@ -92,7 +92,7 @@ export interface AISource {
   thumbnail_uri?: string;
 
   /**
-   * URL to view the source in the DataGrid web app.
+   * URL to view the source in the Datagrid web app.
    */
   url?: string;
 }
