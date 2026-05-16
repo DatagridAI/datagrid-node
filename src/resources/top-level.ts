@@ -446,6 +446,14 @@ export interface ConverseParams {
   include_steps?: boolean | null;
 
   /**
+   * Optional deterministic reference date override in YYYY-MM-DD format. Must be a
+   * real calendar date (for example, rejects impossible dates like 2026-02-31). When
+   * set, the agent treats this date as today for relative date resolution and date
+   * context rendering.
+   */
+  reference_date?: string | null;
+
+  /**
    * Array of secret ID's to be included in the context. The secret value will be
    * appended to the prompt but not stored in conversation history.
    */
@@ -691,6 +699,7 @@ export namespace ConverseParams {
        * The LLM used to generate responses.
        */
       llm_model?:
+        | 'gemini-3.1-flash-lite'
         | 'gemini-3-pro-preview'
         | 'gemini-3.1-pro-preview'
         | 'gemini-3-flash-preview'
@@ -921,6 +930,7 @@ export namespace ConverseParams {
      * The LLM used to generate responses.
      */
     llm_model?:
+      | 'gemini-3.1-flash-lite'
       | 'gemini-3-pro-preview'
       | 'gemini-3.1-pro-preview'
       | 'gemini-3-flash-preview'
