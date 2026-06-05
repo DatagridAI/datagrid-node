@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.15.0 (2026-06-05)
+
+Full Changelog: [v0.14.0...v0.15.0](https://github.com/DatagridAI/datagrid-node/compare/v0.14.0...v0.15.0)
+
+### Features
+
+* **api:** api update ([61f6010](https://github.com/DatagridAI/datagrid-node/commit/61f6010156124fcbb7158b7453d84743b6c07d87))
+
 ## 0.14.0 (2026-05-16)
 
 Full Changelog: [v0.13.0...v0.14.0](https://github.com/DatagridAI/datagrid-node/compare/v0.13.0...v0.14.0)
