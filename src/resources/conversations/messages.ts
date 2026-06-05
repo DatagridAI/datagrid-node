@@ -176,9 +176,9 @@ export namespace Message {
     agent_transcript?: string | null;
 
     /**
-     * Per-turn transcript and citation events in chronological order. Each entry is
-     * plain text with a timestamp offset from the start of the voice session. Present
-     * only for voice sessions that recorded timeline data.
+     * Per-turn transcript, citation, and tool-call status events in chronological
+     * order. Each entry includes a timestamp offset from the start of the voice
+     * session. Present only for voice sessions that recorded timeline data.
      */
     timeline_events?: Array<MessageContentVoice.TimelineEvent>;
   }
@@ -228,8 +228,8 @@ export namespace Message {
     }
 
     /**
-     * A single event from a voice session timeline, representing either a transcript
-     * turn or a citation.
+     * A single event from a voice session timeline, representing a transcript turn,
+     * citation, or tool-call status update.
      */
     export interface TimelineEvent {
       /**
@@ -240,7 +240,7 @@ export namespace Message {
       /**
        * The type of timeline event.
        */
-      type: 'transcript' | 'citation';
+      type: 'transcript' | 'citation' | 'tool_call_status';
 
       /**
        * Citations for this event. Present when type is 'citation'.
@@ -253,9 +253,19 @@ export namespace Message {
       role?: 'user' | 'agent';
 
       /**
+       * Tool-call status for this event. Present when type is 'tool_call_status'.
+       */
+      status?: 'started' | 'completed' | 'failed';
+
+      /**
        * Plain text transcript for this turn. Present when type is 'transcript'.
        */
       text?: string;
+
+      /**
+       * Name of the tool whose status changed. Present when type is 'tool_call_status'.
+       */
+      tool_name?: string;
     }
 
     export namespace TimelineEvent {

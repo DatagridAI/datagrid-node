@@ -696,9 +696,11 @@ export namespace ConverseParams {
       knowledge_ids?: Array<string> | null;
 
       /**
-       * The LLM used to generate responses.
+       * The LLM used to generate responses. Deprecated Gemini 2.0 Flash ids are accepted
+       * for backward compatibility and automatically run as gemini-3.1-flash-lite.
        */
       llm_model?:
+        | 'gemini-3.5-flash'
         | 'gemini-3.1-flash-lite'
         | 'gemini-3-pro-preview'
         | 'gemini-3.1-pro-preview'
@@ -778,6 +780,8 @@ export namespace ConverseParams {
        *   Avoid disabling
        * - table_info: Allow the AI Agent to get information about datasets and schemas
        * - create_dataset: Agents respond with data tables
+       * - charts: Agents render charts inline in the conversation (bar, line, area,
+       *   combo, pie, funnel, gauge, treemap, scorecard).
        *
        * Actions:
        *
@@ -927,9 +931,11 @@ export namespace ConverseParams {
     knowledge_ids?: Array<string> | null;
 
     /**
-     * The LLM used to generate responses.
+     * The LLM used to generate responses. Deprecated Gemini 2.0 Flash ids are accepted
+     * for backward compatibility and automatically run as gemini-3.1-flash-lite.
      */
     llm_model?:
+      | 'gemini-3.5-flash'
       | 'gemini-3.1-flash-lite'
       | 'gemini-3-pro-preview'
       | 'gemini-3.1-pro-preview'
@@ -1017,6 +1023,8 @@ export namespace ConverseParams {
      *   Avoid disabling
      * - table_info: Allow the AI Agent to get information about datasets and schemas
      * - create_dataset: Agents respond with data tables
+     * - charts: Agents render charts inline in the conversation (bar, line, area,
+     *   combo, pie, funnel, gauge, treemap, scorecard).
      *
      * Actions:
      *

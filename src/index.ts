@@ -108,13 +108,6 @@ import {
 } from './resources/secrets';
 import { Tool, ToolDef, ToolDefsCursorNamePage, ToolListParams, ToolName, Tools } from './resources/tools';
 import {
-  Voice,
-  VoiceSessionRequest,
-  VoiceSessionResponse,
-  VoiceStartSessionParams,
-  VoiceWebsocketMessage,
-} from './resources/voice';
-import {
   Webhook,
   WebhookCreateParams,
   WebhookCreateResponse,
@@ -160,6 +153,13 @@ import {
 } from './resources/knowledge/knowledge';
 import { Memory } from './resources/memory/memory';
 import { Organization } from './resources/organization/organization';
+import {
+  Voice,
+  VoiceSessionRequest,
+  VoiceSessionResponse,
+  VoiceStartSessionParams,
+  VoiceWebsocketMessage,
+} from './resources/voice/voice';
 
 export interface ClientOptions {
   /**
