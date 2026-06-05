@@ -34,7 +34,7 @@ describe('top level methods', () => {
         disabled_agent_tools: ['string'],
         disabled_tools: ['string'],
         knowledge_ids: ['string'],
-        llm_model: 'gemini-3.1-flash-lite',
+        llm_model: 'gemini-3.5-flash',
         mcp_servers: [
           {
             server_id: 'server_id',
