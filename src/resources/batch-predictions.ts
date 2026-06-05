@@ -12,7 +12,8 @@ export class BatchPredictions extends APIResource {
    * Create a new asynchronous batch prediction job. The response returns immediately
    * with a `validating` batch while Datagrid validates files and starts background
    * processing. Supply an `Idempotency-Key` header to safely retry the same create
-   * request.
+   * request. The requested model must be available for the authenticated teamspace
+   * cloud provider.
    *
    * @example
    * ```ts
@@ -228,15 +229,39 @@ export interface BatchPrediction {
   metadata: { [key: string]: string } | null;
 
   /**
-   * LLM model to use for every item in the batch.
+   * LLM model to use for every item in the batch. Model availability is cloud-aware:
+   * AWS teamspaces accept Bedrock-native batch-capable models, while GCP teamspaces
+   * accept non-Bedrock batch-capable models and reject Bedrock-only ids. Deprecated
+   * gemini-2.0-flash is accepted for backward compatibility and automatically runs
+   * as gemini-3.1-flash-lite.
    */
   model:
+    | 'gemini-2.0-flash'
     | 'gemini-2.5-flash'
     | 'gemini-2.5-flash-lite'
     | 'gemini-3.1-flash-lite'
+    | 'gemini-3.5-flash'
     | 'gemini-2.5-pro'
+    | 'gemini-3.1-pro-preview'
+    | 'gpt-4o'
+    | 'gpt-4o-mini'
+    | 'gpt-4.1-mini'
+    | 'gpt-4.1'
+    | 'gpt-5-mini'
+    | 'gpt-5'
+    | 'gpt-5.1'
+    | 'claude-sonnet-4@20250514'
+    | 'claude-opus-4-1@20250805'
+    | 'claude-haiku-4-5@20251001'
+    | 'claude-sonnet-4-5@20250929'
+    | 'claude-sonnet-4-6@default'
+    | 'claude-opus-4-5@20251101'
+    | 'claude-opus-4-6@default'
     | 'anthropic.claude-haiku-4-5-20251001-v1:0'
     | 'anthropic.claude-sonnet-4-5-20250929-v1:0'
+    | 'anthropic.claude-sonnet-4-6'
+    | 'anthropic.claude-opus-4-5-20251101-v1:0'
+    | 'anthropic.claude-opus-4-6-v1'
     | 'amazon.nova-2-lite-v1:0';
 
   /**
@@ -391,15 +416,39 @@ export interface BatchPredictionCreateParams {
   items: Array<BatchPredictionCreateParams.Item>;
 
   /**
-   * Body param: LLM model to use for every item in the batch.
+   * Body param: LLM model to use for every item in the batch. Model availability is
+   * cloud-aware: AWS teamspaces accept Bedrock-native batch-capable models, while
+   * GCP teamspaces accept non-Bedrock batch-capable models and reject Bedrock-only
+   * ids. Deprecated gemini-2.0-flash is accepted for backward compatibility and
+   * automatically runs as gemini-3.1-flash-lite.
    */
   model:
+    | 'gemini-2.0-flash'
     | 'gemini-2.5-flash'
     | 'gemini-2.5-flash-lite'
     | 'gemini-3.1-flash-lite'
+    | 'gemini-3.5-flash'
     | 'gemini-2.5-pro'
+    | 'gemini-3.1-pro-preview'
+    | 'gpt-4o'
+    | 'gpt-4o-mini'
+    | 'gpt-4.1-mini'
+    | 'gpt-4.1'
+    | 'gpt-5-mini'
+    | 'gpt-5'
+    | 'gpt-5.1'
+    | 'claude-sonnet-4@20250514'
+    | 'claude-opus-4-1@20250805'
+    | 'claude-haiku-4-5@20251001'
+    | 'claude-sonnet-4-5@20250929'
+    | 'claude-sonnet-4-6@default'
+    | 'claude-opus-4-5@20251101'
+    | 'claude-opus-4-6@default'
     | 'anthropic.claude-haiku-4-5-20251001-v1:0'
     | 'anthropic.claude-sonnet-4-5-20250929-v1:0'
+    | 'anthropic.claude-sonnet-4-6'
+    | 'anthropic.claude-opus-4-5-20251101-v1:0'
+    | 'anthropic.claude-opus-4-6-v1'
     | 'amazon.nova-2-lite-v1:0';
 
   /**

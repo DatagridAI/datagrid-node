@@ -133,7 +133,7 @@ export {
   type VoiceSessionResponse,
   type VoiceWebsocketMessage,
   type VoiceStartSessionParams,
-} from './voice';
+} from './voice/voice';
 export {
   WebhooksWebhookCursorPage,
   Webhooks,

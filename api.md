@@ -405,10 +405,23 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/voice.ts">VoiceSessionRequest</a></code>
-- <code><a href="./src/resources/voice.ts">VoiceSessionResponse</a></code>
-- <code><a href="./src/resources/voice.ts">VoiceWebsocketMessage</a></code>
+- <code><a href="./src/resources/voice/voice.ts">VoiceSessionRequest</a></code>
+- <code><a href="./src/resources/voice/voice.ts">VoiceSessionResponse</a></code>
+- <code><a href="./src/resources/voice/voice.ts">VoiceWebsocketMessage</a></code>
 
 Methods:
 
-- <code title="post /voice">client.voice.<a href="./src/resources/voice.ts">startSession</a>({ ...params }) -> VoiceSessionResponse</code>
+- <code title="post /voice">client.voice.<a href="./src/resources/voice/voice.ts">startSession</a>({ ...params }) -> VoiceSessionResponse</code>
+
+## OrchestratorTasks
+
+Types:
+
+- <code><a href="./src/resources/voice/orchestrator-tasks.ts">VoiceOrchestratorTask</a></code>
+- <code><a href="./src/resources/voice/orchestrator-tasks.ts">VoiceOrchestratorTaskList</a></code>
+
+Methods:
+
+- <code title="get /voice-orchestrator/tasks/{task_id}">client.voice.orchestratorTasks.<a href="./src/resources/voice/orchestrator-tasks.ts">retrieve</a>(taskId) -> VoiceOrchestratorTask</code>
+- <code title="get /voice-orchestrator/tasks">client.voice.orchestratorTasks.<a href="./src/resources/voice/orchestrator-tasks.ts">list</a>({ ...params }) -> VoiceOrchestratorTaskList</code>
+- <code title="patch /voice-orchestrator/tasks/{task_id}/acknowledge">client.voice.orchestratorTasks.<a href="./src/resources/voice/orchestrator-tasks.ts">acknowledge</a>(taskId) -> VoiceOrchestratorTask</code>
