@@ -2,6 +2,7 @@
   "include": ["src", "tests", "examples"],
   "exclude": ["src/_shims/**/*-deno.ts"],
   "compilerOptions": {
+    "types": ["node", "jest"],
     "outDir": "./dist",
 
     "target": "es2020",
@@ -32,7 +33,7 @@
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
-    "isolatedModules": false,
+		"isolatedModules": false,
 
     "skipLibCheck": true
   }
