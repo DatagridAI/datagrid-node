@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.16.1 (2026-06-12)
+
+Full Changelog: [v0.16.0...v0.16.1](https://github.com/DatagridAI/datagrid-node/compare/v0.16.0...v0.16.1)
+
+### Bug Fixes
+
+* **publish:** use npm publish instead of yarn publish ([39d7e5c](https://github.com/DatagridAI/datagrid-node/commit/39d7e5ccd0fb202bfd4d42e7d5699b622f27cf11))
+
 ## 0.16.0 (2026-06-12)
 
 Full Changelog: [v0.15.0...v0.16.0](https://github.com/DatagridAI/datagrid-node/compare/v0.15.0...v0.16.0)
