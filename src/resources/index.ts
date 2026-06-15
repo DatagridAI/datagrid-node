@@ -4,9 +4,13 @@ export {
   AgentsCursorIDPage,
   Agents,
   type Agent,
+  type AgentClaimResponse,
+  type AgentGenerateResponse,
   type AgentCreateParams,
   type AgentUpdateParams,
   type AgentListParams,
+  type AgentClaimParams,
+  type AgentGenerateParams,
 } from './agents';
 export {
   BatchPredictionsAfterCursorPage,

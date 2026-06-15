@@ -23,7 +23,11 @@ import * as TopLevelAPI from './resources/top-level';
 import { ConverseParams, ConverseResponse, Properties } from './resources/top-level';
 import {
   Agent as AgentsAPIAgent,
+  AgentClaimParams,
+  AgentClaimResponse,
   AgentCreateParams,
+  AgentGenerateParams,
+  AgentGenerateResponse,
   AgentListParams,
   AgentUpdateParams,
   Agents,
@@ -550,10 +554,14 @@ export declare namespace Datagrid {
   export {
     Agents as Agents,
     type AgentsAPIAgent as Agent,
+    type AgentClaimResponse as AgentClaimResponse,
+    type AgentGenerateResponse as AgentGenerateResponse,
     AgentsCursorIDPage as AgentsCursorIDPage,
     type AgentCreateParams as AgentCreateParams,
     type AgentUpdateParams as AgentUpdateParams,
     type AgentListParams as AgentListParams,
+    type AgentClaimParams as AgentClaimParams,
+    type AgentGenerateParams as AgentGenerateParams,
   };
 
   export {
