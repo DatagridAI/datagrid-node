@@ -179,6 +179,8 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/agents.ts">Agent</a></code>
+- <code><a href="./src/resources/agents.ts">AgentClaimResponse</a></code>
+- <code><a href="./src/resources/agents.ts">AgentGenerateResponse</a></code>
 
 Methods:
 
@@ -187,6 +189,8 @@ Methods:
 - <code title="patch /agents/{agent_id}">client.agents.<a href="./src/resources/agents.ts">update</a>(agentId, { ...params }) -> Agent</code>
 - <code title="get /agents">client.agents.<a href="./src/resources/agents.ts">list</a>({ ...params }) -> AgentsCursorIDPage</code>
 - <code title="delete /agents/{agent_id}">client.agents.<a href="./src/resources/agents.ts">delete</a>(agentId) -> void</code>
+- <code title="post /agents/claim">client.agents.<a href="./src/resources/agents.ts">claim</a>({ ...params }) -> AgentClaimResponse</code>
+- <code title="post /agents/generate">client.agents.<a href="./src/resources/agents.ts">generate</a>({ ...params }) -> AgentGenerateResponse</code>
 
 # Identity
 

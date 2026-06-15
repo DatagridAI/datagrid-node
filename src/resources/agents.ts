@@ -52,6 +52,26 @@ export class Agents extends APIResource {
       headers: { Accept: '*/*', ...options?.headers },
     });
   }
+
+  /**
+   * Redeem a `claim_token` from a prior `POST /agents/generate` call to retrieve the
+   * generated agent template. The token is consumed (single-use). Use the returned
+   * template to pre-populate the agent creation dialog.
+   */
+  claim(body: AgentClaimParams, options?: Core.RequestOptions): Core.APIPromise<AgentClaimResponse> {
+    return this._client.post('/agents/claim', { body, ...options });
+  }
+
+  /**
+   * Generate an AI agent configuration from a natural language description. Uses the
+   * same LLM-powered generation as the in-product agent builder. This is a public
+   * endpoint that does not require authentication. Rate limited to 5 requests per
+   * day per IP address. The response includes a `claim_token` that can be redeemed
+   * via `POST /agents/claim` after signing up to persist the agent.
+   */
+  generate(body: AgentGenerateParams, options?: Core.RequestOptions): Core.APIPromise<AgentGenerateResponse> {
+    return this._client.post('/agents/generate', { body, ...options });
+  }
 }
 
 export class AgentsCursorIDPage extends CursorIDPage<Agent> {}
@@ -248,6 +268,88 @@ export namespace Agent {
     last_synced_at?: string;
 
     tool_count?: number;
+  }
+}
+
+export interface AgentClaimResponse {
+  id: string;
+
+  category: string;
+
+  connectors: Array<unknown>;
+
+  description: string;
+
+  emoji: string;
+
+  prompt_examples: Array<string>;
+
+  title: string;
+
+  config?: AgentClaimResponse.Config | null;
+
+  is_curated_template?: boolean | null;
+}
+
+export namespace AgentClaimResponse {
+  export interface Config {
+    custom_prompt?: string | null;
+
+    prompt?: string | null;
+
+    tools?: Array<Config.Tool>;
+  }
+
+  export namespace Config {
+    export interface Tool {
+      tool?: string;
+    }
+  }
+}
+
+export interface AgentGenerateResponse {
+  id: string;
+
+  /**
+   * One-time token to create this agent in your account after signing up. Pass to
+   * `POST /agents/claim`. Expires after 7 days.
+   */
+  claim_token: string;
+
+  config: AgentGenerateResponse.Config;
+
+  description: string;
+
+  emoji: string;
+
+  prompt_examples: Array<string>;
+
+  title: string;
+
+  category?: string;
+
+  connectors?: Array<unknown>;
+}
+
+export namespace AgentGenerateResponse {
+  export interface Config {
+    /**
+     * Custom instructions (tone, style)
+     */
+    custom_prompt?: string | null;
+
+    /**
+     * System instructions for the agent
+     */
+    prompt?: string | null;
+
+    tools?: Array<Config.Tool>;
+  }
+
+  export namespace Config {
+    export interface Tool {
+      tool?: string;
+    }
   }
 }
 
@@ -741,14 +843,33 @@ export interface AgentListParams extends CursorIDPageParams {
   search?: string;
 }
 
+export interface AgentClaimParams {
+  /**
+   * The claim token returned from `POST /agents/generate`
+   */
+  claim_token: string;
+}
+
+export interface AgentGenerateParams {
+  /**
+   * Natural language description of the agent you want. e.g. "I want an agent that
+   * helps my sales team answer product questions and draft follow-up emails."
+   */
+  prompt: string;
+}
+
 Agents.AgentsCursorIDPage = AgentsCursorIDPage;
 
 export declare namespace Agents {
   export {
     type Agent as Agent,
+    type AgentClaimResponse as AgentClaimResponse,
+    type AgentGenerateResponse as AgentGenerateResponse,
     AgentsCursorIDPage as AgentsCursorIDPage,
     type AgentCreateParams as AgentCreateParams,
     type AgentUpdateParams as AgentUpdateParams,
     type AgentListParams as AgentListParams,
+    type AgentClaimParams as AgentClaimParams,
+    type AgentGenerateParams as AgentGenerateParams,
   };
 }
