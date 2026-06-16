@@ -65,7 +65,9 @@ export interface VoiceSessionRequest {
   /**
    * Override the agent config for this voice session. Only prompt overrides are
    * supported — voice sessions always use Gemini Live, so LLM model, agent model,
-   * planning prompt, and tool settings are not applicable.
+   * planning prompt, and tool settings are not applicable. Prompt overrides fully
+   * replace the agent's stored values for this session only and are never persisted;
+   * empty or whitespace-only values are treated as omitted.
    */
   config?: VoiceSessionRequest.Config | null;
 
@@ -138,7 +140,9 @@ export namespace VoiceSessionRequest {
   /**
    * Override the agent config for this voice session. Only prompt overrides are
    * supported — voice sessions always use Gemini Live, so LLM model, agent model,
-   * planning prompt, and tool settings are not applicable.
+   * planning prompt, and tool settings are not applicable. Prompt overrides fully
+   * replace the agent's stored values for this session only and are never persisted;
+   * empty or whitespace-only values are treated as omitted.
    */
   export interface Config {
     /**
@@ -147,9 +151,16 @@ export namespace VoiceSessionRequest {
     custom_prompt?: string | null;
 
     /**
-     * Directs your AI Agent's operational behavior during the voice session.
+     * Directs your AI Agent's operational behavior during the voice session. Replaces
+     * the agent's stored system prompt for this session only.
      */
     system_prompt?: string | null;
+
+    /**
+     * Voice-specific instructions (tone, pacing, speaking style). Replaces the agent's
+     * stored voice instructions for this session only. Not persisted.
+     */
+    voice_prompt?: string | null;
   }
 
   /**
@@ -426,7 +437,9 @@ export interface VoiceStartSessionParams {
   /**
    * Override the agent config for this voice session. Only prompt overrides are
    * supported — voice sessions always use Gemini Live, so LLM model, agent model,
-   * planning prompt, and tool settings are not applicable.
+   * planning prompt, and tool settings are not applicable. Prompt overrides fully
+   * replace the agent's stored values for this session only and are never persisted;
+   * empty or whitespace-only values are treated as omitted.
    */
   config?: VoiceStartSessionParams.Config | null;
 
@@ -499,7 +512,9 @@ export namespace VoiceStartSessionParams {
   /**
    * Override the agent config for this voice session. Only prompt overrides are
    * supported — voice sessions always use Gemini Live, so LLM model, agent model,
-   * planning prompt, and tool settings are not applicable.
+   * planning prompt, and tool settings are not applicable. Prompt overrides fully
+   * replace the agent's stored values for this session only and are never persisted;
+   * empty or whitespace-only values are treated as omitted.
    */
   export interface Config {
     /**
@@ -508,9 +523,16 @@ export namespace VoiceStartSessionParams {
     custom_prompt?: string | null;
 
     /**
-     * Directs your AI Agent's operational behavior during the voice session.
+     * Directs your AI Agent's operational behavior during the voice session. Replaces
+     * the agent's stored system prompt for this session only.
      */
     system_prompt?: string | null;
+
+    /**
+     * Voice-specific instructions (tone, pacing, speaking style). Replaces the agent's
+     * stored voice instructions for this session only. Not persisted.
+     */
+    voice_prompt?: string | null;
   }
 
   /**
