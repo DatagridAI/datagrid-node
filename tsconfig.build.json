@@ -3,6 +3,7 @@
   "include": ["dist/src"],
   "exclude": ["dist/src/_shims/*-deno.ts"],
   "compilerOptions": {
+    "types": ["node"],
     "rootDir": "./dist/src",
     "paths": {
       "datagrid-ai/*": ["./dist/src/*"],
