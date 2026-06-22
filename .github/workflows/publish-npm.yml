@@ -1,7 +1,5 @@
-# This workflow is triggered when a GitHub release is created.
-# It can also be run manually to re-publish to NPM in case it failed for some reason.
-# You can run this workflow by navigating to https://www.github.com/DatagridAI/datagrid-node/actions/workflows/publish-npm.yml
-name: Publish NPM
+name: Publish to npm
+
 on:
   workflow_dispatch:
 
@@ -10,23 +8,53 @@ on:
 
 jobs:
   publish:
-    name: publish
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
-      - name: Set up Node
-        uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610 # v3.9.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
 
-      - name: Install dependencies
-        run: |
-          yarn install
+      - run: yarn install
 
-      - name: Publish to NPM
+      - run: yarn build
+
+      - name: Determine dist-tag
+        id: tag
         run: |
-          bash ./bin/publish-npm
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          VERSION=$(node -p "require('./package.json').version")
+
+          # Only use a scoped prerelease tag when a stable version already exists on npm.
+          # Before the first stable release, prereleases also go to `latest` (matches old bin/publish-npm behavior).
+          TAG="latest"
+          if [[ "$VERSION" =~ -([a-zA-Z]+) ]]; then
+            PRERELEASE_TAG="${BASH_REMATCH[1]}"  # capture before any further regex clears BASH_REMATCH
+            NPM_INFO=$(npm view "$PACKAGE_NAME" version --json 2>&1)
+            # Fail on unexpected registry errors; treat E404 (package not yet published) as no stable release.
+            if echo "$NPM_INFO" | jq -e '.error.code' > /dev/null 2>&1; then
+              if ! echo "$NPM_INFO" | jq -e '.error.code == "E404"' > /dev/null 2>&1; then
+                echo "ERROR: unexpected npm registry response: $NPM_INFO" >&2
+                exit 1
+              fi
+              LAST_VERSION=""
+            else
+              LAST_VERSION=$(echo "$NPM_INFO" | jq -r 'if type == "string" then . else "" end')
+            fi
+            if [[ -n "$LAST_VERSION" && ! "$LAST_VERSION" =~ -([a-zA-Z]+) ]]; then
+              TAG="$PRERELEASE_TAG"
+            fi
+          fi
+
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - run: npm publish --provenance --tag ${{ steps.tag.outputs.tag }}
+        working-directory: dist
         env:
-          NPM_TOKEN: ${{ secrets.DATAGRID_NPM_TOKEN || secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
