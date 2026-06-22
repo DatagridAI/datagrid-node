@@ -28,12 +28,21 @@ jobs:
       - name: Determine dist-tag
         id: tag
         run: |
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
           VERSION=$(node -p "require('./package.json').version")
+
+          # Only use a scoped prerelease tag when a stable version already exists on npm.
+          # Before the first stable release, prereleases also go to `latest` (matches old bin/publish-npm behavior).
+          TAG="latest"
           if [[ "$VERSION" =~ -([a-zA-Z]+) ]]; then
-            echo "tag=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
-          else
-            echo "tag=latest" >> "$GITHUB_OUTPUT"
+            NPM_INFO=$(npm view "$PACKAGE_NAME" version --json 2>/dev/null || true)
+            LAST_VERSION=$(echo "$NPM_INFO" | jq -r 'if type == "string" then . else "" end' 2>/dev/null || true)
+            if [[ -n "$LAST_VERSION" && ! "$LAST_VERSION" =~ -([a-zA-Z]+) ]]; then
+              TAG="${BASH_REMATCH[1]}"
+            fi
           fi
+
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
       - run: npm publish --provenance --tag ${{ steps.tag.outputs.tag }}
         working-directory: dist
