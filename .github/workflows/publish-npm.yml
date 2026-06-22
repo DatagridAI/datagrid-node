@@ -21,7 +21,9 @@ jobs:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
 
-      - run: npm ci
+      - run: yarn install
+
+      - run: yarn build
 
       - name: Determine dist-tag
         id: tag
@@ -34,5 +36,6 @@ jobs:
           fi
 
       - run: npm publish --provenance --tag ${{ steps.tag.outputs.tag }}
+        working-directory: dist
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.DATAGRID_NPM_TOKEN || secrets.NPM_TOKEN }}
