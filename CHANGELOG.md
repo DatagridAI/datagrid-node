@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.17.2 (2026-06-24)
+
+Full Changelog: [v0.17.1...v0.17.2](https://github.com/DatagridAI/datagrid-node/compare/v0.17.1...v0.17.2)
+
+### Bug Fixes
+
+* **ci:** publish npm package as public without token env ([6e437f0](https://github.com/DatagridAI/datagrid-node/commit/6e437f05785e224538124d2343239b1c5bcb7ae0))
+* **ci:** remove registry from node-setup collision with OIDC ([621bf23](https://github.com/DatagridAI/datagrid-node/commit/621bf23f10c8eaff903cccfd8f7886d4f7c82ccd))
+
 ## 0.17.1 (2026-06-22)
 
 Full Changelog: [v0.17.0...v0.17.1](https://github.com/DatagridAI/datagrid-node/compare/v0.17.0...v0.17.1)
