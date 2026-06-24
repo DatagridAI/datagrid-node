@@ -54,7 +54,5 @@ jobs:
 
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
-      - run: npm publish --provenance --tag ${{ steps.tag.outputs.tag }}
+      - run: npm publish --provenance --access public --tag ${{ steps.tag.outputs.tag }}
         working-directory: dist
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
