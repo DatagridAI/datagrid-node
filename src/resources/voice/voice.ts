@@ -290,7 +290,12 @@ export interface VoiceSessionResponse {
  * - `transcript`: Real-time transcription
  *   `{ role: "user" | "agent", text: string }`
  * - `citation`: Source citation
- *   `{ citations: Array<object>, timestamp_ms: number }`
+ *   `{ citations: VoiceCitations, timestamp_ms: number, message_id: string }`.
+ *   Each source is a superset of the SSE `/v1/converse` `CitationSource` schema —
+ *   the core fields (`type`, `source_name`, `source_id`, `source_uri`,
+ *   `confirmations`) are identical, with extra optional per-type fields available
+ *   — and `message_id` correlates the citations to the agent turn that produced
+ *   them.
  * - `ended`: Session ended
  *   `{ credits_consumed: number, transcript: Array<{ role: "user" | "agent", text: string }> }`
  */
@@ -387,15 +392,141 @@ export namespace VoiceWebsocketMessage {
    */
   export interface UnionMember5 {
     /**
-     * Array of source citations referenced by the agent.
+     * Array of voice citations. Each source is a superset of the SSE `/v1/converse`
+     * `CitationSource` schema.
      */
-    citations?: Array<unknown>;
+    citations: Array<UnionMember5.Citation>;
+
+    /**
+     * Stable id of the agent message/turn that produced these citations. Always
+     * present; clients use it to correlate a citation to the originating turn.
+     */
+    message_id: string;
 
     /**
      * Timestamp in milliseconds relative to the session start when the citation was
      * referenced.
      */
-    timestamp_ms?: number;
+    timestamp_ms: number;
+  }
+
+  export namespace UnionMember5 {
+    export interface Citation {
+      /**
+       * The text snippet from the response that is being cited.
+       */
+      citation: string;
+
+      /**
+       * Array of sources that support this citation.
+       */
+      sources: Array<Citation.Source>;
+    }
+
+    export namespace Citation {
+      /**
+       * A citation source on the voice WebSocket.
+       *
+       * Strict superset of the SSE `/v1/converse` `CitationSource` schema: the core
+       * fields (`type`, `source_name`, `source_id`, `source_uri`, `confirmations`) carry
+       * the exact same names and semantics. The remaining optional fields are
+       * first-party enrichment used by Datagrid's own clients to render rich citations
+       * live; external clients can safely ignore them.
+       */
+      export interface Source {
+        /**
+         * An array of text snippets from the source that confirm the citation. Required:
+         * emitters must always send an array, using `[]` when there are no snippets rather
+         * than omitting the field. This matches the SSE `/v1/converse` behavior.
+         */
+        confirmations: Array<string>;
+
+        /**
+         * Name of the source.
+         */
+        source_name: string;
+
+        type: 'image' | 'pdf_page' | 'record' | 'web_search' | 'sql_query_result' | 'action';
+
+        /**
+         * record only. Cited record content snippet.
+         */
+        content?: string;
+
+        /**
+         * image / pdf_page only. Data lake item id backing the source.
+         */
+        data_lake_item_id?: string;
+
+        /**
+         * action only. Structured fact data produced by the tool call.
+         */
+        fact_data?: { [key: string]: unknown };
+
+        /**
+         * pdf_page only. Original file name.
+         */
+        file_name?: string;
+
+        /**
+         * Index of this source in the originating, un-deduplicated source list.
+         */
+        original_source_index?: number;
+
+        /**
+         * pdf_page only. 1-based page number within the document.
+         */
+        page_number?: number;
+
+        /**
+         * sql_query_result only. The query view backing the result.
+         */
+        query_view?: Source.QueryView;
+
+        /**
+         * record only. Human-readable record title.
+         */
+        record_title?: string;
+
+        /**
+         * Id of the source.
+         */
+        source_id?: string;
+
+        /**
+         * URI of the source.
+         */
+        source_uri?: string;
+
+        /**
+         * record / pdf_page / sql_query_result only. Backing table id.
+         */
+        table_id?: string;
+
+        /**
+         * sql_query_result only. Natural-language explanation of the query.
+         */
+        task_explanation?: string;
+
+        /**
+         * web_search only. Thumbnail image URL for the result.
+         */
+        thumbnail_url?: string;
+      }
+
+      export namespace Source {
+        /**
+         * sql_query_result only. The query view backing the result.
+         */
+        export interface QueryView {
+          dataset_id?: string;
+
+          query?: string;
+
+          table_fingerprint?: string;
+        }
+      }
+    }
   }
 
   /**
