@@ -204,12 +204,21 @@ export namespace Properties {
           type: 'image' | 'pdf_page' | 'record' | 'web_search' | 'sql_query_result' | 'action';
 
           /**
+           * Origin-system deep-link for the source (e.g. an `app.procore.com` universal
+           * link), when one exists. Unlike `source_uri`, it is never overridden by the
+           * signed Datagrid file URI, so clients can offer an "open in source" action.
+           */
+          external_url?: string;
+
+          /**
            * Id of the source.
            */
           source_id?: string;
 
           /**
-           * URI of the source.
+           * URI of the source. For file-backed sources this is the in-app target (signed
+           * Datagrid file URI when available); use `external_url` for the origin-system
+           * deep-link.
            */
           source_uri?: string;
         }

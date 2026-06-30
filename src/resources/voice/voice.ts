@@ -459,6 +459,14 @@ export namespace VoiceWebsocketMessage {
         data_lake_item_id?: string;
 
         /**
+         * record / pdf_page / sql_query_result / action only. Origin-system deep-link for
+         * the source (e.g. an `app.procore.com` universal link), when one exists. Unlike
+         * `source_uri`, it is never overridden by the signed Datagrid file URI, so clients
+         * can offer an "open in source" action.
+         */
+        external_url?: string;
+
+        /**
          * action only. Structured fact data produced by the tool call.
          */
         fact_data?: { [key: string]: unknown };
@@ -494,7 +502,9 @@ export namespace VoiceWebsocketMessage {
         source_id?: string;
 
         /**
-         * URI of the source.
+         * URI of the source. For file-backed sources this is the in-app target (signed
+         * Datagrid file URI when available); use `external_url` for the origin-system
+         * deep-link.
          */
         source_uri?: string;
 
