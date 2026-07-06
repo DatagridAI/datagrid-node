@@ -69,7 +69,12 @@ export interface Message {
   /**
    * Contents of the message.
    */
-  content: Array<Message.MessageContentText | Message.MessageContentVoice | Message.MessageContentFile>;
+  content: Array<
+    | Message.MessageContentText
+    | Message.MessageContentJson
+    | Message.MessageContentVoice
+    | Message.MessageContentFile
+  >;
 
   /**
    * The ID of the conversation the message belongs to.
@@ -156,6 +161,18 @@ export namespace Message {
     text: string;
 
     type: 'text';
+  }
+
+  /**
+   * JSON content for structured-output responses.
+   */
+  export interface MessageContentJson {
+    /**
+     * The JSON value produced by the agent.
+     */
+    json: unknown;
+
+    type: 'json';
   }
 
   /**
