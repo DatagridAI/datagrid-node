@@ -11,7 +11,7 @@ export {
   type AgentListParams,
   type AgentClaimParams,
   type AgentGenerateParams,
-} from './agents';
+} from './agents/agents';
 export {
   BatchPredictionsAfterCursorPage,
   BatchPredictions,

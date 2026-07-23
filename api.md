@@ -178,19 +178,33 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/agents.ts">Agent</a></code>
-- <code><a href="./src/resources/agents.ts">AgentClaimResponse</a></code>
-- <code><a href="./src/resources/agents.ts">AgentGenerateResponse</a></code>
+- <code><a href="./src/resources/agents/agents.ts">Agent</a></code>
+- <code><a href="./src/resources/agents/agents.ts">AgentClaimResponse</a></code>
+- <code><a href="./src/resources/agents/agents.ts">AgentGenerateResponse</a></code>
 
 Methods:
 
-- <code title="post /agents">client.agents.<a href="./src/resources/agents.ts">create</a>({ ...params }) -> Agent</code>
-- <code title="get /agents/{agent_id}">client.agents.<a href="./src/resources/agents.ts">retrieve</a>(agentId) -> Agent</code>
-- <code title="patch /agents/{agent_id}">client.agents.<a href="./src/resources/agents.ts">update</a>(agentId, { ...params }) -> Agent</code>
-- <code title="get /agents">client.agents.<a href="./src/resources/agents.ts">list</a>({ ...params }) -> AgentsCursorIDPage</code>
-- <code title="delete /agents/{agent_id}">client.agents.<a href="./src/resources/agents.ts">delete</a>(agentId) -> void</code>
-- <code title="post /agents/claim">client.agents.<a href="./src/resources/agents.ts">claim</a>({ ...params }) -> AgentClaimResponse</code>
-- <code title="post /agents/generate">client.agents.<a href="./src/resources/agents.ts">generate</a>({ ...params }) -> AgentGenerateResponse</code>
+- <code title="post /agents">client.agents.<a href="./src/resources/agents/agents.ts">create</a>({ ...params }) -> Agent</code>
+- <code title="get /agents/{agent_id}">client.agents.<a href="./src/resources/agents/agents.ts">retrieve</a>(agentId) -> Agent</code>
+- <code title="patch /agents/{agent_id}">client.agents.<a href="./src/resources/agents/agents.ts">update</a>(agentId, { ...params }) -> Agent</code>
+- <code title="get /agents">client.agents.<a href="./src/resources/agents/agents.ts">list</a>({ ...params }) -> AgentsCursorIDPage</code>
+- <code title="delete /agents/{agent_id}">client.agents.<a href="./src/resources/agents/agents.ts">delete</a>(agentId) -> void</code>
+- <code title="post /agents/claim">client.agents.<a href="./src/resources/agents/agents.ts">claim</a>({ ...params }) -> AgentClaimResponse</code>
+- <code title="post /agents/generate">client.agents.<a href="./src/resources/agents/agents.ts">generate</a>({ ...params }) -> AgentGenerateResponse</code>
+
+## Automations
+
+Types:
+
+- <code><a href="./src/resources/agents/automations.ts">Automation</a></code>
+
+Methods:
+
+- <code title="post /agents/{agent_id}/automations">client.agents.automations.<a href="./src/resources/agents/automations.ts">create</a>(agentId, { ...params }) -> Automation</code>
+- <code title="get /agents/{agent_id}/automations/{automation_id}">client.agents.automations.<a href="./src/resources/agents/automations.ts">retrieve</a>(agentId, automationId) -> Automation</code>
+- <code title="patch /agents/{agent_id}/automations/{automation_id}">client.agents.automations.<a href="./src/resources/agents/automations.ts">update</a>(agentId, automationId, { ...params }) -> Automation</code>
+- <code title="get /agents/{agent_id}/automations">client.agents.automations.<a href="./src/resources/agents/automations.ts">list</a>(agentId, { ...params }) -> AutomationsCursorIDPage</code>
+- <code title="delete /agents/{agent_id}/automations/{automation_id}">client.agents.automations.<a href="./src/resources/agents/automations.ts">delete</a>(agentId, automationId) -> void</code>
 
 # Identity
 

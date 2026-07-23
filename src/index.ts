@@ -22,18 +22,6 @@ import * as API from './resources/index';
 import * as TopLevelAPI from './resources/top-level';
 import { ConverseParams, ConverseResponse, Properties } from './resources/top-level';
 import {
-  Agent as AgentsAPIAgent,
-  AgentClaimParams,
-  AgentClaimResponse,
-  AgentCreateParams,
-  AgentGenerateParams,
-  AgentGenerateResponse,
-  AgentListParams,
-  AgentUpdateParams,
-  Agents,
-  AgentsCursorIDPage,
-} from './resources/agents';
-import {
   BatchPrediction,
   BatchPredictionCreateParams,
   BatchPredictionListParams,
@@ -123,6 +111,18 @@ import {
   Webhooks,
   WebhooksWebhookCursorPage,
 } from './resources/webhooks';
+import {
+  Agent as AgentsAPIAgent,
+  AgentClaimParams,
+  AgentClaimResponse,
+  AgentCreateParams,
+  AgentGenerateParams,
+  AgentGenerateResponse,
+  AgentListParams,
+  AgentUpdateParams,
+  Agents,
+  AgentsCursorIDPage,
+} from './resources/agents/agents';
 import { Beta } from './resources/beta/beta';
 import {
   Conversation,
