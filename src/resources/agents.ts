@@ -225,6 +225,8 @@ export interface Agent {
    * Tools that this agent can use.
    */
   tools: Array<ToolsAPI.Tool>;
+
+  managed_by_app?: Agent.ManagedByApp | null;
 }
 
 export namespace Agent {
@@ -268,6 +270,18 @@ export namespace Agent {
     last_synced_at?: string;
 
     tool_count?: number;
+  }
+
+  export interface ManagedByApp {
+    /**
+     * The name of the app that manages the agent
+     */
+    app_name?: string;
+
+    /**
+     * The UUID of the app that manages the agent
+     */
+    app_uuid?: string;
   }
 }
 
