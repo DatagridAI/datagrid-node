@@ -27,7 +27,7 @@ export class BatchPredictions extends APIResource {
    *       },
    *       { custom_id: 'drawing_002', file_id: 'file_def456' },
    *     ],
-   *     model: 'gemini-2.5-flash',
+   *     model: 'gemini-3.1-flash-lite',
    *     output_schema: {
    *       type: 'object',
    *       additionalProperties: false,
@@ -232,8 +232,8 @@ export interface BatchPrediction {
    * LLM model to use for every item in the batch. Model availability is cloud-aware:
    * AWS teamspaces accept Bedrock-native batch-capable models, while GCP teamspaces
    * accept non-Bedrock batch-capable models and reject Bedrock-only ids. Deprecated
-   * gemini-2.0-flash is accepted for backward compatibility and automatically runs
-   * as gemini-3.1-flash-lite.
+   * gemini-2.x-flash ids are accepted for backward compatibility and automatically
+   * run as gemini-3.1-flash-lite.
    */
   model:
     | 'gemini-2.0-flash'
@@ -423,8 +423,8 @@ export interface BatchPredictionCreateParams {
    * Body param: LLM model to use for every item in the batch. Model availability is
    * cloud-aware: AWS teamspaces accept Bedrock-native batch-capable models, while
    * GCP teamspaces accept non-Bedrock batch-capable models and reject Bedrock-only
-   * ids. Deprecated gemini-2.0-flash is accepted for backward compatibility and
-   * automatically runs as gemini-3.1-flash-lite.
+   * ids. Deprecated gemini-2.x-flash ids are accepted for backward compatibility and
+   * automatically run as gemini-3.1-flash-lite.
    */
   model:
     | 'gemini-2.0-flash'

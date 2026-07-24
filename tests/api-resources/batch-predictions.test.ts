@@ -15,7 +15,7 @@ describe('resource batchPredictions', () => {
         { custom_id: 'drawing_001', file_id: 'file_abc123' },
         { custom_id: 'drawing_002', file_id: 'file_def456' },
       ],
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.1-flash-lite',
       output_schema: {
         type: 'bar',
         additionalProperties: 'bar',
@@ -47,7 +47,7 @@ describe('resource batchPredictions', () => {
           page: 1,
         },
       ],
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.1-flash-lite',
       output_schema: {
         type: 'bar',
         additionalProperties: 'bar',
