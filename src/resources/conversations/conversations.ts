@@ -139,6 +139,15 @@ export interface ConversationListParams extends CursorIDPageParams {
   direction?: 'asc' | 'desc';
 
   /**
+   * When true, excludes conversations that never had a message sent (e.g. abandoned
+   * sessions). Defaults to false, returning every conversation regardless of message
+   * count. Changing this value between requests that reuse the same `before`/`after`
+   * cursor is not supported — the cursor was computed against a different result
+   * set, so pass a consistent value for the lifetime of a given pagination sequence.
+   */
+  has_messages?: boolean;
+
+  /**
    * The field to sort the conversations by.
    */
   sort?: ConversationSortField;

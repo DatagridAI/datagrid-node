@@ -78,6 +78,14 @@ export interface VoiceSessionRequest {
   conversation_id?: string | null;
 
   /**
+   * When true and this session creates a brand-new conversation (no conversation_id
+   * was provided), that conversation is discarded if the session ends without any
+   * message ever being sent. Has no effect when continuing an existing conversation.
+   * Disabled by default.
+   */
+  discard_if_empty?: boolean | null;
+
+  /**
    * When true, the session is ephemeral and will not save messages to conversation
    * history.
    */
@@ -589,6 +597,14 @@ export interface VoiceStartSessionParams {
    * conversation will be created.
    */
   conversation_id?: string | null;
+
+  /**
+   * When true and this session creates a brand-new conversation (no conversation_id
+   * was provided), that conversation is discarded if the session ends without any
+   * message ever being sent. Has no effect when continuing an existing conversation.
+   * Disabled by default.
+   */
+  discard_if_empty?: boolean | null;
 
   /**
    * When true, the session is ephemeral and will not save messages to conversation

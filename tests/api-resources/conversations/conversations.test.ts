@@ -75,6 +75,7 @@ describe('resource conversations', () => {
           after: 'after',
           before: 'before',
           direction: 'asc',
+          has_messages: true,
           limit: 1,
           sort: 'created_at',
         },
