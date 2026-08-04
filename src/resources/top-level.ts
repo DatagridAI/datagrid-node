@@ -211,6 +211,13 @@ export namespace Properties {
           external_url?: string;
 
           /**
+           * record only. Backend-normalized, render-ready structured fields promoted from
+           * the record row (due date, ball-in-court, assignee, revision, type, vendor,
+           * scope, …). Excludes `status`, which is surfaced on its own.
+           */
+          fields?: Array<Source.Field>;
+
+          /**
            * Id of the source.
            */
           source_id?: string;
@@ -221,6 +228,26 @@ export namespace Properties {
            * deep-link.
            */
           source_uri?: string;
+
+          /**
+           * record only. Primary status value for the record (e.g. "Open", "Pending
+           * Review"), surfaced separately from `fields` so clients can render a status chip.
+           */
+          status?: string;
+        }
+
+        export namespace Source {
+          export interface Field {
+            /**
+             * Human-readable field label (e.g. "Due Date").
+             */
+            label: string;
+
+            /**
+             * Human-readable field value (e.g. "2025-09-14").
+             */
+            value: string;
+          }
         }
       }
     }
