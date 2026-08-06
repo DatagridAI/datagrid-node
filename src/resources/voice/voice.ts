@@ -492,6 +492,15 @@ export namespace VoiceWebsocketMessage {
         file_name?: string;
 
         /**
+         * record / pdf_page only. Procore tool type of the underlying record (e.g.
+         * "rfi_headers", "submittal_logs"), read from the indexed Procore item type on the
+         * source row; present only for sources ingested from Procore. Lets clients render
+         * a reliable type label (RFI, Submittal, Observation, …) without parsing the
+         * deep-link URL.
+         */
+        item_type?: string;
+
+        /**
          * Index of this source in the originating, un-deduplicated source list.
          */
         original_source_index?: number;

@@ -218,6 +218,15 @@ export namespace Properties {
           fields?: Array<Source.Field>;
 
           /**
+           * record / pdf_page only. Procore tool type of the underlying record (e.g.
+           * "rfi_headers", "submittal_logs"), read from the indexed Procore item type on the
+           * source row; present only for sources ingested from Procore. Lets clients render
+           * a reliable type label (RFI, Submittal, Observation, …) without parsing the
+           * deep-link URL.
+           */
+          item_type?: string;
+
+          /**
            * Id of the source.
            */
           source_id?: string;
