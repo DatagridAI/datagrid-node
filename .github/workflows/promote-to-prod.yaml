@@ -1,66 +1,100 @@
-# Promotes the staging repo (ToricLabs/datagrid-node-staging) to the public
-# prod repo (DatagridAI/datagrid-node) by force-pushing main.
-#
-# After the push lands on the public repo, release-please will open (or update)
-# a release PR. Merging that PR creates a GitHub Release, which triggers
-# publish-npm.yml in the public repo and publishes to npm.
-#
-# Prerequisites (one-time setup):
-#   1. Create a GitHub PAT with `contents: write` access to DatagridAI/datagrid-node.
-#   2. Store it as secret DATAGRID_PROD_REPO_TOKEN on ToricLabs/datagrid-node-staging.
-name: Promote to Prod
+name: Promote SDKs
 
+# Merge-commit PR variant of ../sdk-repo's stlc-promote.yml, for when the
+# production repo requires a PR for changes to main. On push to staging main
+# (and manual dispatch) it pushes staging main to a stainless/release branch on
+# production, opens a PR into production main, and enables auto-merge. That PR
+# MUST merge with a MERGE COMMIT — never squash/rebase, or the SHAs get rewritten
+# and the trunks fork. Self-routed to staging; needs PRODUCTION_REPO_TOKEN with Contents + Pull requests: write on production.
 on:
-  # Manual trigger — the default path for promoting a tested staging cut.
-  workflow_dispatch:
-    inputs:
-      dry_run:
-        description: 'Dry run — print what would be pushed without pushing'
-        type: boolean
-        default: false
-
-  # Automatic trigger — promote whenever a release commit lands on main.
-  # A release commit is authored by release-please and starts with "release:".
   push:
-    branches:
-      - main
+    # main only. stlc preview/integrated/codegen branches never push to main.
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
 
 jobs:
   promote:
-    name: Promote staging → prod
-    runs-on: ubuntu-latest
-    # For the push trigger, only run on release commits to avoid promoting
-    # every intermediate SDK regen commit.
-    if: >
-      github.event_name == 'workflow_dispatch' ||
-      startsWith(github.event.head_commit.message, 'release:')
-
+    # Runner comes from the STLC_RUNNER repo/org variable when set; defaults to GitHub-hosted.
+    runs-on: ${{ vars.STLC_RUNNER || 'ubuntu-latest' }}
+    if: github.repository == 'ToricLabs/datagrid-node-staging'
+    concurrency:
+      group: stlc-promote
+      cancel-in-progress: true
+    env:
+      PRODUCTION_REPO: DatagridAI/datagrid-node
+      GH_TOKEN: ${{ secrets.PRODUCTION_REPO_TOKEN }}
     steps:
-      - name: Checkout staging repo
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Check out staging
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          persist-credentials: false
 
-      - name: Configure git identity
+      - name: Fetch production main
         run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote add production \
+            "https://x-access-token:${GH_TOKEN}@github.com/${PRODUCTION_REPO}.git"
+          git fetch production main
 
-      - name: Add prod remote
+      - name: Check whether production already has staging's content
+        id: diff
         run: |
-          git remote add prod \
-            "https://x-access-token:${{ secrets.DATAGRID_PROD_REPO_TOKEN }}@github.com/DatagridAI/datagrid-node.git"
+          # Compare by CONTENT, not SHA: release-please commits on production
+          # make the SHAs always differ, which would re-open a spurious PR.
+          MERGED=$(git merge-tree --write-tree production/main origin/main) || MERGED=conflict
+          PRODUCTION_TREE=$(git rev-parse 'production/main^{tree}')
+          if [ "$MERGED" = "$PRODUCTION_TREE" ]; then
+            echo "Production already contains staging's content. Nothing to promote."
+            echo "synced=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "synced=false" >> "$GITHUB_OUTPUT"
+          fi
 
-      - name: Dry run — show what would be pushed
-        if: ${{ inputs.dry_run == true }}
+      - name: Push staging main to the release branch on production
+        if: steps.diff.outputs.synced == 'false'
         run: |
-          echo "DRY RUN — would push:"
-          git log prod/main..HEAD --oneline || echo "(prod/main not fetched yet — fetching for comparison)"
-          git fetch prod main --no-tags
-          git log prod/main..HEAD --oneline
+          # Force is safe: this branch only carries the PR; re-pushing updates it in place.
+          git push production origin/main:refs/heads/stlc/release --force
 
-      - name: Push main to prod repo
-        if: ${{ inputs.dry_run != true }}
+      - name: Open or update the promote PR (merge commit)
+        if: steps.diff.outputs.synced == 'false'
         run: |
-          git push prod HEAD:refs/heads/main --force-with-lease
-          echo "✅ Pushed $(git rev-parse --short HEAD) to DatagridAI/datagrid-node main"
+          EXISTING_PR=$(gh pr list \
+            --repo "${PRODUCTION_REPO}" \
+            --head stlc/release \
+            --state open \
+            --json number \
+            --jq '.[0].number')
+          if [ -z "${EXISTING_PR}" ]; then
+            gh pr create \
+              --repo "${PRODUCTION_REPO}" \
+              --base main \
+              --head stlc/release \
+              --title "Release SDK updates" \
+              --body "$(git log --oneline production/main..origin/main)"
+          else
+            echo "Promote PR #${EXISTING_PR} already exists. The force-push has updated it."
+          fi
+          # --merge = MERGE COMMIT — never --squash/--rebase (that rewrites SHAs
+          # and forks the trunks). Auto-merge still waits for production's
+          # required reviews and checks — they gate when the code publishes.
+          gh pr merge stlc/release --repo "${PRODUCTION_REPO}" --merge --auto \
+            || echo "Auto-merge unavailable — review and merge the promote PR manually with a merge commit."
+
+      - name: Alert on failure
+        if: failure()
+        env:
+          ALERT_WEBHOOK_URL: ${{ secrets.STLC_ALERT_WEBHOOK_URL }}
+        run: |
+          run_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          msg="stlc promote failed in ${{ github.repository }}. A stalled promote or back-sync lets custom-code tracking drift, which later builds refuse on — investigate before the next build. Run: $run_url"
+          echo "::error title=stlc workflow failed::$msg"
+          { echo "### ⚠️ stlc workflow failed"; echo ""; echo "$msg"; } >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "${ALERT_WEBHOOK_URL:-}" ]; then
+            curl -sS -X POST -H 'Content-Type: application/json' \
+              -d "$(jq -n --arg text "$msg" '{text:$text}')" "$ALERT_WEBHOOK_URL" \
+              || echo "::warning::Alert webhook POST failed"
+          fi
