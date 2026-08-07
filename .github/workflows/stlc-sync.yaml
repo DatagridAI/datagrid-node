@@ -83,7 +83,7 @@ jobs:
       - name: Open + auto-merge the back-sync PR (merge commit)
         if: steps.diff.outputs.behind == 'true'
         run: |
-          EXISTING_PR=$(gh pr list --head stlc/from-prod --base main --state open --json number --jq '.[0].number')
+          EXISTING_PR=$(gh pr list --head stlc/from-prod --base main --state open --json number --jq '.[0].number // empty')
           if [ -z "${EXISTING_PR}" ]; then
             gh pr create \
               --base main \

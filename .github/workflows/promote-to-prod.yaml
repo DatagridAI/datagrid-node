@@ -67,7 +67,7 @@ jobs:
             --head stlc/release \
             --state open \
             --json number \
-            --jq '.[0].number')
+            --jq '.[0].number // empty')
           if [ -z "${EXISTING_PR}" ]; then
             gh pr create \
               --repo "${PRODUCTION_REPO}" \
