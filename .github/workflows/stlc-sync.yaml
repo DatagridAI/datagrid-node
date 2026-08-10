@@ -47,7 +47,7 @@ jobs:
 
       - name: Fetch production main
         env:
-          PRODUCTION_REPO_TOKEN: ${{ secrets.PRODUCTION_REPO_TOKEN }}
+          PRODUCTION_REPO_TOKEN: ${{ secrets.DATAGRID_PROD_REPO_TOKEN }}
         run: |
           # Public production reads with no credential; a private production
           # repo needs PRODUCTION_REPO_TOKEN (the same token the promote uses).
