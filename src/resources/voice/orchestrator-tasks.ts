@@ -16,8 +16,9 @@ export class OrchestratorTasks extends APIResource {
    * List delegated voice tasks for the authenticated user. By default this returns
    * active, non-expired queued or running tasks plus unacknowledged terminal tasks
    * and omits task result content from list views. Pass an explicit status filter to
-   * request a specific task state. A `cancelled` status marks tasks stopped via the
-   * cancel endpoint (`PATCH /voice-orchestrator/tasks/{task_id}/cancel`).
+   * request a specific task state. A `cancelled` status is reserved for terminal
+   * task records produced by future cancellation flows; the current voice task inbox
+   * does not add a user-facing cancel endpoint.
    */
   list(
     query?: OrchestratorTaskListParams,
@@ -39,13 +40,6 @@ export class OrchestratorTasks extends APIResource {
    */
   acknowledge(taskId: string, options?: Core.RequestOptions): Core.APIPromise<VoiceOrchestratorTask> {
     return this._client.patch(`/voice-orchestrator/tasks/${taskId}/acknowledge`, options);
-  }
-
-  /**
-   * Cancel voice orchestrator task
-   */
-  cancel(taskId: string, options?: Core.RequestOptions): Core.APIPromise<VoiceOrchestratorTask> {
-    return this._client.patch(`/voice-orchestrator/tasks/${taskId}/cancel`, options);
   }
 }
 

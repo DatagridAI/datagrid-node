@@ -480,25 +480,9 @@ export namespace VoiceWebsocketMessage {
         fact_data?: { [key: string]: unknown };
 
         /**
-         * record only. Backend-normalized, render-ready structured fields promoted from
-         * the record row (due date, ball-in-court, assignee, revision, type, vendor,
-         * scope, …). Excludes `status`, which is surfaced on its own.
-         */
-        fields?: Array<Source.Field>;
-
-        /**
          * pdf_page only. Original file name.
          */
         file_name?: string;
-
-        /**
-         * record / pdf_page only. Procore tool type of the underlying record (e.g.
-         * "rfi_headers", "submittal_logs"), read from the indexed Procore item type on the
-         * source row; present only for sources ingested from Procore. Lets clients render
-         * a reliable type label (RFI, Submittal, Observation, …) without parsing the
-         * deep-link URL.
-         */
-        item_type?: string;
 
         /**
          * Index of this source in the originating, un-deduplicated source list.
@@ -533,12 +517,6 @@ export namespace VoiceWebsocketMessage {
         source_uri?: string;
 
         /**
-         * record only. Primary status value for the record (e.g. "Open", "Pending
-         * Review"), surfaced separately from `fields` so clients can render a status chip.
-         */
-        status?: string;
-
-        /**
          * record / pdf_page / sql_query_result only. Backing table id.
          */
         table_id?: string;
@@ -555,18 +533,6 @@ export namespace VoiceWebsocketMessage {
       }
 
       export namespace Source {
-        export interface Field {
-          /**
-           * Human-readable field label (e.g. "Due Date").
-           */
-          label: string;
-
-          /**
-           * Human-readable field value (e.g. "2025-09-14").
-           */
-          value: string;
-        }
-
         /**
          * sql_query_result only. The query view backing the result.
          */
