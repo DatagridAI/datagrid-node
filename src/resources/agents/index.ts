@@ -20,3 +20,12 @@ export {
   type AutomationUpdateParams,
   type AutomationListParams,
 } from './automations';
+export {
+  EventTriggers,
+  type AgentEventTrigger,
+  type EventTriggerCreateResponse,
+  type EventTriggerUpdateResponse,
+  type EventTriggerListResponse,
+  type EventTriggerCreateParams,
+  type EventTriggerUpdateParams,
+} from './event-triggers';
