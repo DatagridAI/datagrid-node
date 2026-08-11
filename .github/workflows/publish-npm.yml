@@ -20,6 +20,9 @@ jobs:
         with:
           node-version: '22'
 
+      # OIDC trusted publishing requires npm >= 11.5.1; Node 22 ships npm 10.x
+      - run: npm install -g npm@latest
+
       - run: yarn install
 
       - run: yarn build
