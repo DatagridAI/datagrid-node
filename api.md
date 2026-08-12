@@ -51,6 +51,16 @@ Methods:
 
 - <code title="get /tables/{table_id}/records">client.knowledge.tables.records.<a href="./src/resources/knowledge/tables/records.ts">list</a>(tableId, { ...params }) -> RecordsCursorPage</code>
 
+### Summaries
+
+Types:
+
+- <code><a href="./src/resources/knowledge/tables/summaries.ts">Summary</a></code>
+
+Methods:
+
+- <code title="get /tables/{table_id}/summaries">client.knowledge.tables.summaries.<a href="./src/resources/knowledge/tables/summaries.ts">list</a>(tableId, { ...params }) -> SummariesCursorPage</code>
+
 # Connections
 
 Types:
