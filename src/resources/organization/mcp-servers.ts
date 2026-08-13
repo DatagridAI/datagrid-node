@@ -113,12 +113,6 @@ export interface McpServer {
   transport: string;
 
   updated_at: string;
-
-  /**
-   * Present when the MCP server is provisioned and managed by an installed app.
-   * Managed servers are read-only through this API.
-   */
-  managed_by_app?: McpServer.ManagedByApp;
 }
 
 export namespace McpServer {
@@ -135,23 +129,6 @@ export namespace McpServer {
     tool_count?: number;
 
     [k: string]: unknown;
-  }
-
-  /**
-   * Present when the MCP server is provisioned and managed by an installed app.
-   * Managed servers are read-only through this API.
-   */
-  export interface ManagedByApp {
-    /**
-     * The display name of the app that manages the MCP server. Falls back to app_uuid
-     * when the app installation is not known to this teamspace.
-     */
-    app_name?: string;
-
-    /**
-     * The UUID of the app that manages the MCP server.
-     */
-    app_uuid?: string;
   }
 }
 
