@@ -51,6 +51,16 @@ Methods:
 
 - <code title="get /tables/{table_id}/records">client.knowledge.tables.records.<a href="./src/resources/knowledge/tables/records.ts">list</a>(tableId, { ...params }) -> RecordsCursorPage</code>
 
+### Summaries
+
+Types:
+
+- <code><a href="./src/resources/knowledge/tables/summaries.ts">Summary</a></code>
+
+Methods:
+
+- <code title="get /tables/{table_id}/summaries">client.knowledge.tables.summaries.<a href="./src/resources/knowledge/tables/summaries.ts">list</a>(tableId, { ...params }) -> SummariesCursorPage</code>
+
 # Connections
 
 Types:
@@ -205,6 +215,22 @@ Methods:
 - <code title="patch /agents/{agent_id}/automations/{automation_id}">client.agents.automations.<a href="./src/resources/agents/automations.ts">update</a>(agentId, automationId, { ...params }) -> Automation</code>
 - <code title="get /agents/{agent_id}/automations">client.agents.automations.<a href="./src/resources/agents/automations.ts">list</a>(agentId, { ...params }) -> AutomationsCursorIDPage</code>
 - <code title="delete /agents/{agent_id}/automations/{automation_id}">client.agents.automations.<a href="./src/resources/agents/automations.ts">delete</a>(agentId, automationId) -> void</code>
+
+## EventTriggers
+
+Types:
+
+- <code><a href="./src/resources/agents/event-triggers.ts">AgentEventTrigger</a></code>
+- <code><a href="./src/resources/agents/event-triggers.ts">EventTriggerCreateResponse</a></code>
+- <code><a href="./src/resources/agents/event-triggers.ts">EventTriggerUpdateResponse</a></code>
+- <code><a href="./src/resources/agents/event-triggers.ts">EventTriggerListResponse</a></code>
+
+Methods:
+
+- <code title="post /agents/{agent_id}/event-triggers">client.agents.eventTriggers.<a href="./src/resources/agents/event-triggers.ts">create</a>(agentId, { ...params }) -> EventTriggerCreateResponse</code>
+- <code title="patch /agents/{agent_id}/event-triggers/{trigger_id}">client.agents.eventTriggers.<a href="./src/resources/agents/event-triggers.ts">update</a>(agentId, triggerId, { ...params }) -> EventTriggerUpdateResponse</code>
+- <code title="get /agents/{agent_id}/event-triggers">client.agents.eventTriggers.<a href="./src/resources/agents/event-triggers.ts">list</a>(agentId) -> EventTriggerListResponse</code>
+- <code title="delete /agents/{agent_id}/event-triggers/{trigger_id}">client.agents.eventTriggers.<a href="./src/resources/agents/event-triggers.ts">delete</a>(agentId, triggerId) -> void</code>
 
 # Identity
 
@@ -443,3 +469,4 @@ Methods:
 - <code title="get /voice-orchestrator/tasks/{task_id}">client.voice.orchestratorTasks.<a href="./src/resources/voice/orchestrator-tasks.ts">retrieve</a>(taskId) -> VoiceOrchestratorTask</code>
 - <code title="get /voice-orchestrator/tasks">client.voice.orchestratorTasks.<a href="./src/resources/voice/orchestrator-tasks.ts">list</a>({ ...params }) -> VoiceOrchestratorTaskList</code>
 - <code title="patch /voice-orchestrator/tasks/{task_id}/acknowledge">client.voice.orchestratorTasks.<a href="./src/resources/voice/orchestrator-tasks.ts">acknowledge</a>(taskId) -> VoiceOrchestratorTask</code>
+- <code title="patch /voice-orchestrator/tasks/{task_id}/cancel">client.voice.orchestratorTasks.<a href="./src/resources/voice/orchestrator-tasks.ts">cancel</a>(taskId) -> VoiceOrchestratorTask</code>

@@ -13,10 +13,21 @@ import {
   Automations,
   AutomationsCursorIDPage,
 } from './automations';
+import * as EventTriggersAPI from './event-triggers';
+import {
+  AgentEventTrigger,
+  EventTriggerCreateParams,
+  EventTriggerCreateResponse,
+  EventTriggerListResponse,
+  EventTriggerUpdateParams,
+  EventTriggerUpdateResponse,
+  EventTriggers,
+} from './event-triggers';
 import { CursorIDPage, type CursorIDPageParams } from '../../pagination';
 
 export class Agents extends APIResource {
   automations: AutomationsAPI.Automations = new AutomationsAPI.Automations(this._client);
+  eventTriggers: EventTriggersAPI.EventTriggers = new EventTriggersAPI.EventTriggers(this._client);
 
   /**
    * Create a new agent
@@ -936,6 +947,7 @@ export interface AgentGenerateParams {
 Agents.AgentsCursorIDPage = AgentsCursorIDPage;
 Agents.Automations = Automations;
 Agents.AutomationsCursorIDPage = AutomationsCursorIDPage;
+Agents.EventTriggers = EventTriggers;
 
 export declare namespace Agents {
   export {
@@ -957,5 +969,15 @@ export declare namespace Agents {
     type AutomationCreateParams as AutomationCreateParams,
     type AutomationUpdateParams as AutomationUpdateParams,
     type AutomationListParams as AutomationListParams,
+  };
+
+  export {
+    EventTriggers as EventTriggers,
+    type AgentEventTrigger as AgentEventTrigger,
+    type EventTriggerCreateResponse as EventTriggerCreateResponse,
+    type EventTriggerUpdateResponse as EventTriggerUpdateResponse,
+    type EventTriggerListResponse as EventTriggerListResponse,
+    type EventTriggerCreateParams as EventTriggerCreateParams,
+    type EventTriggerUpdateParams as EventTriggerUpdateParams,
   };
 }
