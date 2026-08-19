@@ -39,10 +39,7 @@ export interface Record {
   id: string;
 
   /**
-   * The ISO string for when the record was created. For Procore datasets, each
-   * upsert resets this value to the ingestion time because Procore ingestion does
-   * not preserve the original value across updates. Do not use it as the record's
-   * original Procore creation time.
+   * The ISO string for when the record was created.
    */
   created_at: string;
 
