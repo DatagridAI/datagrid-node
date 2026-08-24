@@ -154,14 +154,24 @@ export namespace Message {
       item_type?: string;
 
       /**
-       * Id of the source.
+       * pdf_page only. 1-based page number within the source document. Omitted when the
+       * page is unknown; never `0`.
+       */
+      page_number?: number;
+
+      /**
+       * Id of the source when Datagrid holds one (dataset id, or data-lake item id for
+       * file-backed `pdf_page`). Omitted for `pdf_page` sources with no Datagrid-backed
+       * file.
        */
       source_id?: string;
 
       /**
        * URI of the source. For file-backed sources this is the in-app target (signed
        * Datagrid file URI when available); use `external_url` for the origin-system
-       * deep-link.
+       * deep-link. For `pdf_page` sources with no Datagrid file, this is the
+       * origin-system deep-link and matches `external_url`; locate the page with
+       * `page_number`.
        */
       source_uri?: string;
 
@@ -381,14 +391,24 @@ export namespace Message {
           item_type?: string;
 
           /**
-           * Id of the source.
+           * pdf_page only. 1-based page number within the source document. Omitted when the
+           * page is unknown; never `0`.
+           */
+          page_number?: number;
+
+          /**
+           * Id of the source when Datagrid holds one (dataset id, or data-lake item id for
+           * file-backed `pdf_page`). Omitted for `pdf_page` sources with no Datagrid-backed
+           * file.
            */
           source_id?: string;
 
           /**
            * URI of the source. For file-backed sources this is the in-app target (signed
            * Datagrid file URI when available); use `external_url` for the origin-system
-           * deep-link.
+           * deep-link. For `pdf_page` sources with no Datagrid file, this is the
+           * origin-system deep-link and matches `external_url`; locate the page with
+           * `page_number`.
            */
           source_uri?: string;
 
