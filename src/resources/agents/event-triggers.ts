@@ -145,7 +145,7 @@ export interface AgentEventTrigger {
   trigger_event: string;
 
   /**
-   * The external provider that emits the event. Currently only Procore is supported.
+   * The external provider that emits the event.
    */
   trigger_source: 'procore';
 
@@ -239,7 +239,7 @@ export interface EventTriggerCreateParams {
   trigger_event: string;
 
   /**
-   * The external provider that emits the event. Currently only Procore is supported.
+   * The external provider that emits the event.
    */
   trigger_source: 'procore';
 
