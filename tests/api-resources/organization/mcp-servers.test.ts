@@ -99,4 +99,46 @@ describe('resource mcpServers', () => {
       client.organization.mcpServers.delete('server_id', { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(Datagrid.NotFoundError);
   });
+
+  test('handleOAuthCallback: only required params', async () => {
+    const responsePromise = client.organization.mcpServers.handleOAuthCallback('server_id', {
+      code: 'code',
+      redirect_uri: 'https://example.com',
+      state: 'state',
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('handleOAuthCallback: required and optional params', async () => {
+    const response = await client.organization.mcpServers.handleOAuthCallback('server_id', {
+      code: 'code',
+      redirect_uri: 'https://example.com',
+      state: 'state',
+    });
+  });
+
+  test('startOAuth: only required params', async () => {
+    const responsePromise = client.organization.mcpServers.startOAuth('server_id', {
+      redirect_uri: 'https://example.com',
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('startOAuth: required and optional params', async () => {
+    const response = await client.organization.mcpServers.startOAuth('server_id', {
+      redirect_uri: 'https://example.com',
+    });
+  });
 });
