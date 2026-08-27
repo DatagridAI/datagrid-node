@@ -440,6 +440,16 @@ Methods:
 
 # Beta
 
+## Converse
+
+Types:
+
+- <code><a href="./src/resources/beta/converse.ts">BetaConverseRequest</a></code>
+
+Methods:
+
+- <code title="post /beta/converse">client.beta.converse.<a href="./src/resources/beta/converse.ts">converse</a>({ ...params }) -> ConverseResponse</code>
+
 ## Rewrite
 
 Types:
