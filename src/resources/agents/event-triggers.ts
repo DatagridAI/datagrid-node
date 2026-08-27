@@ -147,7 +147,7 @@ export interface AgentEventTrigger {
   /**
    * The external provider that emits the event.
    */
-  trigger_source: 'procore';
+  trigger_source: 'procore' | 'sharepoint';
 
   /**
    * ISO 8601 timestamp of the last modification to the event trigger.
@@ -241,7 +241,7 @@ export interface EventTriggerCreateParams {
   /**
    * The external provider that emits the event.
    */
-  trigger_source: 'procore';
+  trigger_source: 'procore' | 'sharepoint';
 
   /**
    * Optional description of what the App Event automation does.
