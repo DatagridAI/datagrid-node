@@ -46,33 +46,6 @@ export class McpServers extends APIResource {
       headers: { Accept: '*/*', ...options?.headers },
     });
   }
-
-  /**
-   * Complete an OAuth authorization flow for a registered MCP server by exchanging
-   * the authorization code returned from the OAuth provider. Requires a user-scoped
-   * API key (`dg_live_`); service keys (`dg_svc_`) are rejected with
-   * `mcp_oauth_requires_user_principal`.
-   */
-  handleOAuthCallback(
-    serverId: string,
-    body: McpServerHandleOAuthCallbackParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<HandleMcpOAuthCallbackResponse> {
-    return this._client.post(`/organization/mcp-servers/${serverId}/oauth-callback`, { body, ...options });
-  }
-
-  /**
-   * Start an OAuth authorization flow for a registered MCP server and return the URL
-   * to redirect the end user to. Requires a user-scoped API key (`dg_live_`);
-   * service keys (`dg_svc_`) are rejected with `mcp_oauth_requires_user_principal`.
-   */
-  startOAuth(
-    serverId: string,
-    body: McpServerStartOAuthParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<StartMcpOAuthResponse> {
-    return this._client.post(`/organization/mcp-servers/${serverId}/start-oauth`, { body, ...options });
-  }
 }
 
 export interface CreateMcpServerRequest {
@@ -101,48 +74,6 @@ export interface CreateMcpServerRequest {
   protocol_version?: string | null;
 
   transport?: 'http' | null;
-}
-
-export interface HandleMcpOAuthCallbackRequest {
-  /**
-   * Authorization code returned by the OAuth authorization server on the callback.
-   */
-  code: string;
-
-  /**
-   * The same `redirect_uri` passed to `start-oauth`. HTTPS is required except for
-   * loopback (`http://localhost`, `http://127.0.0.1`, `http://[::1]`).
-   */
-  redirect_uri: string;
-
-  /**
-   * The `state` value the OAuth authorization server echoed on the callback. Must
-   * match the value returned from `start-oauth`.
-   */
-  state: string;
-}
-
-export interface HandleMcpOAuthCallbackResponse {
-  /**
-   * Always true when the endpoint returns success; the flow only completes if the
-   * token exchange succeeded.
-   */
-  oauth_configured: true;
-
-  object: 'mcp_oauth_callback';
-
-  /**
-   * True if Datagrid automatically re-synced the MCP server's tool manifest after
-   * the OAuth exchange. False if the caller lacks organization-edit permissions or
-   * the sync itself failed.
-   */
-  tools_synced: boolean;
-
-  /**
-   * Human-readable outcome. Optional product copy — branch on `oauth_configured` and
-   * `tools_synced` rather than matching this text.
-   */
-  message?: string;
 }
 
 export interface ListMcpServersResponse {
@@ -222,30 +153,6 @@ export namespace McpServer {
      */
     app_uuid?: string;
   }
-}
-
-export interface StartMcpOAuthRequest {
-  /**
-   * OAuth redirect URI. HTTPS is required except for loopback (`http://localhost`,
-   * `http://127.0.0.1`, `http://[::1]`).
-   */
-  redirect_uri: string;
-}
-
-export interface StartMcpOAuthResponse {
-  /**
-   * URL to redirect the end user to so they can complete the OAuth authorization
-   * consent.
-   */
-  authorization_url: string;
-
-  object: 'mcp_oauth_start';
-
-  /**
-   * Opaque state value bound to this OAuth flow, echoed by the authorization server
-   * on the callback for CSRF protection.
-   */
-  state: string;
 }
 
 export interface UpdateMcpServerRequest {
@@ -334,46 +241,13 @@ export interface McpServerUpdateParams {
   transport?: 'http' | null;
 }
 
-export interface McpServerHandleOAuthCallbackParams {
-  /**
-   * Authorization code returned by the OAuth authorization server on the callback.
-   */
-  code: string;
-
-  /**
-   * The same `redirect_uri` passed to `start-oauth`. HTTPS is required except for
-   * loopback (`http://localhost`, `http://127.0.0.1`, `http://[::1]`).
-   */
-  redirect_uri: string;
-
-  /**
-   * The `state` value the OAuth authorization server echoed on the callback. Must
-   * match the value returned from `start-oauth`.
-   */
-  state: string;
-}
-
-export interface McpServerStartOAuthParams {
-  /**
-   * OAuth redirect URI. HTTPS is required except for loopback (`http://localhost`,
-   * `http://127.0.0.1`, `http://[::1]`).
-   */
-  redirect_uri: string;
-}
-
 export declare namespace McpServers {
   export {
     type CreateMcpServerRequest as CreateMcpServerRequest,
-    type HandleMcpOAuthCallbackRequest as HandleMcpOAuthCallbackRequest,
-    type HandleMcpOAuthCallbackResponse as HandleMcpOAuthCallbackResponse,
     type ListMcpServersResponse as ListMcpServersResponse,
     type McpServer as McpServer,
-    type StartMcpOAuthRequest as StartMcpOAuthRequest,
-    type StartMcpOAuthResponse as StartMcpOAuthResponse,
     type UpdateMcpServerRequest as UpdateMcpServerRequest,
     type McpServerCreateParams as McpServerCreateParams,
     type McpServerUpdateParams as McpServerUpdateParams,
-    type McpServerHandleOAuthCallbackParams as McpServerHandleOAuthCallbackParams,
-    type McpServerStartOAuthParams as McpServerStartOAuthParams,
   };
 }

@@ -196,12 +196,6 @@ export interface Knowledge {
   credits: Knowledge.Credits | null;
 
   /**
-   * The knowledge-level indexing override. `none` means semantic indexing is
-   * disabled; `null` means Datagrid uses its normal indexing defaults.
-   */
-  default_indexing_quality: 'none' | null;
-
-  /**
    * The last terminal processing error for this knowledge, if any. Present when the
    * latest asynchronous processing or re-index run ended unsuccessfully; `null` when
    * the knowledge is `failed` only because every row ended in a persistent failed
@@ -650,12 +644,6 @@ export interface KnowledgeCreateParams {
    * created at the root level.
    */
   parent?: KnowledgeCreateParams.ParentPage | KnowledgeCreateParams.RootPage | null;
-
-  /**
-   * Whether semantic indexing is enabled for tables created under this knowledge.
-   * Set to `false` to keep records SQL-queryable without vector indexing.
-   */
-  semantic_indexing_enabled?: boolean | null;
 }
 
 export namespace KnowledgeCreateParams {
