@@ -355,12 +355,8 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/organization/mcp-servers.ts">CreateMcpServerRequest</a></code>
-- <code><a href="./src/resources/organization/mcp-servers.ts">HandleMcpOAuthCallbackRequest</a></code>
-- <code><a href="./src/resources/organization/mcp-servers.ts">HandleMcpOAuthCallbackResponse</a></code>
 - <code><a href="./src/resources/organization/mcp-servers.ts">ListMcpServersResponse</a></code>
 - <code><a href="./src/resources/organization/mcp-servers.ts">McpServer</a></code>
-- <code><a href="./src/resources/organization/mcp-servers.ts">StartMcpOAuthRequest</a></code>
-- <code><a href="./src/resources/organization/mcp-servers.ts">StartMcpOAuthResponse</a></code>
 - <code><a href="./src/resources/organization/mcp-servers.ts">UpdateMcpServerRequest</a></code>
 
 Methods:
@@ -370,8 +366,6 @@ Methods:
 - <code title="patch /organization/mcp-servers/{server_id}">client.organization.mcpServers.<a href="./src/resources/organization/mcp-servers.ts">update</a>(serverId, { ...params }) -> McpServer</code>
 - <code title="get /organization/mcp-servers">client.organization.mcpServers.<a href="./src/resources/organization/mcp-servers.ts">list</a>() -> ListMcpServersResponse</code>
 - <code title="delete /organization/mcp-servers/{server_id}">client.organization.mcpServers.<a href="./src/resources/organization/mcp-servers.ts">delete</a>(serverId) -> void</code>
-- <code title="post /organization/mcp-servers/{server_id}/oauth-callback">client.organization.mcpServers.<a href="./src/resources/organization/mcp-servers.ts">handleOAuthCallback</a>(serverId, { ...params }) -> HandleMcpOAuthCallbackResponse</code>
-- <code title="post /organization/mcp-servers/{server_id}/start-oauth">client.organization.mcpServers.<a href="./src/resources/organization/mcp-servers.ts">startOAuth</a>(serverId, { ...params }) -> StartMcpOAuthResponse</code>
 
 ## Credits
 
@@ -439,16 +433,6 @@ Methods:
 - <code title="get /data-views/service-accounts/{service_account_id}/credentials">client.dataViews.serviceAccounts.<a href="./src/resources/data-views/service-accounts.ts">credentials</a>(serviceAccountId) -> ServiceAccountCredentials</code>
 
 # Beta
-
-## Converse
-
-Types:
-
-- <code><a href="./src/resources/beta/converse.ts">BetaConverseRequest</a></code>
-
-Methods:
-
-- <code title="post /beta/converse">client.beta.converse.<a href="./src/resources/beta/converse.ts">converse</a>({ ...params }) -> ConverseResponse</code>
 
 ## Rewrite
 
