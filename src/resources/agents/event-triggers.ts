@@ -145,9 +145,9 @@ export interface AgentEventTrigger {
   trigger_event: string;
 
   /**
-   * The external provider that emits the event. Currently only Procore is supported.
+   * The external provider that emits the event.
    */
-  trigger_source: 'procore';
+  trigger_source: 'procore' | 'sharepoint' | 'egnyte';
 
   /**
    * ISO 8601 timestamp of the last modification to the event trigger.
@@ -239,9 +239,9 @@ export interface EventTriggerCreateParams {
   trigger_event: string;
 
   /**
-   * The external provider that emits the event. Currently only Procore is supported.
+   * The external provider that emits the event.
    */
-  trigger_source: 'procore';
+  trigger_source: 'procore' | 'sharepoint' | 'egnyte';
 
   /**
    * Optional description of what the App Event automation does.

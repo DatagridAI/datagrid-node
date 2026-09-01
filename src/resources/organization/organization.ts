@@ -6,11 +6,17 @@ import { Credits, CreditsReport } from './credits';
 import * as McpServersAPI from './mcp-servers';
 import {
   CreateMcpServerRequest,
+  HandleMcpOAuthCallbackRequest,
+  HandleMcpOAuthCallbackResponse,
   ListMcpServersResponse,
   McpServer,
   McpServerCreateParams,
+  McpServerHandleOAuthCallbackParams,
+  McpServerStartOAuthParams,
   McpServerUpdateParams,
   McpServers,
+  StartMcpOAuthRequest,
+  StartMcpOAuthResponse,
   UpdateMcpServerRequest,
 } from './mcp-servers';
 import * as UsersAPI from './users';
@@ -66,11 +72,17 @@ export declare namespace Organization {
   export {
     McpServers as McpServers,
     type CreateMcpServerRequest as CreateMcpServerRequest,
+    type HandleMcpOAuthCallbackRequest as HandleMcpOAuthCallbackRequest,
+    type HandleMcpOAuthCallbackResponse as HandleMcpOAuthCallbackResponse,
     type ListMcpServersResponse as ListMcpServersResponse,
     type McpServer as McpServer,
+    type StartMcpOAuthRequest as StartMcpOAuthRequest,
+    type StartMcpOAuthResponse as StartMcpOAuthResponse,
     type UpdateMcpServerRequest as UpdateMcpServerRequest,
     type McpServerCreateParams as McpServerCreateParams,
     type McpServerUpdateParams as McpServerUpdateParams,
+    type McpServerHandleOAuthCallbackParams as McpServerHandleOAuthCallbackParams,
+    type McpServerStartOAuthParams as McpServerStartOAuthParams,
   };
 
   export { Credits as Credits, type CreditsReport as CreditsReport };
