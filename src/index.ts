@@ -34,29 +34,6 @@ import {
   ValidationProblemError,
 } from './resources/batch-predictions';
 import {
-  Channel,
-  ChannelAddMembersParams,
-  ChannelAddMembersResponse,
-  ChannelAddReactionParams,
-  ChannelCreateMessageParams,
-  ChannelCreateParams,
-  ChannelCreateThreadMessageParams,
-  ChannelListMembersParams,
-  ChannelListMessagesParams,
-  ChannelListParams,
-  ChannelListThreadMessagesParams,
-  ChannelListThreadsParams,
-  ChannelMember,
-  ChannelMembersCursorIDPage,
-  ChannelMessage,
-  ChannelMessagesCursorIDPage,
-  ChannelThread,
-  ChannelThreadsCursorIDPage,
-  ChannelUpdateParams,
-  Channels,
-  ChannelsCursorIDPage,
-} from './resources/channels';
-import {
   ConnectionProvider,
   ConnectionProviderCreateParams,
   ConnectionProviderListParams,
@@ -341,7 +318,6 @@ export class Datagrid extends Core.APIClient {
   webhooks: API.Webhooks = new API.Webhooks(this);
   search: API.Search = new API.Search(this);
   agents: API.Agents = new API.Agents(this);
-  channels: API.Channels = new API.Channels(this);
   identity: API.IdentityResource = new API.IdentityResource(this);
   pages: API.Pages = new API.Pages(this);
   tools: API.Tools = new API.Tools(this);
@@ -439,11 +415,6 @@ Datagrid.WebhooksWebhookCursorPage = WebhooksWebhookCursorPage;
 Datagrid.Search = Search;
 Datagrid.Agents = Agents;
 Datagrid.AgentsCursorIDPage = AgentsCursorIDPage;
-Datagrid.Channels = Channels;
-Datagrid.ChannelsCursorIDPage = ChannelsCursorIDPage;
-Datagrid.ChannelMembersCursorIDPage = ChannelMembersCursorIDPage;
-Datagrid.ChannelMessagesCursorIDPage = ChannelMessagesCursorIDPage;
-Datagrid.ChannelThreadsCursorIDPage = ChannelThreadsCursorIDPage;
 Datagrid.IdentityResource = IdentityResource;
 Datagrid.Pages = Pages;
 Datagrid.PagesCursorIDPage = PagesCursorIDPage;
@@ -601,30 +572,6 @@ export declare namespace Datagrid {
     type AgentListParams as AgentListParams,
     type AgentClaimParams as AgentClaimParams,
     type AgentGenerateParams as AgentGenerateParams,
-  };
-
-  export {
-    Channels as Channels,
-    type Channel as Channel,
-    type ChannelMember as ChannelMember,
-    type ChannelMessage as ChannelMessage,
-    type ChannelThread as ChannelThread,
-    type ChannelAddMembersResponse as ChannelAddMembersResponse,
-    ChannelsCursorIDPage as ChannelsCursorIDPage,
-    ChannelMembersCursorIDPage as ChannelMembersCursorIDPage,
-    ChannelMessagesCursorIDPage as ChannelMessagesCursorIDPage,
-    ChannelThreadsCursorIDPage as ChannelThreadsCursorIDPage,
-    type ChannelCreateParams as ChannelCreateParams,
-    type ChannelUpdateParams as ChannelUpdateParams,
-    type ChannelListParams as ChannelListParams,
-    type ChannelAddMembersParams as ChannelAddMembersParams,
-    type ChannelAddReactionParams as ChannelAddReactionParams,
-    type ChannelCreateMessageParams as ChannelCreateMessageParams,
-    type ChannelCreateThreadMessageParams as ChannelCreateThreadMessageParams,
-    type ChannelListMembersParams as ChannelListMembersParams,
-    type ChannelListMessagesParams as ChannelListMessagesParams,
-    type ChannelListThreadMessagesParams as ChannelListThreadMessagesParams,
-    type ChannelListThreadsParams as ChannelListThreadsParams,
   };
 
   export {

@@ -26,29 +26,6 @@ export {
 } from './batch-predictions';
 export { Beta } from './beta/beta';
 export {
-  ChannelsCursorIDPage,
-  ChannelMembersCursorIDPage,
-  ChannelMessagesCursorIDPage,
-  ChannelThreadsCursorIDPage,
-  Channels,
-  type Channel,
-  type ChannelMember,
-  type ChannelMessage,
-  type ChannelThread,
-  type ChannelAddMembersResponse,
-  type ChannelCreateParams,
-  type ChannelUpdateParams,
-  type ChannelListParams,
-  type ChannelAddMembersParams,
-  type ChannelAddReactionParams,
-  type ChannelCreateMessageParams,
-  type ChannelCreateThreadMessageParams,
-  type ChannelListMembersParams,
-  type ChannelListMessagesParams,
-  type ChannelListThreadMessagesParams,
-  type ChannelListThreadsParams,
-} from './channels';
-export {
   ConnectionProvidersCursorIDPage,
   ConnectionProviders,
   type ConnectionProvider,
