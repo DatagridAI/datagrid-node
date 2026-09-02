@@ -63,6 +63,12 @@ export interface VoiceSessionRequest {
   agent_id?: string | null;
 
   /**
+   * Orchestrator sessions only: set false to disable specialist delegation tools for
+   * the session. Ignored for direct-agent sessions.
+   */
+  allow_delegation?: boolean | null;
+
+  /**
    * Override the agent config for this voice session. Only prompt overrides are
    * supported — voice sessions always use Gemini Live, so LLM model, agent model,
    * planning prompt, and tool settings are not applicable. Prompt overrides fully
@@ -624,6 +630,12 @@ export interface VoiceStartSessionParams {
    * voice_mode is orchestrator.
    */
   agent_id?: string | null;
+
+  /**
+   * Orchestrator sessions only: set false to disable specialist delegation tools for
+   * the session. Ignored for direct-agent sessions.
+   */
+  allow_delegation?: boolean | null;
 
   /**
    * Override the agent config for this voice session. Only prompt overrides are
