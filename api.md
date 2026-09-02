@@ -232,6 +232,35 @@ Methods:
 - <code title="get /agents/{agent_id}/event-triggers">client.agents.eventTriggers.<a href="./src/resources/agents/event-triggers.ts">list</a>(agentId) -> EventTriggerListResponse</code>
 - <code title="delete /agents/{agent_id}/event-triggers/{trigger_id}">client.agents.eventTriggers.<a href="./src/resources/agents/event-triggers.ts">delete</a>(agentId, triggerId) -> void</code>
 
+# Channels
+
+Types:
+
+- <code><a href="./src/resources/channels.ts">Channel</a></code>
+- <code><a href="./src/resources/channels.ts">ChannelMember</a></code>
+- <code><a href="./src/resources/channels.ts">ChannelMessage</a></code>
+- <code><a href="./src/resources/channels.ts">ChannelThread</a></code>
+- <code><a href="./src/resources/channels.ts">ChannelAddMembersResponse</a></code>
+
+Methods:
+
+- <code title="post /channels">client.channels.<a href="./src/resources/channels.ts">create</a>({ ...params }) -> Channel</code>
+- <code title="get /channels/{channel_id}">client.channels.<a href="./src/resources/channels.ts">retrieve</a>(channelId) -> Channel</code>
+- <code title="patch /channels/{channel_id}">client.channels.<a href="./src/resources/channels.ts">update</a>(channelId, { ...params }) -> Channel</code>
+- <code title="get /channels">client.channels.<a href="./src/resources/channels.ts">list</a>({ ...params }) -> ChannelsCursorIDPage</code>
+- <code title="post /channels/{channel_id}/members">client.channels.<a href="./src/resources/channels.ts">addMembers</a>(channelId, { ...params }) -> ChannelAddMembersResponse</code>
+- <code title="post /channels/{channel_id}/messages/{message_id}/reactions">client.channels.<a href="./src/resources/channels.ts">addReaction</a>(channelId, messageId, { ...params }) -> ChannelMessage</code>
+- <code title="post /channels/{channel_id}/messages">client.channels.<a href="./src/resources/channels.ts">createMessage</a>(channelId, { ...params }) -> ChannelMessage</code>
+- <code title="post /channels/{channel_id}/messages/{message_id}/threads">client.channels.<a href="./src/resources/channels.ts">createThread</a>(channelId, messageId) -> ChannelThread</code>
+- <code title="post /channels/{channel_id}/threads/{thread_id}/messages">client.channels.<a href="./src/resources/channels.ts">createThreadMessage</a>(channelId, threadId, { ...params }) -> ChannelMessage</code>
+- <code title="get /channels/{channel_id}/members">client.channels.<a href="./src/resources/channels.ts">listMembers</a>(channelId, { ...params }) -> ChannelMembersCursorIDPage</code>
+- <code title="get /channels/{channel_id}/messages">client.channels.<a href="./src/resources/channels.ts">listMessages</a>(channelId, { ...params }) -> ChannelMessagesCursorIDPage</code>
+- <code title="get /channels/{channel_id}/threads/{thread_id}/messages">client.channels.<a href="./src/resources/channels.ts">listThreadMessages</a>(channelId, threadId, { ...params }) -> ChannelMessagesCursorIDPage</code>
+- <code title="get /channels/{channel_id}/threads">client.channels.<a href="./src/resources/channels.ts">listThreads</a>(channelId, { ...params }) -> ChannelThreadsCursorIDPage</code>
+- <code title="delete /channels/{channel_id}/members/{member_id}">client.channels.<a href="./src/resources/channels.ts">removeMember</a>(channelId, memberId) -> void</code>
+- <code title="delete /channels/{channel_id}/messages/{message_id}/reactions/{reaction}">client.channels.<a href="./src/resources/channels.ts">removeReaction</a>(channelId, messageId, reaction) -> ChannelMessage</code>
+- <code title="get /channels/{channel_id}/threads/{thread_id}">client.channels.<a href="./src/resources/channels.ts">retrieveThread</a>(channelId, threadId) -> ChannelThread</code>
+
 # Identity
 
 Types:
@@ -355,8 +384,12 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/organization/mcp-servers.ts">CreateMcpServerRequest</a></code>
+- <code><a href="./src/resources/organization/mcp-servers.ts">HandleMcpOAuthCallbackRequest</a></code>
+- <code><a href="./src/resources/organization/mcp-servers.ts">HandleMcpOAuthCallbackResponse</a></code>
 - <code><a href="./src/resources/organization/mcp-servers.ts">ListMcpServersResponse</a></code>
 - <code><a href="./src/resources/organization/mcp-servers.ts">McpServer</a></code>
+- <code><a href="./src/resources/organization/mcp-servers.ts">StartMcpOAuthRequest</a></code>
+- <code><a href="./src/resources/organization/mcp-servers.ts">StartMcpOAuthResponse</a></code>
 - <code><a href="./src/resources/organization/mcp-servers.ts">UpdateMcpServerRequest</a></code>
 
 Methods:
@@ -366,6 +399,8 @@ Methods:
 - <code title="patch /organization/mcp-servers/{server_id}">client.organization.mcpServers.<a href="./src/resources/organization/mcp-servers.ts">update</a>(serverId, { ...params }) -> McpServer</code>
 - <code title="get /organization/mcp-servers">client.organization.mcpServers.<a href="./src/resources/organization/mcp-servers.ts">list</a>() -> ListMcpServersResponse</code>
 - <code title="delete /organization/mcp-servers/{server_id}">client.organization.mcpServers.<a href="./src/resources/organization/mcp-servers.ts">delete</a>(serverId) -> void</code>
+- <code title="post /organization/mcp-servers/{server_id}/oauth-callback">client.organization.mcpServers.<a href="./src/resources/organization/mcp-servers.ts">handleOAuthCallback</a>(serverId, { ...params }) -> HandleMcpOAuthCallbackResponse</code>
+- <code title="post /organization/mcp-servers/{server_id}/start-oauth">client.organization.mcpServers.<a href="./src/resources/organization/mcp-servers.ts">startOAuth</a>(serverId, { ...params }) -> StartMcpOAuthResponse</code>
 
 ## Credits
 
@@ -433,6 +468,16 @@ Methods:
 - <code title="get /data-views/service-accounts/{service_account_id}/credentials">client.dataViews.serviceAccounts.<a href="./src/resources/data-views/service-accounts.ts">credentials</a>(serviceAccountId) -> ServiceAccountCredentials</code>
 
 # Beta
+
+## Converse
+
+Types:
+
+- <code><a href="./src/resources/beta/converse.ts">BetaConverseRequest</a></code>
+
+Methods:
+
+- <code title="post /beta/converse">client.beta.converse.<a href="./src/resources/beta/converse.ts">converse</a>({ ...params }) -> ConverseResponse</code>
 
 ## Rewrite
 

@@ -35,6 +35,7 @@ describe('resource knowledge', () => {
       files: [await toFile(Buffer.from('Example data'), 'README.md')],
       name: 'name',
       parent: { page_id: 'page_id', type: 'page' },
+      semantic_indexing_enabled: true,
     });
   });
 
