@@ -412,6 +412,19 @@ Methods:
 
 - <code title="get /organization/credits">client.organization.credits.<a href="./src/resources/organization/credits.ts">get</a>() -> CreditsReport</code>
 
+## Reports
+
+### UserCreditsConsumption
+
+Types:
+
+- <code><a href="./src/resources/organization/reports/user-credits-consumption.ts">UserCreditConsumption</a></code>
+- <code><a href="./src/resources/organization/reports/user-credits-consumption.ts">UserCreditConsumptionList</a></code>
+
+Methods:
+
+- <code title="get /organization/reports/user-credits-consumption">client.organization.reports.userCreditsConsumption.<a href="./src/resources/organization/reports/user-credits-consumption.ts">list</a>({ ...params }) -> UserCreditConsumptionList</code>
+
 # Conversations
 
 Types:
