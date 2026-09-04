@@ -7,9 +7,11 @@ export class UserCreditsConsumption extends APIResource {
   /**
    * Return Control Tower user credit consumption rows for the authenticated
    * organization. The date window is measured in UTC calendar days and must not
-   * exceed 90 days. Date-only values are interpreted as UTC midnight. Pagination
-   * uses opaque `after` / `before` cursors from `first_id` / `last_id` (encoded
-   * offsets). Dollar `amount` is not included.
+   * exceed 90 days. A date-only `start_date` begins at UTC midnight and a date-only
+   * `end_date` covers that whole UTC day. Pagination uses opaque `after` / `before`
+   * cursors from `first_id` / `last_id`. The cursors encode a position in the result
+   * set, not a record id, so rows written between two page requests can shift the
+   * window. Dollar `amount` is not included.
    */
   list(
     query: UserCreditsConsumptionListParams,
@@ -31,7 +33,8 @@ export interface UserCreditConsumption {
   created_at: string;
 
   /**
-   * Credits consumed by this row.
+   * Credits consumed by this row. Fractional — the row is a sum of decimal ledger
+   * amounts.
    */
   credits: number;
 
@@ -95,8 +98,8 @@ export interface UserCreditConsumptionList {
 
 export interface UserCreditsConsumptionListParams {
   /**
-   * Inclusive end of the report window (ISO 8601 date or date-time). Date-only
-   * values are UTC midnight.
+   * Inclusive end of the report window (ISO 8601 date or date-time). A date-only
+   * value covers that entire UTC day; a date-time is used exactly as given.
    */
   end_date: string;
 
