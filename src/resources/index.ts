@@ -147,6 +147,16 @@ export {
   type SecretListParams,
 } from './secrets';
 export {
+  SkillsCursorIDPage,
+  Skills,
+  type BuiltinSkill,
+  type Skill,
+  type SkillListBuiltinsResponse,
+  type SkillCreateParams,
+  type SkillUpdateParams,
+  type SkillListParams,
+} from './skills';
+export {
   ToolDefsCursorNamePage,
   Tools,
   type Tool,
