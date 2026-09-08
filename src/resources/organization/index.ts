@@ -24,7 +24,6 @@ export {
   type UserUpdateParams,
   type UserListParams,
 } from './users';
-export { Reports } from './reports/index';
 export {
   TeamspacesCursorIDPage,
   Teamspaces,

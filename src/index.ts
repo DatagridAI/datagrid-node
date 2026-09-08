@@ -121,19 +121,6 @@ import {
   Secrets,
   SecretsCursorIDPage,
 } from './resources/secrets';
-import {
-  BuiltinSkill,
-  Skill,
-  SkillCreateParams,
-  SkillDraft,
-  SkillGenerateParams,
-  SkillGenerateResponse,
-  SkillListBuiltinsResponse,
-  SkillListParams,
-  SkillUpdateParams,
-  Skills,
-  SkillsCursorIDPage,
-} from './resources/skills';
 import { Tool, ToolDef, ToolDefsCursorNamePage, ToolListParams, ToolName, Tools } from './resources/tools';
 import {
   Webhook,
@@ -353,7 +340,6 @@ export class Datagrid extends Core.APIClient {
   secrets: API.Secrets = new API.Secrets(this);
   webhooks: API.Webhooks = new API.Webhooks(this);
   search: API.Search = new API.Search(this);
-  skills: API.Skills = new API.Skills(this);
   agents: API.Agents = new API.Agents(this);
   channels: API.Channels = new API.Channels(this);
   identity: API.IdentityResource = new API.IdentityResource(this);
@@ -451,8 +437,6 @@ Datagrid.SecretsCursorIDPage = SecretsCursorIDPage;
 Datagrid.Webhooks = Webhooks;
 Datagrid.WebhooksWebhookCursorPage = WebhooksWebhookCursorPage;
 Datagrid.Search = Search;
-Datagrid.Skills = Skills;
-Datagrid.SkillsCursorIDPage = SkillsCursorIDPage;
 Datagrid.Agents = Agents;
 Datagrid.AgentsCursorIDPage = AgentsCursorIDPage;
 Datagrid.Channels = Channels;
@@ -604,20 +588,6 @@ export declare namespace Datagrid {
     type SearchSearchParams as SearchSearchParams,
     type SearchSearchAIParams as SearchSearchAIParams,
     type SearchSearchTreeParams as SearchSearchTreeParams,
-  };
-
-  export {
-    Skills as Skills,
-    type BuiltinSkill as BuiltinSkill,
-    type Skill as Skill,
-    type SkillDraft as SkillDraft,
-    type SkillGenerateResponse as SkillGenerateResponse,
-    type SkillListBuiltinsResponse as SkillListBuiltinsResponse,
-    SkillsCursorIDPage as SkillsCursorIDPage,
-    type SkillCreateParams as SkillCreateParams,
-    type SkillUpdateParams as SkillUpdateParams,
-    type SkillListParams as SkillListParams,
-    type SkillGenerateParams as SkillGenerateParams,
   };
 
   export {
