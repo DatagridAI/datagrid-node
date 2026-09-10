@@ -184,6 +184,31 @@ Methods:
 - <code title="post /search/ai">client.search.<a href="./src/resources/search.ts">searchAI</a>({ ...params }) -> SearchAIResult</code>
 - <code title="get /search/tree">client.search.<a href="./src/resources/search.ts">searchTree</a>({ ...params }) -> SearchTreeResult</code>
 
+# Skills
+
+Types:
+
+- <code><a href="./src/resources/skills.ts">BuiltinSkill</a></code>
+- <code><a href="./src/resources/skills.ts">Skill</a></code>
+- <code><a href="./src/resources/skills.ts">SkillDraft</a></code>
+- <code><a href="./src/resources/skills.ts">SkillGenerateResponse</a></code>
+- <code><a href="./src/resources/skills.ts">SkillListBuiltinsResponse</a></code>
+
+Methods:
+
+- <code title="post /skills">client.skills.<a href="./src/resources/skills.ts">create</a>({ ...params }) -> Skill</code>
+- <code title="get /skills/{skill_id}">client.skills.<a href="./src/resources/skills.ts">retrieve</a>(skillId) -> Skill</code>
+- <code title="patch /skills/{skill_id}">client.skills.<a href="./src/resources/skills.ts">update</a>(skillId, { ...params }) -> Skill</code>
+- <code title="get /skills">client.skills.<a href="./src/resources/skills.ts">list</a>({ ...params }) -> SkillsCursorIDPage</code>
+- <code title="delete /skills/{skill_id}">client.skills.<a href="./src/resources/skills.ts">delete</a>(skillId) -> void</code>
+- <code title="post /skills/{skill_id}/clone">client.skills.<a href="./src/resources/skills.ts">clone</a>(skillId) -> Skill</code>
+- <code title="post /skills/{skill_id}/demote">client.skills.<a href="./src/resources/skills.ts">demote</a>(skillId) -> Skill</code>
+- <code title="post /skills/generate">client.skills.<a href="./src/resources/skills.ts">generate</a>({ ...params }) -> SkillGenerateResponse</code>
+- <code title="get /skills/builtin">client.skills.<a href="./src/resources/skills.ts">listBuiltins</a>() -> SkillListBuiltinsResponse</code>
+- <code title="post /skills/builtin/{builtin_key}/override">client.skills.<a href="./src/resources/skills.ts">overrideBuiltin</a>(builtinKey) -> Skill</code>
+- <code title="post /skills/{skill_id}/promote">client.skills.<a href="./src/resources/skills.ts">promote</a>(skillId) -> Skill</code>
+- <code title="post /skills/builtin/{builtin_key}/reset">client.skills.<a href="./src/resources/skills.ts">resetBuiltinOverride</a>(builtinKey) -> void</code>
+
 # Agents
 
 Types:
@@ -411,6 +436,30 @@ Types:
 Methods:
 
 - <code title="get /organization/credits">client.organization.credits.<a href="./src/resources/organization/credits.ts">get</a>() -> CreditsReport</code>
+
+## Reports
+
+### UserCreditsConsumption
+
+Types:
+
+- <code><a href="./src/resources/organization/reports/user-credits-consumption.ts">UserCreditConsumption</a></code>
+- <code><a href="./src/resources/organization/reports/user-credits-consumption.ts">UserCreditConsumptionList</a></code>
+
+Methods:
+
+- <code title="get /organization/reports/user-credits-consumption">client.organization.reports.userCreditsConsumption.<a href="./src/resources/organization/reports/user-credits-consumption.ts">list</a>({ ...params }) -> UserCreditConsumptionList</code>
+
+### ConsumptionBreakdown
+
+Types:
+
+- <code><a href="./src/resources/organization/reports/consumption-breakdown.ts">ConsumptionBreakdown</a></code>
+- <code><a href="./src/resources/organization/reports/consumption-breakdown.ts">ConsumptionBreakdownList</a></code>
+
+Methods:
+
+- <code title="get /organization/reports/consumption-breakdown">client.organization.reports.consumptionBreakdown.<a href="./src/resources/organization/reports/consumption-breakdown.ts">list</a>({ ...params }) -> ConsumptionBreakdownList</code>
 
 # Conversations
 

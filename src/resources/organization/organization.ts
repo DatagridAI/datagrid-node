@@ -27,6 +27,8 @@ import {
   UserUpdateParams,
   Users,
 } from './users';
+import * as ReportsAPI from './reports/reports';
+import { Reports } from './reports/reports';
 import * as TeamspacesAPI from './teamspaces/teamspaces';
 import {
   Teamspace,
@@ -42,6 +44,7 @@ export class Organization extends APIResource {
   teamspaces: TeamspacesAPI.Teamspaces = new TeamspacesAPI.Teamspaces(this._client);
   mcpServers: McpServersAPI.McpServers = new McpServersAPI.McpServers(this._client);
   credits: CreditsAPI.Credits = new CreditsAPI.Credits(this._client);
+  reports: ReportsAPI.Reports = new ReportsAPI.Reports(this._client);
 }
 
 Organization.Users = Users;
@@ -50,6 +53,7 @@ Organization.Teamspaces = Teamspaces;
 Organization.TeamspacesCursorIDPage = TeamspacesCursorIDPage;
 Organization.McpServers = McpServers;
 Organization.Credits = Credits;
+Organization.Reports = Reports;
 
 export declare namespace Organization {
   export {
@@ -86,4 +90,6 @@ export declare namespace Organization {
   };
 
   export { Credits as Credits, type CreditsReport as CreditsReport };
+
+  export { Reports as Reports };
 }
