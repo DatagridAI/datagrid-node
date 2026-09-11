@@ -301,9 +301,7 @@ export interface VoiceSessionResponse {
  * - `audio`: Audio response chunk
  *   `{ data: string (base64 PCM), mime_type: string }`
  * - `tool_call`: Tool invocation status
- *   `{ tool_name: string, status: "started" | "completed" | "failed", args?: object }`.
- *   `args` contains bounded, JSON-safe function arguments and is present only when
- *   the call starts.
+ *   `{ tool_name: string, status: "started" | "completed" | "failed" }`
  * - `interrupted`: Model was interrupted
  * - `error`: Error occurred `{ message: string }`
  * - `transcript`: Real-time transcription
@@ -379,11 +377,6 @@ export namespace VoiceWebsocketMessage {
    * For 'tool_call' messages
    */
   export interface UnionMember2 {
-    /**
-     * Bounded, JSON-safe function arguments. Present only when status is 'started'.
-     */
-    args?: { [key: string]: unknown };
-
     status?: 'started' | 'completed' | 'failed';
 
     tool_name?: string;

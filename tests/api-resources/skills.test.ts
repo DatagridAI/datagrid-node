@@ -157,17 +157,6 @@ describe('resource skills', () => {
     );
   });
 
-  test('generate', async () => {
-    const responsePromise = client.skills.generate({});
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
   test('listBuiltins', async () => {
     const responsePromise = client.skills.listBuiltins();
     const rawResponse = await responsePromise.asResponse();
