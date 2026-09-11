@@ -301,7 +301,9 @@ export interface VoiceSessionResponse {
  * - `audio`: Audio response chunk
  *   `{ data: string (base64 PCM), mime_type: string }`
  * - `tool_call`: Tool invocation status
- *   `{ tool_name: string, status: "started" | "completed" | "failed" }`
+ *   `{ tool_name: string, status: "started" | "completed" | "failed", args?: object }`.
+ *   `args` contains bounded, JSON-safe function arguments and is present only when
+ *   the call starts.
  * - `interrupted`: Model was interrupted
  * - `error`: Error occurred `{ message: string }`
  * - `transcript`: Real-time transcription
@@ -377,6 +379,11 @@ export namespace VoiceWebsocketMessage {
    * For 'tool_call' messages
    */
   export interface UnionMember2 {
+    /**
+     * Bounded, JSON-safe function arguments. Present only when status is 'started'.
+     */
+    args?: { [key: string]: unknown };
+
     status?: 'started' | 'completed' | 'failed';
 
     tool_name?: string;
@@ -563,7 +570,9 @@ export namespace VoiceWebsocketMessage {
         task_explanation?: string;
 
         /**
-         * web_search only. Thumbnail image URL for the result.
+         * web_search / record. Thumbnail image URL for a web result, or a preview image
+         * URL from an indexed record row (e.g. a Drawings thumbnail). Omitted when the
+         * source has none.
          */
         thumbnail_url?: string;
       }
