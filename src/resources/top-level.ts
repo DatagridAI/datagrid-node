@@ -253,12 +253,6 @@ export namespace Properties {
            * Review"), surfaced separately from `fields` so clients can render a status chip.
            */
           status?: string;
-
-          /**
-           * record only. Preview image URL from the indexed row (e.g. a Drawings thumbnail).
-           * Omitted when the row has none.
-           */
-          thumbnail_url?: string;
         }
 
         export namespace Source {
