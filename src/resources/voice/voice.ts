@@ -301,9 +301,7 @@ export interface VoiceSessionResponse {
  * - `audio`: Audio response chunk
  *   `{ data: string (base64 PCM), mime_type: string }`
  * - `tool_call`: Tool invocation status
- *   `{ tool_name: string, status: "started" | "completed" | "failed", args?: object }`.
- *   `args` contains bounded, JSON-safe function arguments and is present only when
- *   the call starts.
+ *   `{ tool_name: string, status: "started" | "completed" | "failed" }`
  * - `interrupted`: Model was interrupted
  * - `error`: Error occurred `{ message: string }`
  * - `transcript`: Real-time transcription
@@ -379,11 +377,6 @@ export namespace VoiceWebsocketMessage {
    * For 'tool_call' messages
    */
   export interface UnionMember2 {
-    /**
-     * Bounded, JSON-safe function arguments. Present only when status is 'started'.
-     */
-    args?: { [key: string]: unknown };
-
     status?: 'started' | 'completed' | 'failed';
 
     tool_name?: string;
@@ -560,21 +553,6 @@ export namespace VoiceWebsocketMessage {
         status?: string;
 
         /**
-         * record only. Locale-stable status bucket from the source mapped field
-         * (`mapped_to_status`), never parsed from the display `status` string. `open`,
-         * `closed`, and `in_progress` map to semantic fills; `custom` and omission both
-         * mean a default gray fill.
-         */
-        status_category?: 'open' | 'closed' | 'in_progress' | 'custom';
-
-        /**
-         * record only. Source-system color for the record status (hex or named token),
-         * when the indexed row carries one. Omitted when absent. Clients must not invent a
-         * color from `status`.
-         */
-        status_color?: string;
-
-        /**
          * record / pdf_page / sql_query_result only. Backing table id.
          */
         table_id?: string;
@@ -585,9 +563,7 @@ export namespace VoiceWebsocketMessage {
         task_explanation?: string;
 
         /**
-         * web_search / record. Thumbnail image URL for a web result, or a preview image
-         * URL from an indexed record row (e.g. a Drawings thumbnail). Omitted when the
-         * source has none.
+         * web_search only. Thumbnail image URL for the result.
          */
         thumbnail_url?: string;
       }

@@ -180,27 +180,6 @@ export namespace Message {
        * Review"), surfaced separately from `fields` so clients can render a status chip.
        */
       status?: string;
-
-      /**
-       * record only. Locale-stable status bucket from the source mapped field
-       * (`mapped_to_status`), never parsed from the display `status` string. `open`,
-       * `closed`, and `in_progress` map to semantic fills; `custom` and omission both
-       * mean a default gray fill.
-       */
-      status_category?: 'open' | 'closed' | 'in_progress' | 'custom';
-
-      /**
-       * record only. Source-system color for the record status (hex or named token),
-       * when the indexed row carries one. Omitted when absent. Clients must not invent a
-       * color from `status`.
-       */
-      status_color?: string;
-
-      /**
-       * record only. Preview image URL from the indexed row (e.g. a Drawings thumbnail).
-       * Omitted when the row has none.
-       */
-      thumbnail_url?: string;
     }
 
     export namespace Source {
@@ -269,9 +248,9 @@ export namespace Message {
     agent_transcript?: string | null;
 
     /**
-     * Per-turn transcript, citation, tool-call status, and attachment events in
-     * chronological order. Each entry includes a timestamp offset from the start of
-     * the voice session. Present only for voice sessions that recorded timeline data.
+     * Per-turn transcript, citation, and tool-call status events in chronological
+     * order. Each entry includes a timestamp offset from the start of the voice
+     * session. Present only for voice sessions that recorded timeline data.
      */
     timeline_events?: Array<MessageContentVoice.TimelineEvent>;
   }
@@ -322,7 +301,7 @@ export namespace Message {
 
     /**
      * A single event from a voice session timeline, representing a transcript turn,
-     * citation, tool-call status update, or an attached file.
+     * citation, or tool-call status update.
      */
     export interface TimelineEvent {
       /**
@@ -333,30 +312,12 @@ export namespace Message {
       /**
        * The type of timeline event.
        */
-      type: 'transcript' | 'citation' | 'tool_call_status' | 'attachment';
+      type: 'transcript' | 'citation' | 'tool_call_status';
 
       /**
        * Citations for this event. Present when type is 'citation'.
        */
       citations?: Array<TimelineEvent.Citation>;
-
-      /**
-       * Identifier of the attached file, as returned by the files endpoint. Retrieve its
-       * bytes from `/v1/files/{file_id}/content`. Present when type is 'attachment'.
-       */
-      file_id?: string;
-
-      /**
-       * Original name of the attached file. Present when type is 'attachment', and only
-       * when the file was uploaded with a name.
-       */
-      filename?: string;
-
-      /**
-       * Media type of the attached file, for example `image/jpeg`. Present when type is
-       * 'attachment'.
-       */
-      media_type?: string;
 
       /**
        * The role of the participant for this event.
@@ -456,27 +417,6 @@ export namespace Message {
            * Review"), surfaced separately from `fields` so clients can render a status chip.
            */
           status?: string;
-
-          /**
-           * record only. Locale-stable status bucket from the source mapped field
-           * (`mapped_to_status`), never parsed from the display `status` string. `open`,
-           * `closed`, and `in_progress` map to semantic fills; `custom` and omission both
-           * mean a default gray fill.
-           */
-          status_category?: 'open' | 'closed' | 'in_progress' | 'custom';
-
-          /**
-           * record only. Source-system color for the record status (hex or named token),
-           * when the indexed row carries one. Omitted when absent. Clients must not invent a
-           * color from `status`.
-           */
-          status_color?: string;
-
-          /**
-           * record only. Preview image URL from the indexed row (e.g. a Drawings thumbnail).
-           * Omitted when the row has none.
-           */
-          thumbnail_url?: string;
         }
 
         export namespace Source {

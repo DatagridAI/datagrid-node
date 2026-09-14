@@ -151,13 +151,10 @@ export {
   Skills,
   type BuiltinSkill,
   type Skill,
-  type SkillDraft,
-  type SkillGenerateResponse,
   type SkillListBuiltinsResponse,
   type SkillCreateParams,
   type SkillUpdateParams,
   type SkillListParams,
-  type SkillGenerateParams,
 } from './skills';
 export {
   ToolDefsCursorNamePage,
