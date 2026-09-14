@@ -253,6 +253,27 @@ export namespace Properties {
            * Review"), surfaced separately from `fields` so clients can render a status chip.
            */
           status?: string;
+
+          /**
+           * record only. Locale-stable status bucket from the source mapped field
+           * (`mapped_to_status`), never parsed from the display `status` string. `open`,
+           * `closed`, and `in_progress` map to semantic fills; `custom` and omission both
+           * mean a default gray fill.
+           */
+          status_category?: 'open' | 'closed' | 'in_progress' | 'custom';
+
+          /**
+           * record only. Source-system color for the record status (hex or named token),
+           * when the indexed row carries one. Omitted when absent. Clients must not invent a
+           * color from `status`.
+           */
+          status_color?: string;
+
+          /**
+           * record only. Preview image URL from the indexed row (e.g. a Drawings thumbnail).
+           * Omitted when the row has none.
+           */
+          thumbnail_url?: string;
         }
 
         export namespace Source {
