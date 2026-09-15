@@ -82,6 +82,20 @@ export class Skills extends APIResource {
   }
 
   /**
+   * Generate one or more skill drafts from a natural-language prompt and/or
+   * previously uploaded SOP files (`POST /v1/files`). Drafts are returned as a list
+   * and are **not** persisted — use `POST /v1/skills` to create each draft you want
+   * to keep. Requires `ep:skills:write`.
+   */
+  generate(body: SkillGenerateParams, options?: Core.RequestOptions): Core.APIPromise<SkillGenerateResponse> {
+    return this._client.post('/skills/generate', {
+      body,
+      timeout: (this._client as any)._options.timeout ?? 180000,
+      ...options,
+    });
+  }
+
+  /**
    * Return the full in-memory built-in catalogue shipped with Datagrid. The
    * catalogue is small and not cursor-paginated (`has_more` is always `false`);
    * adding pagination later would be a breaking SDK change. Use
@@ -275,6 +289,77 @@ export interface Skill {
   updated_at: string;
 }
 
+export interface SkillDraft {
+  /**
+   * Category bucket for grouping in the skill picker.
+   */
+  category:
+    | 'document_analysis'
+    | 'construction_project_management'
+    | 'financial_analysis'
+    | 'estimation'
+    | 'quality_and_safety'
+    | 'scheduling'
+    | 'contracts_and_legal'
+    | 'data_and_reporting'
+    | 'research'
+    | 'communication'
+    | 'general_productivity';
+
+  /**
+   * Short description shown in the skill picker.
+   */
+  description: string;
+
+  /**
+   * The full instructions / system prompt for this skill.
+   */
+  instructions: string;
+
+  /**
+   * Suggested display name for the skill.
+   */
+  name: string;
+
+  /**
+   * The object type, always 'skill_draft'.
+   */
+  object: 'skill_draft';
+
+  /**
+   * Tool identifiers that this skill works best with.
+   */
+  preferred_tools: Array<string>;
+
+  /**
+   * Tool identifiers that this skill requires to function.
+   */
+  required_tools: Array<string>;
+
+  /**
+   * Suggested slash command key (e.g. `budget-check`). Deduplicated within the draft
+   * list.
+   */
+  slash_key: string;
+}
+
+export interface SkillGenerateResponse {
+  /**
+   * Array of generated skill drafts. Pass each to `POST /v1/skills` to persist.
+   */
+  data: Array<SkillDraft>;
+
+  /**
+   * Whether there are more results. Always false for generate.
+   */
+  has_more: boolean;
+
+  /**
+   * The object type, always 'list'.
+   */
+  object: 'list';
+}
+
 export interface SkillListBuiltinsResponse {
   /**
    * Array of built-in skill definitions.
@@ -426,16 +511,34 @@ export interface SkillListParams extends CursorIDPageParams {
   search?: string;
 }
 
+export interface SkillGenerateParams {
+  /**
+   * IDs of previously uploaded files to use as source material (e.g. SOP documents).
+   * Obtain file IDs via `POST /v1/files`. At least one of `prompt` or `file_ids`
+   * must be non-empty.
+   */
+  file_ids?: Array<string>;
+
+  /**
+   * Natural-language description of the skill(s) to generate. At least one of
+   * `prompt` or `file_ids` must be non-empty.
+   */
+  prompt?: string;
+}
+
 Skills.SkillsCursorIDPage = SkillsCursorIDPage;
 
 export declare namespace Skills {
   export {
     type BuiltinSkill as BuiltinSkill,
     type Skill as Skill,
+    type SkillDraft as SkillDraft,
+    type SkillGenerateResponse as SkillGenerateResponse,
     type SkillListBuiltinsResponse as SkillListBuiltinsResponse,
     SkillsCursorIDPage as SkillsCursorIDPage,
     type SkillCreateParams as SkillCreateParams,
     type SkillUpdateParams as SkillUpdateParams,
     type SkillListParams as SkillListParams,
+    type SkillGenerateParams as SkillGenerateParams,
   };
 }
