@@ -125,9 +125,6 @@ import {
   BuiltinSkill,
   Skill,
   SkillCreateParams,
-  SkillDraft,
-  SkillGenerateParams,
-  SkillGenerateResponse,
   SkillListBuiltinsResponse,
   SkillListParams,
   SkillUpdateParams,
@@ -610,14 +607,11 @@ export declare namespace Datagrid {
     Skills as Skills,
     type BuiltinSkill as BuiltinSkill,
     type Skill as Skill,
-    type SkillDraft as SkillDraft,
-    type SkillGenerateResponse as SkillGenerateResponse,
     type SkillListBuiltinsResponse as SkillListBuiltinsResponse,
     SkillsCursorIDPage as SkillsCursorIDPage,
     type SkillCreateParams as SkillCreateParams,
     type SkillUpdateParams as SkillUpdateParams,
     type SkillListParams as SkillListParams,
-    type SkillGenerateParams as SkillGenerateParams,
   };
 
   export {

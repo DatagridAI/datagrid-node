@@ -190,8 +190,6 @@ Types:
 
 - <code><a href="./src/resources/skills.ts">BuiltinSkill</a></code>
 - <code><a href="./src/resources/skills.ts">Skill</a></code>
-- <code><a href="./src/resources/skills.ts">SkillDraft</a></code>
-- <code><a href="./src/resources/skills.ts">SkillGenerateResponse</a></code>
 - <code><a href="./src/resources/skills.ts">SkillListBuiltinsResponse</a></code>
 
 Methods:
@@ -203,7 +201,6 @@ Methods:
 - <code title="delete /skills/{skill_id}">client.skills.<a href="./src/resources/skills.ts">delete</a>(skillId) -> void</code>
 - <code title="post /skills/{skill_id}/clone">client.skills.<a href="./src/resources/skills.ts">clone</a>(skillId) -> Skill</code>
 - <code title="post /skills/{skill_id}/demote">client.skills.<a href="./src/resources/skills.ts">demote</a>(skillId) -> Skill</code>
-- <code title="post /skills/generate">client.skills.<a href="./src/resources/skills.ts">generate</a>({ ...params }) -> SkillGenerateResponse</code>
 - <code title="get /skills/builtin">client.skills.<a href="./src/resources/skills.ts">listBuiltins</a>() -> SkillListBuiltinsResponse</code>
 - <code title="post /skills/builtin/{builtin_key}/override">client.skills.<a href="./src/resources/skills.ts">overrideBuiltin</a>(builtinKey) -> Skill</code>
 - <code title="post /skills/{skill_id}/promote">client.skills.<a href="./src/resources/skills.ts">promote</a>(skillId) -> Skill</code>
