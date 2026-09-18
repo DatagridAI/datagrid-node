@@ -58,9 +58,7 @@ describe('resource converse', () => {
       include_steps: true,
       reference_date: '2019-12-27',
       secret_ids: ['string'],
-      skill_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'],
       skills: [{ content: 'content', type: 'inline' }],
-      slash_keys: ['string'],
       stream: true,
       text: { format: {} },
       user: {
