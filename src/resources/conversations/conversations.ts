@@ -148,6 +148,15 @@ export interface ConversationListParams extends CursorIDPageParams {
   has_messages?: boolean;
 
   /**
+   * When true, restricts the list to conversations that contain at least one voice
+   * message. Defaults to false, returning conversations regardless of modality.
+   * Changing this value between requests that reuse the same `before`/`after` cursor
+   * is not supported — the cursor was computed against a different result set, so
+   * pass a consistent value for the lifetime of a given pagination sequence.
+   */
+  has_voice_messages?: boolean;
+
+  /**
    * The field to sort the conversations by.
    */
   sort?: ConversationSortField;
