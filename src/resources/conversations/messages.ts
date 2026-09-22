@@ -377,6 +377,16 @@ export namespace Message {
        * Name of the tool whose status changed. Present when type is 'tool_call_status'.
        */
       tool_name?: string;
+
+      /**
+       * Identifies the conversational turn this event belongs to. Every 'transcript' and
+       * 'citation' event produced by the same turn shares one value, so a citation can
+       * be grouped with the transcripts it came from without relying on the order events
+       * appear in. Absent on events recorded before this field existed, and on the
+       * 'tool_call_status' and 'attachment' types; fall back to event order in those
+       * cases.
+       */
+      turn_index?: number;
     }
 
     export namespace TimelineEvent {
