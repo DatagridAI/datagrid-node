@@ -22,10 +22,6 @@ export class Converse extends APIResource {
    *
    * The request body is the stable Converse body plus the optional top-level
    * `skills` array; all other behavior matches `POST /converse`.
-   *
-   * Because inline `skills` replace the stored catalogue for the turn, they cannot
-   * be combined with `skill_ids` or `slash_keys`, which name stored skills.
-   * Supplying both returns a `400`.
    */
   converse(
     body: ConverseConverseParams,
@@ -126,15 +122,6 @@ export interface BetaConverseRequest {
   secret_ids?: Array<string> | null;
 
   /**
-   * Array of skill IDs to force-activate for this turn. Each ID must refer to an
-   * account-shared or builtin skill reachable by the API key's teamspace.
-   * User-scoped (private) skills are not accessible from API keys. Deduped and
-   * merged with `slash_keys` before the turn begins. Maximum 32 entries. Returns 400
-   * if any ID is unresolved, disabled, or out of scope.
-   */
-  skill_ids?: Array<string> | null;
-
-  /**
    * Request-scoped skills made available to the agent for this turn only. They form
    * the turn's skill catalogue and are selected by the agent (Magpie 2.5 planner) or
    * read from its workspace (Magpie 3.0) — they are not force-applied, so supplying
@@ -148,15 +135,6 @@ export interface BetaConverseRequest {
    * supplied inline skills.
    */
   skills?: Array<BetaConverseRequest.Skill>;
-
-  /**
-   * Array of slash-key tokens (e.g. `"budget-check"` or `"/rfi-triage"`) to
-   * force-activate for this turn. Leading slashes are stripped. Resolved
-   * account-shared → builtin in precedence order. Deduped and merged with
-   * `skill_ids` before the turn begins. Maximum 32 entries. Returns 400 if any token
-   * cannot be resolved to an enabled, reachable skill.
-   */
-  slash_keys?: Array<string> | null;
 
   /**
    * Determines the response type of the converse. Response is the Server-Sent Events
@@ -399,7 +377,6 @@ export namespace BetaConverseRequest {
        * for backward compatibility and automatically run as gemini-3.1-flash-lite.
        */
       llm_model?:
-        | 'gemini-3.8-flash'
         | 'gemini-3.5-flash'
         | 'gemini-3.1-flash-lite'
         | 'gemini-3-pro-preview'
@@ -649,7 +626,6 @@ export namespace BetaConverseRequest {
      * for backward compatibility and automatically run as gemini-3.1-flash-lite.
      */
     llm_model?:
-      | 'gemini-3.8-flash'
       | 'gemini-3.5-flash'
       | 'gemini-3.1-flash-lite'
       | 'gemini-3-pro-preview'
@@ -1034,15 +1010,6 @@ export interface ConverseConverseParams {
   secret_ids?: Array<string> | null;
 
   /**
-   * Array of skill IDs to force-activate for this turn. Each ID must refer to an
-   * account-shared or builtin skill reachable by the API key's teamspace.
-   * User-scoped (private) skills are not accessible from API keys. Deduped and
-   * merged with `slash_keys` before the turn begins. Maximum 32 entries. Returns 400
-   * if any ID is unresolved, disabled, or out of scope.
-   */
-  skill_ids?: Array<string> | null;
-
-  /**
    * Request-scoped skills made available to the agent for this turn only. They form
    * the turn's skill catalogue and are selected by the agent (Magpie 2.5 planner) or
    * read from its workspace (Magpie 3.0) — they are not force-applied, so supplying
@@ -1056,15 +1023,6 @@ export interface ConverseConverseParams {
    * supplied inline skills.
    */
   skills?: Array<ConverseConverseParams.Skill>;
-
-  /**
-   * Array of slash-key tokens (e.g. `"budget-check"` or `"/rfi-triage"`) to
-   * force-activate for this turn. Leading slashes are stripped. Resolved
-   * account-shared → builtin in precedence order. Deduped and merged with
-   * `skill_ids` before the turn begins. Maximum 32 entries. Returns 400 if any token
-   * cannot be resolved to an enabled, reachable skill.
-   */
-  slash_keys?: Array<string> | null;
 
   /**
    * Determines the response type of the converse. Response is the Server-Sent Events
@@ -1307,7 +1265,6 @@ export namespace ConverseConverseParams {
        * for backward compatibility and automatically run as gemini-3.1-flash-lite.
        */
       llm_model?:
-        | 'gemini-3.8-flash'
         | 'gemini-3.5-flash'
         | 'gemini-3.1-flash-lite'
         | 'gemini-3-pro-preview'
@@ -1557,7 +1514,6 @@ export namespace ConverseConverseParams {
      * for backward compatibility and automatically run as gemini-3.1-flash-lite.
      */
     llm_model?:
-      | 'gemini-3.8-flash'
       | 'gemini-3.5-flash'
       | 'gemini-3.1-flash-lite'
       | 'gemini-3-pro-preview'
