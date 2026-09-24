@@ -27,6 +27,13 @@ export interface ConverseResponse extends MessagesAPI.Message {
   reasoning?: Array<ConverseResponse.Reasoning> | null;
 
   /**
+   * Array of skills that were force-activated for this turn via `skill_ids` or
+   * `slash_keys`. Null when no skills were explicitly requested, or when none of the
+   * requested skills survived resolution for this turn.
+   */
+  skills?: Array<ConverseResponse.Skill> | null;
+
+  /**
    * Array of tool calls that were executed during this response.
    */
   tool_calls?: Array<ConverseResponse.ToolCall> | null;
@@ -71,6 +78,32 @@ export namespace ConverseResponse {
     task?: string | null;
   }
 
+  /**
+   * A skill that was force-activated for this turn.
+   */
+  export interface Skill {
+    /**
+     * The unique identifier of the skill.
+     */
+    id: string;
+
+    /**
+     * The human-readable name of the skill.
+     */
+    name: string;
+
+    /**
+     * The visibility scope of the skill. `user` (private) never appears here:
+     * `skill_ids` and `slash_keys` can only name account-shared or builtin skills.
+     */
+    scope: 'account' | 'builtin';
+
+    /**
+     * The slash key used to invoke the skill (without leading slash).
+     */
+    slash_key: string;
+  }
+
   export interface ToolCall {
     /**
      * The ID of the tool call.
@@ -106,6 +139,7 @@ export type Properties =
   | Properties.ConverseStatusEvent
   | Properties.ConverseCitationsEvent
   | Properties.ConverseGeneratedTitleEvent
+  | Properties.ConverseSkillsEvent
   | Properties.ConverseContentMessageDeltaEvent
   | Properties.ConverseToolCallDeltaEvent
   | Properties.ConverseReasoningDeltaEvent;
@@ -327,6 +361,69 @@ export namespace Properties {
     }
   }
 
+  export interface ConverseSkillsEvent {
+    data: ConverseSkillsEvent.Data;
+
+    /**
+     * Type of the event, which is always skills
+     */
+    event: 'skills';
+  }
+
+  export namespace ConverseSkillsEvent {
+    export interface Data {
+      /**
+       * The ID of the agent used for the converse.
+       */
+      agent_id: string;
+
+      /**
+       * The ID of the agent conversation.
+       */
+      conversation_id: string;
+
+      /**
+       * Skills that were force-activated for this turn via `skill_ids` or `slash_keys`.
+       * Null when no skills were explicitly requested, or when none of the requested
+       * skills survived resolution for this turn.
+       */
+      skills: Array<Data.Skill> | null;
+
+      /**
+       * The chat mode used for this response turn when available.
+       */
+      chat_mode?: 'full_agent' | 'light_agent' | 'llm_router' | null;
+    }
+
+    export namespace Data {
+      /**
+       * A skill that was force-activated for this turn.
+       */
+      export interface Skill {
+        /**
+         * The unique identifier of the skill.
+         */
+        id: string;
+
+        /**
+         * The human-readable name of the skill.
+         */
+        name: string;
+
+        /**
+         * The visibility scope of the skill. `user` (private) never appears here:
+         * `skill_ids` and `slash_keys` can only name account-shared or builtin skills.
+         */
+        scope: 'account' | 'builtin';
+
+        /**
+         * The slash key used to invoke the skill (without leading slash).
+         */
+        slash_key: string;
+      }
+    }
+  }
+
   export interface ConverseContentMessageDeltaEvent {
     data: ConverseContentMessageDeltaEvent.Data;
 
@@ -545,6 +642,24 @@ export interface ConverseParams {
    * appended to the prompt but not stored in conversation history.
    */
   secret_ids?: Array<string> | null;
+
+  /**
+   * Array of skill IDs to force-activate for this turn. Each ID must refer to an
+   * account-shared or builtin skill reachable by the API key's teamspace.
+   * User-scoped (private) skills are not accessible from API keys. Deduped and
+   * merged with `slash_keys` before the turn begins. Maximum 32 entries. Returns 400
+   * if any ID is unresolved, disabled, or out of scope.
+   */
+  skill_ids?: Array<string> | null;
+
+  /**
+   * Array of slash-key tokens (e.g. `"budget-check"` or `"/rfi-triage"`) to
+   * force-activate for this turn. Leading slashes are stripped. Resolved
+   * account-shared → builtin in precedence order. Deduped and merged with
+   * `skill_ids` before the turn begins. Maximum 32 entries. Returns 400 if any token
+   * cannot be resolved to an enabled, reachable skill.
+   */
+  slash_keys?: Array<string> | null;
 
   /**
    * Determines the response type of the converse. Response is the Server-Sent Events
@@ -787,6 +902,7 @@ export namespace ConverseParams {
        * for backward compatibility and automatically run as gemini-3.1-flash-lite.
        */
       llm_model?:
+        | 'gemini-3.8-flash'
         | 'gemini-3.5-flash'
         | 'gemini-3.1-flash-lite'
         | 'gemini-3-pro-preview'
@@ -1036,6 +1152,7 @@ export namespace ConverseParams {
      * for backward compatibility and automatically run as gemini-3.1-flash-lite.
      */
     llm_model?:
+      | 'gemini-3.8-flash'
       | 'gemini-3.5-flash'
       | 'gemini-3.1-flash-lite'
       | 'gemini-3-pro-preview'
