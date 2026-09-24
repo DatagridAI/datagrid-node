@@ -34,7 +34,7 @@ describe('top level methods', () => {
         disabled_agent_tools: ['string'],
         disabled_tools: ['string'],
         knowledge_ids: ['string'],
-        llm_model: 'gemini-3.8-flash',
+        llm_model: 'gemini-3.5-flash',
         mcp_servers: [
           {
             server_id: 'server_id',
@@ -58,8 +58,6 @@ describe('top level methods', () => {
       include_steps: true,
       reference_date: '2019-12-27',
       secret_ids: ['string'],
-      skill_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'],
-      slash_keys: ['string'],
       stream: true,
       text: { format: {} },
       user: {

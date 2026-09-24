@@ -7,11 +7,9 @@ import { CursorIDPage, type CursorIDPageParams } from '../pagination';
 
 export class Skills extends APIResource {
   /**
-   * Create a skill. Defaults to company-owned (`account`) scope, then assigns the
-   * API key's teamspace so the created skill is returned as `teamspace`. Pass
-   * `scope: user` to create a private skill that can later be promoted.
-   * Account-scope slash keys must not collide with a built-in; use the override
-   * endpoint for that.
+   * Create a skill. Defaults to company-owned (`account`) scope. Pass `scope: user`
+   * to create a private skill that can later be promoted. Account-scope slash keys
+   * must not collide with a built-in; use the override endpoint for that.
    */
   create(body: SkillCreateParams, options?: Core.RequestOptions): Core.APIPromise<Skill> {
     return this._client.post('/skills', { body, ...options });
@@ -36,10 +34,9 @@ export class Skills extends APIResource {
   }
 
   /**
-   * List skills invocable by the authenticated organization. Returns built-in
-   * skills, skills assigned to the caller's teamspace, and the caller's private
-   * skills. Unassigned custom company skills are omitted. Removed built-in overrides
-   * are excluded.
+   * List skills reachable by the authenticated organization. Returns built-in
+   * skills, company (account) skills, and the caller's private skills. Removed
+   * built-in overrides are excluded.
    */
   list(query?: SkillListParams, options?: Core.RequestOptions): Core.PagePromise<SkillsCursorIDPage, Skill>;
   list(options?: Core.RequestOptions): Core.PagePromise<SkillsCursorIDPage, Skill>;
@@ -277,11 +274,9 @@ export interface Skill {
 
   /**
    * Ownership scope. `user` = private (author only), `account` = company-owned,
-   * `teamspace` = assigned to selected teamspaces, `builtin` = global default. A
-   * default public create is assigned to the API key's teamspace and returned as
-   * `teamspace`.
+   * `builtin` = global default.
    */
-  scope: 'user' | 'account' | 'teamspace' | 'builtin';
+  scope: 'user' | 'account' | 'builtin';
 
   /**
    * The slash command key used to invoke this skill (e.g. `budget-check`).
@@ -410,9 +405,7 @@ export interface SkillCreateParams {
   name: string;
 
   /**
-   * The slash command key (e.g. `budget-check`). Must use lowercase letters, digits,
-   * and single dashes, start with a letter, end with a letter or digit, and be
-   * unique within the scope.
+   * The slash command key (e.g. `budget-check`). Must be unique within the scope.
    */
   slash_key: string;
 
@@ -493,8 +486,7 @@ export interface SkillUpdateParams {
   required_tools?: Array<string> | null;
 
   /**
-   * The slash command key. Must use lowercase letters, digits, and single dashes,
-   * start with a letter, end with a letter or digit, and be unique within the scope.
+   * The slash command key. Must be unique within the scope.
    */
   slash_key?: string | null;
 }
@@ -507,11 +499,10 @@ export interface SkillListParams extends CursorIDPageParams {
 
   /**
    * Return only skills of this scope. `user` is the caller's own private skills,
-   * `account` company-owned skills invocable here, `teamspace` skills assigned to
-   * the caller's teamspace, and `builtin` the global catalogue. Omit to return
-   * everything the caller can invoke.
+   * `account` the company's shared skills, and `builtin` the global catalogue. Omit
+   * to return everything the caller can reach.
    */
-  scope?: 'user' | 'account' | 'teamspace' | 'builtin';
+  scope?: 'user' | 'account' | 'builtin';
 
   /**
    * Optional search string to filter skills by name or slash key. Case-insensitive

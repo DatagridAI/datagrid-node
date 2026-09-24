@@ -76,7 +76,6 @@ describe('resource conversations', () => {
           before: 'before',
           direction: 'asc',
           has_messages: true,
-          has_voice_messages: true,
           limit: 1,
           sort: 'created_at',
         },

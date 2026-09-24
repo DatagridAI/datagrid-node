@@ -222,7 +222,6 @@ export interface Agent {
    * for backward compatibility and automatically run as gemini-3.1-flash-lite.
    */
   llm_model:
-    | 'gemini-3.8-flash'
     | 'gemini-3.5-flash'
     | 'gemini-3.1-flash-lite'
     | 'gemini-3-pro-preview'
@@ -509,7 +508,6 @@ export interface AgentCreateParams {
    * for backward compatibility and automatically run as gemini-3.1-flash-lite.
    */
   llm_model?:
-    | 'gemini-3.8-flash'
     | 'gemini-3.5-flash'
     | 'gemini-3.1-flash-lite'
     | 'gemini-3-pro-preview'
@@ -758,7 +756,6 @@ export interface AgentUpdateParams {
    * for backward compatibility and automatically run as gemini-3.1-flash-lite.
    */
   llm_model?:
-    | 'gemini-3.8-flash'
     | 'gemini-3.5-flash'
     | 'gemini-3.1-flash-lite'
     | 'gemini-3-pro-preview'
