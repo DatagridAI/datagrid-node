@@ -486,7 +486,6 @@ Methods:
 
 - <code title="get /conversations/{conversation_id}/messages/{message_id}">client.conversations.messages.<a href="./src/resources/conversations/messages.ts">retrieve</a>(conversationId, messageId) -> Message</code>
 - <code title="get /conversations/{conversation_id}/messages">client.conversations.messages.<a href="./src/resources/conversations/messages.ts">list</a>(conversationId, { ...params }) -> MessagesCursorIDPage</code>
-- <code title="post /conversations/{conversation_id}/messages/{message_id}">client.conversations.messages.<a href="./src/resources/conversations/messages.ts">submitFeedback</a>(conversationId, messageId, { ...params }) -> void</code>
 
 # DataViews
 

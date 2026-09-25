@@ -44,11 +44,8 @@ describe('resource search', () => {
   test('searchAI: required and optional params', async () => {
     const response = await client.search.searchAI({
       query: 'query',
-      display_type: 'dataset',
       limit: 0,
-      offset: 0,
       record_types: ['rows'],
-      skip_ai_generation: true,
     });
   });
 
@@ -66,7 +63,6 @@ describe('resource search', () => {
   test('searchTree: required and optional params', async () => {
     const response = await client.search.searchTree({
       query: 'query',
-      display_type: 'dataset',
       limit: 1,
       next: 'next',
       record_types: ['rows'],
