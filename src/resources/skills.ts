@@ -410,8 +410,8 @@ export interface SkillCreateParams {
   name: string;
 
   /**
-   * The slash command key (e.g. `budget-check`). Must use lowercase letters, digits,
-   * and single dashes, start with a letter, end with a letter or digit, and be
+   * The slash command key (e.g. `budget-check`, `3d-review`). Must use lowercase
+   * letters, digits, and single dashes, start and end with a letter or digit, and be
    * unique within the scope.
    */
   slash_key: string;
@@ -494,7 +494,7 @@ export interface SkillUpdateParams {
 
   /**
    * The slash command key. Must use lowercase letters, digits, and single dashes,
-   * start with a letter, end with a letter or digit, and be unique within the scope.
+   * start and end with a letter or digit, and be unique within the scope.
    */
   slash_key?: string | null;
 }
