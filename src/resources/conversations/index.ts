@@ -9,10 +9,4 @@ export {
   type ConversationUpdateParams,
   type ConversationListParams,
 } from './conversations';
-export {
-  MessagesCursorIDPage,
-  Messages,
-  type Message,
-  type MessageListParams,
-  type MessageSubmitFeedbackParams,
-} from './messages';
+export { MessagesCursorIDPage, Messages, type Message, type MessageListParams } from './messages';
