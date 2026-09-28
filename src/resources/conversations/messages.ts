@@ -42,6 +42,23 @@ export class Messages extends APIResource {
       ...options,
     });
   }
+
+  /**
+   * Record a like or dislike on a conversation message. When the user has consented
+   * to data sharing, the associated trace is donated for troubleshooting.
+   */
+  submitFeedback(
+    conversationId: string,
+    messageId: string,
+    body: MessageSubmitFeedbackParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<void> {
+    return this._client.post(`/conversations/${conversationId}/messages/${messageId}`, {
+      body,
+      ...options,
+      headers: { Accept: '*/*', ...options?.headers },
+    });
+  }
 }
 
 export class MessagesCursorIDPage extends CursorIDPage<Message> {}
@@ -377,6 +394,16 @@ export namespace Message {
        * Name of the tool whose status changed. Present when type is 'tool_call_status'.
        */
       tool_name?: string;
+
+      /**
+       * Identifies the conversational turn this event belongs to. Every 'transcript' and
+       * 'citation' event produced by the same turn shares one value, so a citation can
+       * be grouped with the transcripts it came from without relying on the order events
+       * appear in. Absent on events recorded before this field existed, and on the
+       * 'tool_call_status' and 'attachment' types; fall back to event order in those
+       * cases.
+       */
+      turn_index?: number;
     }
 
     export namespace TimelineEvent {
@@ -524,6 +551,23 @@ export namespace Message {
 
 export interface MessageListParams extends CursorIDPageParams {}
 
+export interface MessageSubmitFeedbackParams {
+  /**
+   * `1` for thumbs up, `-1` for thumbs down.
+   */
+  like: 1 | -1;
+
+  /**
+   * Optional free-text comment.
+   */
+  feedback?: string | null;
+
+  /**
+   * Client surface where the user submitted feedback.
+   */
+  ui_surface?: 'datagrid_web' | 'procore_embed' | 'field_ai_mobile' | null;
+}
+
 Messages.MessagesCursorIDPage = MessagesCursorIDPage;
 
 export declare namespace Messages {
@@ -531,5 +575,6 @@ export declare namespace Messages {
     type Message as Message,
     MessagesCursorIDPage as MessagesCursorIDPage,
     type MessageListParams as MessageListParams,
+    type MessageSubmitFeedbackParams as MessageSubmitFeedbackParams,
   };
 }

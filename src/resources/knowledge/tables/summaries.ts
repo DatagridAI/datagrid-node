@@ -7,10 +7,11 @@ import { CursorPage, type CursorPageParams } from '../../../pagination';
 
 export class Summaries extends APIResource {
   /**
-   * Returns a list of AI-generated summary records for a knowledge table. Use
-   * `record_type=row` (the default) for per-row summaries, or `record_type=table`
-   * for the single table-level summary. This endpoint reflects the current index
-   * state and does not consume AI credits.
+   * Returns indexed summary content for a knowledge table. Use `record_type=row`
+   * (the default) for per-row summaries, `record_type=table` for the table-level
+   * summary, `record_type=file` for file-level overviews, or `record_type=page` for
+   * page extraction bodies. This endpoint reflects the current index state and does
+   * not consume AI credits.
    */
   list(
     tableId: string,
@@ -36,9 +37,9 @@ export class Summaries extends APIResource {
 export class SummariesCursorPage extends CursorPage<Summary> {}
 
 /**
- * The `summary` object represents an AI-generated summary record produced during
- * knowledge indexing. A row summary describes a single source row; a table summary
- * describes the entire table.
+ * The `summary` object represents indexed summary content. Row, table, and file
+ * records contain generated summaries; page records contain the indexed page
+ * extraction body.
  */
 export interface Summary {
   /**
@@ -63,14 +64,14 @@ export interface Summary {
   object: 'summary';
 
   /**
-   * The kind of summary. `row` is per source row; `table` is the single table-level
-   * summary.
+   * The kind of summary content: per source row, table, file, or page.
    */
-  record_type: 'row' | 'table';
+  record_type: 'row' | 'table' | 'file' | 'page';
 
   /**
-   * The AI-generated summary, as markdown. `null` for records that have not finished
-   * indexing.
+   * The indexed body as markdown. For pages this is the page extraction body; for
+   * other record types it is generated summary content. `null` for records that have
+   * not finished indexing.
    */
   summary: string | null;
 
@@ -86,7 +87,23 @@ export interface Summary {
   updated_at: string | null;
 
   /**
-   * The primary key of the source row for a row summary. `null` for table summaries.
+   * The id of the source file for a file or page summary. All pages of a file share
+   * its file summary's `file_id`, and it can be passed to `GET /files/{file_id}`.
+   * `null` for row and table summaries, and for file or page records indexed before
+   * file ids were recorded.
+   */
+  file_id?: string | null;
+
+  /**
+   * The 1-based page number within the source file for a page summary. `null` for
+   * row, table, and file summaries, and for page records indexed before page numbers
+   * were recorded.
+   */
+  page_number?: number | null;
+
+  /**
+   * The primary key of the source row for a row summary. `null` for table, file, and
+   * page summaries.
    */
   primary_key?: string | null;
 
@@ -105,10 +122,11 @@ export interface Summary {
 export interface SummaryListParams extends CursorPageParams {
   /**
    * Which summary variant to return. `row` (default) returns one summary per source
-   * row. `table` returns the single table-level summary. Matches `record_type` on
-   * each Summary in the response.
+   * row. `table` returns the table-level summary. `file` returns file-level
+   * overviews. `page` returns page extraction bodies. Matches `record_type` on each
+   * Summary in the response.
    */
-  record_type?: 'row' | 'table';
+  record_type?: 'row' | 'table' | 'file' | 'page';
 }
 
 Summaries.SummariesCursorPage = SummariesCursorPage;
