@@ -14,7 +14,7 @@ describe('resource skills', () => {
       category: 'document_analysis',
       instructions: 'instructions',
       name: 'name',
-      slash_key: 'x',
+      slash_key: 'xx',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -30,7 +30,7 @@ describe('resource skills', () => {
       category: 'document_analysis',
       instructions: 'instructions',
       name: 'name',
-      slash_key: 'x',
+      slash_key: 'xx',
       description: 'description',
       enabled: true,
       preferred_tools: ['string'],

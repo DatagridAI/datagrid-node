@@ -4,13 +4,7 @@ import { APIResource } from '../../resource';
 import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
 import * as MessagesAPI from './messages';
-import {
-  Message,
-  MessageListParams,
-  MessageSubmitFeedbackParams,
-  Messages,
-  MessagesCursorIDPage,
-} from './messages';
+import { Message, MessageListParams, Messages, MessagesCursorIDPage } from './messages';
 import { CursorIDPage, type CursorIDPageParams } from '../../pagination';
 
 export class Conversations extends APIResource {
@@ -187,6 +181,5 @@ export declare namespace Conversations {
     type Message as Message,
     MessagesCursorIDPage as MessagesCursorIDPage,
     type MessageListParams as MessageListParams,
-    type MessageSubmitFeedbackParams as MessageSubmitFeedbackParams,
   };
 }
