@@ -61,4 +61,25 @@ describe('resource messages', () => {
       ),
     ).rejects.toThrow(Datagrid.NotFoundError);
   });
+
+  test('submitFeedback: only required params', async () => {
+    const responsePromise = client.conversations.messages.submitFeedback('conversation_id', 'message_id', {
+      like: 1,
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('submitFeedback: required and optional params', async () => {
+    const response = await client.conversations.messages.submitFeedback('conversation_id', 'message_id', {
+      like: 1,
+      feedback: 'feedback',
+      ui_surface: 'datagrid_web',
+    });
+  });
 });

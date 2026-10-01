@@ -43,7 +43,7 @@ export class Voice extends APIResource {
    *
    * **Message Types:**
    *
-   * - Client: `start`, `audio`, `stop`, `interrupt`, `text`
+   * - Client: `start`, `audio`, `stop`, `interrupt`, `end_turn`, `text`
    * - Server: `started`, `ready`, `audio`, `tool_call`, `interrupted`, `error`,
    *   `transcript`, `citation`, `ended`
    */
@@ -245,6 +245,13 @@ export namespace VoiceSessionRequest {
     silent_start?: boolean | null;
 
     /**
+     * Controls how user audio turns close. 'server' uses the existing RMS and silence
+     * timer. 'client' disables that timer and requires an explicit end_turn message
+     * after each utterance.
+     */
+    turn_end_mode?: 'server' | 'client' | null;
+
+    /**
      * Voice preset to use (e.g., 'sage', 'nova', 'spark'). If not provided, uses the
      * agent's configured voice preset or the default.
      */
@@ -286,6 +293,10 @@ export interface VoiceSessionResponse {
  * - `audio`: Send audio chunk `{ data: string (base64 PCM), mime_type?: string }`
  * - `stop`: End session gracefully
  * - `interrupt`: Signal user interruption
+ * - `end_turn`: Commit the current user audio turn immediately (no payload).
+ *   Forwards Gemini `activityEnd` without waiting for server-side silence
+ *   detection. Does not barge in on the agent; use `interrupt` for that. No
+ *   dedicated server ack.
  * - `text`: Inject text content into the active session `{ text: string }`. The
  *   agent treats this as if the user spoke the text. Useful for providing
  *   additional context mid-session without requiring audio.
@@ -340,6 +351,7 @@ export interface VoiceWebsocketMessage {
     | 'audio'
     | 'stop'
     | 'interrupt'
+    | 'end_turn'
     | 'text'
     | 'started'
     | 'ready'
@@ -836,6 +848,13 @@ export namespace VoiceStartSessionParams {
      * Disabled by default.
      */
     silent_start?: boolean | null;
+
+    /**
+     * Controls how user audio turns close. 'server' uses the existing RMS and silence
+     * timer. 'client' disables that timer and requires an explicit end_turn message
+     * after each utterance.
+     */
+    turn_end_mode?: 'server' | 'client' | null;
 
     /**
      * Voice preset to use (e.g., 'sage', 'nova', 'spark'). If not provided, uses the
