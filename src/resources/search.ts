@@ -444,11 +444,6 @@ export namespace SearchTreeResult {
     page_url?: string;
 
     /**
-     * The record (row) a file or page search result is attached to.
-     */
-    parent_record?: DisplayItem.ParentRecord;
-
-    /**
      * Relevance score of the result, between 0 and 1.
      */
     score?: number;
@@ -519,26 +514,6 @@ export namespace SearchTreeResult {
        * Number of human members.
        */
       people_count: number;
-    }
-
-    /**
-     * The record (row) a file or page search result is attached to.
-     */
-    export interface ParentRecord {
-      /**
-       * Document identifier of the record.
-       */
-      id: string;
-
-      /**
-       * Record summary text.
-       */
-      body?: string;
-
-      /**
-       * Record title.
-       */
-      title?: string;
     }
   }
 }
