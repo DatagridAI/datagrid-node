@@ -43,7 +43,7 @@ export class Voice extends APIResource {
    *
    * **Message Types:**
    *
-   * - Client: `start`, `audio`, `stop`, `interrupt`, `text`
+   * - Client: `start`, `audio`, `stop`, `interrupt`, `end_turn`, `text`
    * - Server: `started`, `ready`, `audio`, `tool_call`, `interrupted`, `error`,
    *   `transcript`, `citation`, `ended`
    */
@@ -79,7 +79,9 @@ export interface VoiceSessionRequest {
 
   /**
    * The ID of an existing conversation to continue. If not provided, a new
-   * conversation will be created.
+   * conversation will be created. If the id cannot be resolved, the session start
+   * fails with the `conversation_not_found` error code rather than silently creating
+   * a new conversation.
    */
   conversation_id?: string | null;
 
@@ -245,6 +247,13 @@ export namespace VoiceSessionRequest {
     silent_start?: boolean | null;
 
     /**
+     * Controls how user audio turns close. 'server' uses the existing RMS and silence
+     * timer. 'client' disables that timer and requires an explicit end_turn message
+     * after each utterance.
+     */
+    turn_end_mode?: 'server' | 'client' | null;
+
+    /**
      * Voice preset to use (e.g., 'sage', 'nova', 'spark'). If not provided, uses the
      * agent's configured voice preset or the default.
      */
@@ -286,6 +295,10 @@ export interface VoiceSessionResponse {
  * - `audio`: Send audio chunk `{ data: string (base64 PCM), mime_type?: string }`
  * - `stop`: End session gracefully
  * - `interrupt`: Signal user interruption
+ * - `end_turn`: Commit the current user audio turn immediately (no payload).
+ *   Forwards Gemini `activityEnd` without waiting for server-side silence
+ *   detection. Does not barge in on the agent; use `interrupt` for that. No
+ *   dedicated server ack.
  * - `text`: Inject text content into the active session `{ text: string }`. The
  *   agent treats this as if the user spoke the text. Useful for providing
  *   additional context mid-session without requiring audio.
@@ -305,7 +318,11 @@ export interface VoiceSessionResponse {
  *   `args` contains bounded, JSON-safe function arguments and is present only when
  *   the call starts.
  * - `interrupted`: Model was interrupted
- * - `error`: Error occurred `{ message: string }`
+ * - `error`: Error occurred `{ message: string, code?: string }`. Notable codes:
+ *   `conversation_not_found` — the supplied `conversation_id` cannot be used
+ *   (deleted, or not accessible to the caller); retry the `start` without it.
+ *   `voice_provider_degraded` — the voice provider is unavailable; back off and
+ *   retry later.
  * - `transcript`: Real-time transcription
  *   `{ role: "user" | "agent", text: string }`
  * - `citation`: Source citation
@@ -340,6 +357,7 @@ export interface VoiceWebsocketMessage {
     | 'audio'
     | 'stop'
     | 'interrupt'
+    | 'end_turn'
     | 'text'
     | 'started'
     | 'ready'
@@ -395,7 +413,8 @@ export namespace VoiceWebsocketMessage {
   export interface UnionMember3 {
     /**
      * Machine-readable error code. Use this for programmatic matching instead of the
-     * message string. Example: 'client_silence_timeout'.
+     * message string. Examples: 'conversation_not_found', 'voice_provider_degraded',
+     * 'client_silence_timeout'.
      */
     code?: string;
 
@@ -672,7 +691,9 @@ export interface VoiceStartSessionParams {
 
   /**
    * The ID of an existing conversation to continue. If not provided, a new
-   * conversation will be created.
+   * conversation will be created. If the id cannot be resolved, the session start
+   * fails with the `conversation_not_found` error code rather than silently creating
+   * a new conversation.
    */
   conversation_id?: string | null;
 
@@ -836,6 +857,13 @@ export namespace VoiceStartSessionParams {
      * Disabled by default.
      */
     silent_start?: boolean | null;
+
+    /**
+     * Controls how user audio turns close. 'server' uses the existing RMS and silence
+     * timer. 'client' disables that timer and requires an explicit end_turn message
+     * after each utterance.
+     */
+    turn_end_mode?: 'server' | 'client' | null;
 
     /**
      * Voice preset to use (e.g., 'sage', 'nova', 'spark'). If not provided, uses the
