@@ -214,6 +214,7 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/agents/agents.ts">Agent</a></code>
+- <code><a href="./src/resources/agents/agents.ts">AgentListItem</a></code>
 - <code><a href="./src/resources/agents/agents.ts">AgentClaimResponse</a></code>
 - <code><a href="./src/resources/agents/agents.ts">AgentGenerateResponse</a></code>
 
@@ -222,7 +223,7 @@ Methods:
 - <code title="post /agents">client.agents.<a href="./src/resources/agents/agents.ts">create</a>({ ...params }) -> Agent</code>
 - <code title="get /agents/{agent_id}">client.agents.<a href="./src/resources/agents/agents.ts">retrieve</a>(agentId) -> Agent</code>
 - <code title="patch /agents/{agent_id}">client.agents.<a href="./src/resources/agents/agents.ts">update</a>(agentId, { ...params }) -> Agent</code>
-- <code title="get /agents">client.agents.<a href="./src/resources/agents/agents.ts">list</a>({ ...params }) -> AgentsCursorIDPage</code>
+- <code title="get /agents">client.agents.<a href="./src/resources/agents/agents.ts">list</a>({ ...params }) -> AgentListItemsCursorIDPage</code>
 - <code title="delete /agents/{agent_id}">client.agents.<a href="./src/resources/agents/agents.ts">delete</a>(agentId) -> void</code>
 - <code title="post /agents/claim">client.agents.<a href="./src/resources/agents/agents.ts">claim</a>({ ...params }) -> AgentClaimResponse</code>
 - <code title="post /agents/generate">client.agents.<a href="./src/resources/agents/agents.ts">generate</a>({ ...params }) -> AgentGenerateResponse</code>

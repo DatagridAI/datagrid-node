@@ -1,9 +1,10 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export {
-  AgentsCursorIDPage,
+  AgentListItemsCursorIDPage,
   Agents,
   type Agent,
+  type AgentListItem,
   type AgentClaimResponse,
   type AgentGenerateResponse,
   type AgentCreateParams,

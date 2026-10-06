@@ -42,7 +42,8 @@ export class Agents extends APIResource {
   }
 
   /**
-   * Get details of a specific agent
+   * Get one agent, including its `corpus` and `knowledge_ids`. The list endpoint
+   * omits those fields.
    *
    * @example
    * ```ts
@@ -66,26 +67,30 @@ export class Agents extends APIResource {
   }
 
   /**
-   * List all agents for the authenticated organization
+   * List agents for the authenticated organization. Each agent omits `corpus` and
+   * `knowledge_ids`; retrieve an agent to read its knowledge scope.
    *
    * @example
    * ```ts
    * // Automatically fetches more pages as needed.
-   * for await (const agent of client.agents.list()) {
+   * for await (const agentListItem of client.agents.list()) {
    *   // ...
    * }
    * ```
    */
-  list(query?: AgentListParams, options?: Core.RequestOptions): Core.PagePromise<AgentsCursorIDPage, Agent>;
-  list(options?: Core.RequestOptions): Core.PagePromise<AgentsCursorIDPage, Agent>;
+  list(
+    query?: AgentListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<AgentListItemsCursorIDPage, AgentListItem>;
+  list(options?: Core.RequestOptions): Core.PagePromise<AgentListItemsCursorIDPage, AgentListItem>;
   list(
     query: AgentListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<AgentsCursorIDPage, Agent> {
+  ): Core.PagePromise<AgentListItemsCursorIDPage, AgentListItem> {
     if (isRequestOptions(query)) {
       return this.list({}, query);
     }
-    return this._client.getAPIList('/agents', AgentsCursorIDPage, { query, ...options });
+    return this._client.getAPIList('/agents', AgentListItemsCursorIDPage, { query, ...options });
   }
 
   /**
@@ -138,7 +143,7 @@ export class Agents extends APIResource {
   }
 }
 
-export class AgentsCursorIDPage extends CursorIDPage<Agent> {}
+export class AgentListItemsCursorIDPage extends CursorIDPage<AgentListItem> {}
 
 export interface Agent {
   /**
@@ -319,6 +324,185 @@ export namespace Agent {
     type: 'page';
   }
 
+  export interface McpServer {
+    base_url: string;
+
+    credential_id: string | null;
+
+    name: string;
+
+    object: 'agent_mcp_server';
+
+    server_id: string;
+
+    status: string;
+
+    last_synced_at?: string;
+
+    tool_count?: number;
+  }
+
+  export interface ManagedByApp {
+    /**
+     * The name of the app that manages the agent
+     */
+    app_name?: string;
+
+    /**
+     * The UUID of the app that manages the agent
+     */
+    app_uuid?: string;
+  }
+}
+
+/**
+ * An agent as returned by List agents. `corpus` and `knowledge_ids` are omitted;
+ * retrieve the agent to read its knowledge scope.
+ */
+export interface AgentListItem {
+  /**
+   * Unique identifier for the agent
+   */
+  id: string;
+
+  /**
+   * The agent model determines the processing mode for Converse requests. The
+   * Datagrid web app exposes **Ask**, **Extended**, and **Execute** as Converse
+   * **`chat_mode`** (`llm_router`, `light_agent`, `full_agent`). The values below
+   * set **`config.agent_model`** (model tier and tool limits)—use both fields when
+   * mirroring in-app behavior.
+   *
+   * **Execute** (full tool use, planning, and multi-step reasoning; aligns with
+   * **Execute** in the web app / `full_agent`):
+   *
+   * - `magpie-2.0` — Legacy full-agent model with proactive planning and reasoning.
+   * - `magpie-2.5` — Default. Latest full-agent model — faster, more adaptable, and
+   *   built to handle a broader range of real-world tasks.
+   * - `magpie-1.1` — Previous-generation full agent model.
+   *
+   * **Extended** (search-focused; aligns with **Extended** in the web app /
+   * `light_agent`; not **Ask**):
+   *
+   * - `magpie-1.1-flash` — Fast model optimized for RAG use cases. Only supports the
+   *   `semantic_search` tool. A 400 error will be returned if other tools are
+   *   specified.
+   *
+   * **Direct LLM** (no tool execution; **`agent_model` only**—**Ask** in the web app
+   * is `chat_mode: llm_router`, not `magpie-1.1-flash`):
+   *
+   * - `llm-only` — Runs a direct LLM conversation with no planning or tool calls. A
+   *   400 error will be returned if tools are specified.
+   *
+   * Can also accept any custom string value for future model versions.
+   */
+  agent_model:
+    | 'magpie-1.1'
+    | 'magpie-1.1-flash'
+    | 'magpie-2.0'
+    | 'magpie-2.5'
+    | 'magpie-2.5-flash'
+    | 'llm-only'
+    | (string & {})
+    | null;
+
+  /**
+   * The ISO string for when the agent was created
+   */
+  created_at: string;
+
+  /**
+   * Use custom prompt to instruct the style and formatting of the agent's response
+   */
+  custom_prompt: string | null;
+
+  /**
+   * The description of the agent
+   */
+  description: string | null;
+
+  /**
+   * The emoji of the agent
+   */
+  emoji: string | null;
+
+  /**
+   * The LLM used to generate responses. Deprecated Gemini 2.x Flash ids are accepted
+   * for backward compatibility and automatically run as gemini-3.1-flash-lite.
+   */
+  llm_model:
+    | 'gemini-3.8-flash'
+    | 'gemini-3.5-flash'
+    | 'gemini-3.1-flash-lite'
+    | 'gemini-3-pro-preview'
+    | 'gemini-3.1-pro-preview'
+    | 'gemini-3-flash-preview'
+    | 'gemini-2.5-pro'
+    | 'gemini-2.5-pro-preview-05-06'
+    | 'gemini-2.5-flash'
+    | 'gemini-2.5-flash-lite'
+    | 'gemini-2.5-flash-preview-04-17'
+    | 'gemini-2.5-flash-native-audio-preview-12-2025'
+    | 'gpt-5'
+    | 'gpt-5.1'
+    | 'openai.gpt-5.5'
+    | 'gemini-2.0-flash-001'
+    | 'gemini-2.0-flash'
+    | 'gemini-1.5-pro-001'
+    | 'gemini-1.5-pro-002'
+    | 'gemini-1.5-flash-002'
+    | 'gemini-1.5-flash-001'
+    | 'chatgpt-4o-latest'
+    | 'gpt-4o'
+    | 'gpt-4'
+    | 'gpt-4-turbo'
+    | 'gpt-4o-mini'
+    | 'claude-haiku-4-5@20251001'
+    | 'claude-sonnet-4-6@default'
+    | 'claude-opus-4-6@default'
+    | 'claude-opus-4-7'
+    | 'claude-opus-4-8'
+    | 'anthropic.claude-haiku-4-5-20251001-v1:0'
+    | 'anthropic.claude-sonnet-4-6'
+    | 'anthropic.claude-opus-4-6-v1'
+    | 'anthropic.claude-opus-4-7'
+    | 'anthropic.claude-opus-4-8'
+    | (string & {});
+
+  /**
+   * Registered MCP servers enabled for this agent.
+   */
+  mcp_servers: Array<AgentListItem.McpServer>;
+
+  /**
+   * The name of the agent
+   */
+  name: string;
+
+  /**
+   * The object type, always 'agent'
+   */
+  object: 'agent';
+
+  /**
+   * Define the planning strategy your AI Agent should use when breaking down tasks
+   * and solving problems
+   */
+  planning_prompt: string | null;
+
+  /**
+   * Directs your AI Agent's operational behavior.
+   */
+  system_prompt: string | null;
+
+  /**
+   * Tools that this agent can use.
+   */
+  tools: Array<ToolsAPI.Tool>;
+
+  managed_by_app?: AgentListItem.ManagedByApp | null;
+}
+
+export namespace AgentListItem {
   export interface McpServer {
     base_url: string;
 
@@ -947,7 +1131,7 @@ export interface AgentGenerateParams {
   prompt: string;
 }
 
-Agents.AgentsCursorIDPage = AgentsCursorIDPage;
+Agents.AgentListItemsCursorIDPage = AgentListItemsCursorIDPage;
 Agents.Automations = Automations;
 Agents.AutomationsCursorIDPage = AutomationsCursorIDPage;
 Agents.EventTriggers = EventTriggers;
@@ -955,9 +1139,10 @@ Agents.EventTriggers = EventTriggers;
 export declare namespace Agents {
   export {
     type Agent as Agent,
+    type AgentListItem as AgentListItem,
     type AgentClaimResponse as AgentClaimResponse,
     type AgentGenerateResponse as AgentGenerateResponse,
-    AgentsCursorIDPage as AgentsCursorIDPage,
+    AgentListItemsCursorIDPage as AgentListItemsCursorIDPage,
     type AgentCreateParams as AgentCreateParams,
     type AgentUpdateParams as AgentUpdateParams,
     type AgentListParams as AgentListParams,

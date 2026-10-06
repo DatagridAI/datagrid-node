@@ -154,10 +154,11 @@ import {
   AgentCreateParams,
   AgentGenerateParams,
   AgentGenerateResponse,
+  AgentListItem,
+  AgentListItemsCursorIDPage,
   AgentListParams,
   AgentUpdateParams,
   Agents,
-  AgentsCursorIDPage,
 } from './resources/agents/agents';
 import { Beta } from './resources/beta/beta';
 import {
@@ -454,7 +455,7 @@ Datagrid.Search = Search;
 Datagrid.Skills = Skills;
 Datagrid.SkillsCursorIDPage = SkillsCursorIDPage;
 Datagrid.Agents = Agents;
-Datagrid.AgentsCursorIDPage = AgentsCursorIDPage;
+Datagrid.AgentListItemsCursorIDPage = AgentListItemsCursorIDPage;
 Datagrid.Channels = Channels;
 Datagrid.ChannelsCursorIDPage = ChannelsCursorIDPage;
 Datagrid.ChannelMembersCursorIDPage = ChannelMembersCursorIDPage;
@@ -623,9 +624,10 @@ export declare namespace Datagrid {
   export {
     Agents as Agents,
     type AgentsAPIAgent as Agent,
+    type AgentListItem as AgentListItem,
     type AgentClaimResponse as AgentClaimResponse,
     type AgentGenerateResponse as AgentGenerateResponse,
-    AgentsCursorIDPage as AgentsCursorIDPage,
+    AgentListItemsCursorIDPage as AgentListItemsCursorIDPage,
     type AgentCreateParams as AgentCreateParams,
     type AgentUpdateParams as AgentUpdateParams,
     type AgentListParams as AgentListParams,
