@@ -42,8 +42,8 @@ export class Agents extends APIResource {
   }
 
   /**
-   * Get one agent, including its `corpus` and `knowledge_ids`. The list endpoint
-   * omits those fields.
+   * Get one agent, including its `corpus` and `knowledge_ids`. List still returns
+   * those fields, marked deprecated.
    *
    * @example
    * ```ts
@@ -67,8 +67,11 @@ export class Agents extends APIResource {
   }
 
   /**
-   * List agents for the authenticated organization. Each agent omits `corpus` and
-   * `knowledge_ids`; retrieve an agent to read its knowledge scope.
+   * List agents for the authenticated organization. `corpus` and `knowledge_ids` are
+   * deprecated on this endpoint and still returned from the agent's stored
+   * selectors. Null means all knowledge. They do not expand tenant datasets and
+   * tables. Retrieve an agent to read knowledge scope after they are removed from
+   * list.
    *
    * @example
    * ```ts
@@ -356,8 +359,9 @@ export namespace Agent {
 }
 
 /**
- * An agent as returned by List agents. `corpus` and `knowledge_ids` are omitted;
- * retrieve the agent to read its knowledge scope.
+ * An agent as returned by List agents. `corpus` and `knowledge_ids` are deprecated
+ * on this endpoint and still returned. Null means all knowledge. Retrieve the
+ * agent to read knowledge scope after they are removed from list.
  */
 export interface AgentListItem {
   /**
@@ -406,6 +410,14 @@ export interface AgentListItem {
     | null;
 
   /**
+   * @deprecated Deprecated on list. Still returned from the agent's stored
+   * selectors, without expanding tenant knowledge. Null means all knowledge.
+   * Retrieve the agent to read knowledge scope after this field is removed from
+   * list.
+   */
+  corpus: Array<AgentListItem.CorpusKnowledgeItem | AgentListItem.CorpusPageItem> | null;
+
+  /**
    * The ISO string for when the agent was created
    */
   created_at: string;
@@ -424,6 +436,12 @@ export interface AgentListItem {
    * The emoji of the agent
    */
   emoji: string | null;
+
+  /**
+   * @deprecated Deprecated on list, and deprecated in favor of `corpus`. Still
+   * returned. Null means all knowledge.
+   */
+  knowledge_ids: Array<string> | null;
 
   /**
    * The LLM used to generate responses. Deprecated Gemini 2.x Flash ids are accepted
@@ -503,6 +521,30 @@ export interface AgentListItem {
 }
 
 export namespace AgentListItem {
+  export interface CorpusKnowledgeItem {
+    /**
+     * The ID of the knowledge to include in the corpus.
+     */
+    knowledge_id: string;
+
+    /**
+     * The type of the corpus item. Always 'knowledge' for knowledge items.
+     */
+    type: 'knowledge';
+  }
+
+  export interface CorpusPageItem {
+    /**
+     * The ID of the page to include in the corpus.
+     */
+    page_id: string;
+
+    /**
+     * The type of the corpus item. Always 'page' for page items.
+     */
+    type: 'page';
+  }
+
   export interface McpServer {
     base_url: string;
 
