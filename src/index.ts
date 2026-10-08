@@ -217,7 +217,7 @@ export interface ClientOptions {
   apiKey?: string | undefined;
 
   /**
-   * Teamspace ID sent as the `Datagrid-Teamspace` header. Honored only for API keys with "All Teamspaces" access, or "Selected Teamspaces" access that includes the target; otherwise requests run in the key's home teamspace.
+   * Teamspace to use
    */
   teamspace?: string | null | undefined;
 
