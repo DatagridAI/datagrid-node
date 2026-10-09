@@ -314,9 +314,11 @@ export interface VoiceSessionResponse {
  * - `audio`: Audio response chunk
  *   `{ data: string (base64 PCM), mime_type: string }`
  * - `tool_call`: Tool invocation status
- *   `{ tool_name: string, status: "started" | "completed" | "failed", args?: object }`.
+ *   `{ tool_name: string, status: "started" | "completed" | "failed", args?: object, tool_call_id?: string, turn_index?: number }`.
  *   `args` contains bounded, JSON-safe function arguments and is present only when
- *   the call starts.
+ *   the call starts. `tool_call_id` is shared by the started, completed, and
+ *   failed events of one call. `turn_index` is the commit window the call started
+ *   in.
  * - `interrupted`: Model was interrupted
  * - `error`: Error occurred `{ message: string, code?: string }`. Notable codes:
  *   `conversation_not_found` — the supplied `conversation_id` cannot be used
@@ -405,7 +407,20 @@ export namespace VoiceWebsocketMessage {
 
     status?: 'started' | 'completed' | 'failed';
 
+    /**
+     * Server-generated id shared by the started, completed, and failed events of one
+     * call. Optional for compatibility with older servers.
+     */
+    tool_call_id?: string;
+
     tool_name?: string;
+
+    /**
+     * One-based commit-window ordinal for the turn the call started in. A later
+     * completed or failed event keeps this value even if the window has advanced.
+     * Optional for compatibility with older servers.
+     */
+    turn_index?: number;
   }
 
   /**

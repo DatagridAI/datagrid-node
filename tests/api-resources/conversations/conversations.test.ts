@@ -77,6 +77,7 @@ describe('resource conversations', () => {
           direction: 'asc',
           has_messages: true,
           has_voice_messages: true,
+          has_voice_or_mobile_messages: true,
           limit: 1,
           sort: 'created_at',
         },
