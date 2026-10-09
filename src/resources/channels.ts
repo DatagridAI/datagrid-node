@@ -626,13 +626,6 @@ export namespace ChannelMessage {
       text?: string;
 
       /**
-       * Server-generated id shared by the started, completed, and failed events of one
-       * call. Present when type is 'tool_call_status'. Optional on events recorded
-       * before this field existed.
-       */
-      tool_call_id?: string;
-
-      /**
        * Name of the tool whose status changed. Present when type is 'tool_call_status'.
        */
       tool_name?: string;
@@ -641,10 +634,9 @@ export namespace ChannelMessage {
        * Identifies the conversational turn this event belongs to. Every 'transcript' and
        * 'citation' event produced by the same turn shares one value, so a citation can
        * be grouped with the transcripts it came from without relying on the order events
-       * appear in. On 'tool_call_status', this is the turn the call started in; a later
-       * completed or failed event keeps that value even if the session has moved on.
-       * Absent on events recorded before this field existed, and on the 'attachment'
-       * type; fall back to event order in those cases.
+       * appear in. Absent on events recorded before this field existed, and on the
+       * 'tool_call_status' and 'attachment' types; fall back to event order in those
+       * cases.
        */
       turn_index?: number;
     }
