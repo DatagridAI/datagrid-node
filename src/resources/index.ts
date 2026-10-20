@@ -117,7 +117,6 @@ export {
   type KnowledgeConnectParams,
 } from './knowledge/knowledge';
 export { Memory } from './memory/memory';
-export { Models, type Model, type ModelListResponse } from './models';
 export { Organization } from './organization/organization';
 export {
   PagesCursorIDPage,

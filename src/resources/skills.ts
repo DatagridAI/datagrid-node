@@ -7,11 +7,11 @@ import { CursorIDPage, type CursorIDPageParams } from '../pagination';
 
 export class Skills extends APIResource {
   /**
-   * Create a skill. Defaults to Public (`account`) privacy with an initial
-   * invocation assignment to the API key's teamspace; creation and assignment are
-   * atomic, and the returned scope remains `account`. Pass `scope: user` to create a
-   * Private skill without an initial assignment. Public slash keys must not collide
-   * with a built-in; use the override endpoint for that.
+   * Create a skill. Defaults to company-owned (`account`) scope, then assigns the
+   * API key's teamspace so the created skill is returned as `teamspace`. Pass
+   * `scope: user` to create a private skill that can later be promoted.
+   * Account-scope slash keys must not collide with a built-in; use the override
+   * endpoint for that.
    */
   create(body: SkillCreateParams, options?: Core.RequestOptions): Core.APIPromise<Skill> {
     return this._client.post('/skills', { body, ...options });
@@ -36,10 +36,10 @@ export class Skills extends APIResource {
   }
 
   /**
-   * List skills invocable in the authenticated teamspace. Returns built-ins, Public
-   * custom skills that are unrestricted or assigned here, and the API-key subject's
-   * own Private skills assigned here. Other users' Private skills, unassigned
-   * Private skills, and removed built-in overrides are excluded.
+   * List skills invocable by the authenticated organization. Returns built-in
+   * skills, skills assigned to the caller's teamspace, and the caller's private
+   * skills. Unassigned custom company skills are omitted. Removed built-in overrides
+   * are excluded.
    */
   list(query?: SkillListParams, options?: Core.RequestOptions): Core.PagePromise<SkillsCursorIDPage, Skill>;
   list(options?: Core.RequestOptions): Core.PagePromise<SkillsCursorIDPage, Skill>;
@@ -76,11 +76,9 @@ export class Skills extends APIResource {
   }
 
   /**
-   * Convert a Public (`account`) skill or deprecated legacy `teamspace` skill to
-   * Private (`user`) scope. Existing teamspace assignments are preserved. The caller
-   * must be the skill's original author and administer skills in the account.
-   * Built-in overrides cannot be demoted; use `/reset` instead. Requires
-   * `ep:skills:write`.
+   * Demote a company (account-scope) skill back to private. The caller must be the
+   * skill's original author and administer skills in the account. Built-in overrides
+   * cannot be demoted; use `/reset` instead. Requires `ep:skills:write`.
    */
   demote(skillId: string, options?: Core.RequestOptions): Core.APIPromise<Skill> {
     return this._client.post(`/skills/${skillId}/demote`, options);
@@ -122,10 +120,8 @@ export class Skills extends APIResource {
   }
 
   /**
-   * Convert a Private (`user`) skill or deprecated legacy `teamspace` skill to
-   * Public (`account`) scope. Existing teamspace assignments are preserved. The
-   * caller must be the skill's author and an account admin. Requires
-   * `ep:skills:write`.
+   * Promote a private (user-scope) skill to company scope. The caller must be the
+   * skill's author and an account admin. Requires `ep:skills:write`.
    */
   promote(skillId: string, options?: Core.RequestOptions): Core.APIPromise<Skill> {
     return this._client.post(`/skills/${skillId}/promote`, options);
@@ -280,10 +276,10 @@ export interface Skill {
   required_tools: Array<string>;
 
   /**
-   * Privacy scope. `user` = Private (author only), `account` = Public within the
-   * company, `teamspace` = deprecated legacy Public value retained only for
-   * compatibility, and `builtin` = global default. New skills never use `teamspace`;
-   * changing its privacy or assignments normalizes it.
+   * Ownership scope. `user` = private (author only), `account` = company-owned,
+   * `teamspace` = assigned to selected teamspaces, `builtin` = global default. A
+   * default public create is assigned to the API key's teamspace and returned as
+   * `teamspace`.
    */
   scope: 'user' | 'account' | 'teamspace' | 'builtin';
 
@@ -510,12 +506,10 @@ export interface SkillListParams extends CursorIDPageParams {
   enabled?: boolean;
 
   /**
-   * Return only skills of this scope. `user` returns the API-key subject's own
-   * Private skills assigned to the authenticated teamspace; `account` returns Public
-   * custom skills invocable here; `teamspace` is a deprecated legacy Public value
-   * that remains assignment-required until normalized by a privacy or assignment
-   * action; and `builtin` is the global catalogue. Omit to return everything the
-   * caller can invoke.
+   * Return only skills of this scope. `user` is the caller's own private skills,
+   * `account` company-owned skills invocable here, `teamspace` skills assigned to
+   * the caller's teamspace, and `builtin` the global catalogue. Omit to return
+   * everything the caller can invoke.
    */
   scope?: 'user' | 'account' | 'teamspace' | 'builtin';
 
