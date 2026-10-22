@@ -325,6 +325,17 @@ Methods:
 - <code title="get /tools/{tool_name}">client.tools.<a href="./src/resources/tools.ts">retrieve</a>(toolName) -> ToolDef</code>
 - <code title="get /tools">client.tools.<a href="./src/resources/tools.ts">list</a>({ ...params }) -> ToolDefsCursorNamePage</code>
 
+# Models
+
+Types:
+
+- <code><a href="./src/resources/models.ts">Model</a></code>
+- <code><a href="./src/resources/models.ts">ModelListResponse</a></code>
+
+Methods:
+
+- <code title="get /models">client.models.<a href="./src/resources/models.ts">list</a>() -> ModelListResponse</code>
+
 # Memory
 
 ## User
