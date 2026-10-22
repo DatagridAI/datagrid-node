@@ -92,7 +92,6 @@ import {
   ResizePayload,
 } from './resources/i-frame-events';
 import { Identity, IdentityResource, IdentityTeamspace } from './resources/identity';
-import { Model, ModelListResponse, Models } from './resources/models';
 import {
   Page,
   PageCreateParams,
@@ -361,7 +360,6 @@ export class Datagrid extends Core.APIClient {
   identity: API.IdentityResource = new API.IdentityResource(this);
   pages: API.Pages = new API.Pages(this);
   tools: API.Tools = new API.Tools(this);
-  models: API.Models = new API.Models(this);
   memory: API.Memory = new API.Memory(this);
   iFrameEvents: API.IFrameEvents = new API.IFrameEvents(this);
   organization: API.Organization = new API.Organization(this);
@@ -468,7 +466,6 @@ Datagrid.Pages = Pages;
 Datagrid.PagesCursorIDPage = PagesCursorIDPage;
 Datagrid.Tools = Tools;
 Datagrid.ToolDefsCursorNamePage = ToolDefsCursorNamePage;
-Datagrid.Models = Models;
 Datagrid.Memory = Memory;
 Datagrid.IFrameEvents = IFrameEvents;
 Datagrid.Organization = Organization;
@@ -685,8 +682,6 @@ export declare namespace Datagrid {
     ToolDefsCursorNamePage as ToolDefsCursorNamePage,
     type ToolListParams as ToolListParams,
   };
-
-  export { Models as Models, type Model as Model, type ModelListResponse as ModelListResponse };
 
   export { Memory as Memory };
 
