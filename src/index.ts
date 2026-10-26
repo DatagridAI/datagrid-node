@@ -91,7 +91,8 @@ import {
   KnowledgeCreatedPayload,
   ResizePayload,
 } from './resources/i-frame-events';
-import { Identity, IdentityResource, IdentityTeamspace } from './resources/identity';
+import { Identity, IdentityProcore, IdentityResource, IdentityTeamspace } from './resources/identity';
+import { Model, ModelListResponse, Models } from './resources/models';
 import {
   Page,
   PageCreateParams,
@@ -100,6 +101,15 @@ import {
   Pages,
   PagesCursorIDPage,
 } from './resources/pages';
+import {
+  Procore,
+  ProcoreCompany,
+  ProcoreCompanyList,
+  ProcoreListCompaniesParams,
+  ProcoreListProjectsParams,
+  ProcoreProject,
+  ProcoreProjectList,
+} from './resources/procore';
 import {
   AISource,
   Search,
@@ -358,8 +368,10 @@ export class Datagrid extends Core.APIClient {
   agents: API.Agents = new API.Agents(this);
   channels: API.Channels = new API.Channels(this);
   identity: API.IdentityResource = new API.IdentityResource(this);
+  procore: API.Procore = new API.Procore(this);
   pages: API.Pages = new API.Pages(this);
   tools: API.Tools = new API.Tools(this);
+  models: API.Models = new API.Models(this);
   memory: API.Memory = new API.Memory(this);
   iFrameEvents: API.IFrameEvents = new API.IFrameEvents(this);
   organization: API.Organization = new API.Organization(this);
@@ -462,10 +474,12 @@ Datagrid.ChannelMembersCursorIDPage = ChannelMembersCursorIDPage;
 Datagrid.ChannelMessagesCursorIDPage = ChannelMessagesCursorIDPage;
 Datagrid.ChannelThreadsCursorIDPage = ChannelThreadsCursorIDPage;
 Datagrid.IdentityResource = IdentityResource;
+Datagrid.Procore = Procore;
 Datagrid.Pages = Pages;
 Datagrid.PagesCursorIDPage = PagesCursorIDPage;
 Datagrid.Tools = Tools;
 Datagrid.ToolDefsCursorNamePage = ToolDefsCursorNamePage;
+Datagrid.Models = Models;
 Datagrid.Memory = Memory;
 Datagrid.IFrameEvents = IFrameEvents;
 Datagrid.Organization = Organization;
@@ -662,7 +676,18 @@ export declare namespace Datagrid {
   export {
     IdentityResource as IdentityResource,
     type Identity as Identity,
+    type IdentityProcore as IdentityProcore,
     type IdentityTeamspace as IdentityTeamspace,
+  };
+
+  export {
+    Procore as Procore,
+    type ProcoreCompany as ProcoreCompany,
+    type ProcoreCompanyList as ProcoreCompanyList,
+    type ProcoreProject as ProcoreProject,
+    type ProcoreProjectList as ProcoreProjectList,
+    type ProcoreListCompaniesParams as ProcoreListCompaniesParams,
+    type ProcoreListProjectsParams as ProcoreListProjectsParams,
   };
 
   export {
@@ -682,6 +707,8 @@ export declare namespace Datagrid {
     ToolDefsCursorNamePage as ToolDefsCursorNamePage,
     type ToolListParams as ToolListParams,
   };
+
+  export { Models as Models, type Model as Model, type ModelListResponse as ModelListResponse };
 
   export { Memory as Memory };
 

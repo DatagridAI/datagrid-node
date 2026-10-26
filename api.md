@@ -292,11 +292,26 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/identity.ts">Identity</a></code>
+- <code><a href="./src/resources/identity.ts">IdentityProcore</a></code>
 - <code><a href="./src/resources/identity.ts">IdentityTeamspace</a></code>
 
 Methods:
 
 - <code title="get /identity">client.identity.<a href="./src/resources/identity.ts">retrieve</a>() -> Identity</code>
+
+# Procore
+
+Types:
+
+- <code><a href="./src/resources/procore.ts">ProcoreCompany</a></code>
+- <code><a href="./src/resources/procore.ts">ProcoreCompanyList</a></code>
+- <code><a href="./src/resources/procore.ts">ProcoreProject</a></code>
+- <code><a href="./src/resources/procore.ts">ProcoreProjectList</a></code>
+
+Methods:
+
+- <code title="get /procore/companies">client.procore.<a href="./src/resources/procore.ts">listCompanies</a>({ ...params }) -> ProcoreCompanyList</code>
+- <code title="get /procore/companies/{company_id}/projects">client.procore.<a href="./src/resources/procore.ts">listProjects</a>(companyId, { ...params }) -> ProcoreProjectList</code>
 
 # Pages
 
@@ -324,6 +339,17 @@ Methods:
 
 - <code title="get /tools/{tool_name}">client.tools.<a href="./src/resources/tools.ts">retrieve</a>(toolName) -> ToolDef</code>
 - <code title="get /tools">client.tools.<a href="./src/resources/tools.ts">list</a>({ ...params }) -> ToolDefsCursorNamePage</code>
+
+# Models
+
+Types:
+
+- <code><a href="./src/resources/models.ts">Model</a></code>
+- <code><a href="./src/resources/models.ts">ModelListResponse</a></code>
+
+Methods:
+
+- <code title="get /models">client.models.<a href="./src/resources/models.ts">list</a>() -> ModelListResponse</code>
 
 # Memory
 
