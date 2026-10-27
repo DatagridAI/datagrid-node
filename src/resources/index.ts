@@ -101,7 +101,7 @@ export {
   type KnowledgeCreatedPayload,
   type ResizePayload,
 } from './i-frame-events';
-export { IdentityResource, type Identity, type IdentityTeamspace } from './identity';
+export { IdentityResource, type Identity, type IdentityProcore, type IdentityTeamspace } from './identity';
 export {
   KnowledgesCursorIDPage,
   KnowledgeResource,
@@ -127,6 +127,15 @@ export {
   type PageUpdateParams,
   type PageListParams,
 } from './pages';
+export {
+  Procore,
+  type ProcoreCompany,
+  type ProcoreCompanyList,
+  type ProcoreProject,
+  type ProcoreProjectList,
+  type ProcoreListCompaniesParams,
+  type ProcoreListProjectsParams,
+} from './procore';
 export {
   Search,
   type AISource,

@@ -91,7 +91,7 @@ import {
   KnowledgeCreatedPayload,
   ResizePayload,
 } from './resources/i-frame-events';
-import { Identity, IdentityResource, IdentityTeamspace } from './resources/identity';
+import { Identity, IdentityProcore, IdentityResource, IdentityTeamspace } from './resources/identity';
 import { Model, ModelListResponse, Models } from './resources/models';
 import {
   Page,
@@ -101,6 +101,15 @@ import {
   Pages,
   PagesCursorIDPage,
 } from './resources/pages';
+import {
+  Procore,
+  ProcoreCompany,
+  ProcoreCompanyList,
+  ProcoreListCompaniesParams,
+  ProcoreListProjectsParams,
+  ProcoreProject,
+  ProcoreProjectList,
+} from './resources/procore';
 import {
   AISource,
   Search,
@@ -359,6 +368,7 @@ export class Datagrid extends Core.APIClient {
   agents: API.Agents = new API.Agents(this);
   channels: API.Channels = new API.Channels(this);
   identity: API.IdentityResource = new API.IdentityResource(this);
+  procore: API.Procore = new API.Procore(this);
   pages: API.Pages = new API.Pages(this);
   tools: API.Tools = new API.Tools(this);
   models: API.Models = new API.Models(this);
@@ -464,6 +474,7 @@ Datagrid.ChannelMembersCursorIDPage = ChannelMembersCursorIDPage;
 Datagrid.ChannelMessagesCursorIDPage = ChannelMessagesCursorIDPage;
 Datagrid.ChannelThreadsCursorIDPage = ChannelThreadsCursorIDPage;
 Datagrid.IdentityResource = IdentityResource;
+Datagrid.Procore = Procore;
 Datagrid.Pages = Pages;
 Datagrid.PagesCursorIDPage = PagesCursorIDPage;
 Datagrid.Tools = Tools;
@@ -665,7 +676,18 @@ export declare namespace Datagrid {
   export {
     IdentityResource as IdentityResource,
     type Identity as Identity,
+    type IdentityProcore as IdentityProcore,
     type IdentityTeamspace as IdentityTeamspace,
+  };
+
+  export {
+    Procore as Procore,
+    type ProcoreCompany as ProcoreCompany,
+    type ProcoreCompanyList as ProcoreCompanyList,
+    type ProcoreProject as ProcoreProject,
+    type ProcoreProjectList as ProcoreProjectList,
+    type ProcoreListCompaniesParams as ProcoreListCompaniesParams,
+    type ProcoreListProjectsParams as ProcoreListProjectsParams,
   };
 
   export {

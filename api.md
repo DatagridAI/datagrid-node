@@ -292,11 +292,26 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/identity.ts">Identity</a></code>
+- <code><a href="./src/resources/identity.ts">IdentityProcore</a></code>
 - <code><a href="./src/resources/identity.ts">IdentityTeamspace</a></code>
 
 Methods:
 
 - <code title="get /identity">client.identity.<a href="./src/resources/identity.ts">retrieve</a>() -> Identity</code>
+
+# Procore
+
+Types:
+
+- <code><a href="./src/resources/procore.ts">ProcoreCompany</a></code>
+- <code><a href="./src/resources/procore.ts">ProcoreCompanyList</a></code>
+- <code><a href="./src/resources/procore.ts">ProcoreProject</a></code>
+- <code><a href="./src/resources/procore.ts">ProcoreProjectList</a></code>
+
+Methods:
+
+- <code title="get /procore/companies">client.procore.<a href="./src/resources/procore.ts">listCompanies</a>({ ...params }) -> ProcoreCompanyList</code>
+- <code title="get /procore/companies/{company_id}/projects">client.procore.<a href="./src/resources/procore.ts">listProjects</a>(companyId, { ...params }) -> ProcoreProjectList</code>
 
 # Pages
 
