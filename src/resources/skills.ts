@@ -11,7 +11,7 @@ export class Skills extends APIResource {
    * invocation assignment to the API key's teamspace; creation and assignment are
    * atomic, and the returned scope remains `account`. Pass `scope: user` to create a
    * Private skill without an initial assignment. Public slash keys must not collide
-   * with a built-in.
+   * with a built-in; use the override endpoint for that.
    */
   create(body: SkillCreateParams, options?: Core.RequestOptions): Core.APIPromise<Skill> {
     return this._client.post('/skills', { body, ...options });
@@ -28,10 +28,8 @@ export class Skills extends APIResource {
    * Update a skill. Requires an API key with `ep:skills:write` whose user
    * administers skills in the account. A shared (`account`-scope) skill may be
    * updated by any skill administrator; a private (`user`-scope) skill only by its
-   * author. Built-in skills and company copies of them cannot have their content
-   * edited, but a skill administrator may set `enabled` on one to enable or disable
-   * it for the whole company. The global built-in row is never changed; the response
-   * carries your company's state.
+   * author. Built-in skills and company overrides of them cannot have their content
+   * edited; `enabled` may still be toggled on an override.
    */
   update(skillId: string, body: SkillUpdateParams, options?: Core.RequestOptions): Core.APIPromise<Skill> {
     return this._client.patch(`/skills/${skillId}`, { body, ...options });
@@ -40,9 +38,8 @@ export class Skills extends APIResource {
   /**
    * List skills invocable in the authenticated teamspace. Returns built-ins, Public
    * custom skills that are unrestricted or assigned here, and the API-key subject's
-   * own Private skills assigned here. Other users' Private skills and unassigned
-   * Private skills are excluded. Built-in skills your company removed are excluded,
-   * and a built-in your company disabled is returned with `enabled: false`.
+   * own Private skills assigned here. Other users' Private skills, unassigned
+   * Private skills, and removed built-in overrides are excluded.
    */
   list(query?: SkillListParams, options?: Core.RequestOptions): Core.PagePromise<SkillsCursorIDPage, Skill>;
   list(options?: Core.RequestOptions): Core.PagePromise<SkillsCursorIDPage, Skill>;
@@ -57,11 +54,10 @@ export class Skills extends APIResource {
   }
 
   /**
-   * Delete a skill. For a built-in skill (or a company copy of one) this removes it
-   * for your company only — it is excluded from listings and agents and can be
-   * restored with `POST /skills/builtin/{builtin_key}/override` — rather than
-   * deleting it. Requires an API key with `ep:skills:delete` whose user administers
-   * skills in the account.
+   * Delete a skill. For company-owned built-in overrides this marks the override as
+   * removed (hidden from the library) rather than hard-deleting it, so the canonical
+   * built-in is suppressed. Requires an API key with `ep:skills:delete` whose user
+   * administers skills in the account.
    */
   delete(skillId: string, options?: Core.RequestOptions): Core.APIPromise<void> {
     return this._client.delete(`/skills/${skillId}`, {
@@ -83,8 +79,8 @@ export class Skills extends APIResource {
    * Convert a Public (`account`) skill or deprecated legacy `teamspace` skill to
    * Private (`user`) scope. Existing teamspace assignments are preserved. The caller
    * must be the skill's original author and administer skills in the account.
-   * Company copies of built-in skills cannot be demoted; use `/reset` instead.
-   * Requires `ep:skills:write`.
+   * Built-in overrides cannot be demoted; use `/reset` instead. Requires
+   * `ep:skills:write`.
    */
   demote(skillId: string, options?: Core.RequestOptions): Core.APIPromise<Skill> {
     return this._client.post(`/skills/${skillId}/demote`, options);
@@ -107,9 +103,8 @@ export class Skills extends APIResource {
   /**
    * Return the full in-memory built-in catalogue shipped with Datagrid. The
    * catalogue is small and not cursor-paginated (`has_more` is always `false`);
-   * adding pagination later would be a breaking SDK change. To disable or remove a
-   * built-in for your company, `PATCH` (`enabled`) or `DELETE` it by its skill id;
-   * restore a removed one with `POST /skills/builtin/{builtin_key}/override`.
+   * adding pagination later would be a breaking SDK change. Use
+   * `POST /skills/builtin/{builtin_key}/override` to customize one for your company.
    * Requires `ep:skills:read`.
    */
   listBuiltins(options?: Core.RequestOptions): Core.APIPromise<SkillListBuiltinsResponse> {
@@ -137,10 +132,9 @@ export class Skills extends APIResource {
   }
 
   /**
-   * Reset a built-in skill to the global default for your company: clears your
-   * company's disabled/removed state for it and deletes any company copy of it (the
-   * copy's id then no longer resolves). Idempotent: no-op when there is nothing to
-   * reset. Requires `ep:skills:write` (account admin).
+   * Remove the company's override of a built-in skill, reverting all members back to
+   * the global default. Idempotent: no-op when no override exists. Requires
+   * `ep:skills:write` (account admin).
    */
   resetBuiltinOverride(builtinKey: string, options?: Core.RequestOptions): Core.APIPromise<void> {
     return this._client.post(`/skills/builtin/${builtinKey}/reset`, {
@@ -212,8 +206,8 @@ export interface Skill {
   account_id: string | null;
 
   /**
-   * For built-in skills and company copies of them: the identifier of the built-in.
-   * `null` for user-authored skills.
+   * For company overrides of built-in skills: the identifier of the underlying
+   * built-in. `null` for user-authored skills.
    */
   builtin_key: string | null;
 
@@ -250,8 +244,7 @@ export interface Skill {
   description: string;
 
   /**
-   * Whether the skill is active and available for selection. For a built-in skill,
-   * `false` when your company disabled it.
+   * Whether the skill is active and available for selection.
    */
   enabled: boolean;
 
