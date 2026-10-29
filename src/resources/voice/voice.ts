@@ -306,10 +306,13 @@ export interface VoiceSessionResponse {
  * **Server to Client Messages:**
  *
  * - `started`: Session established
- *   `{ session_id: string, conversation_id: string, message_id: string, agent_id: string, dm_navigation_item_id?: string }`.
+ *   `{ session_id: string, conversation_id: string, message_id: string, agent_id: string, dm_navigation_item_id?: string, sends_turn_complete?: true }`.
  *   `agent_id` is the agent the session is bound to after supervisor resolution.
  *   `dm_navigation_item_id` is present only when the session ran in that DM's
- *   conversation, so clients can navigate straight to it.
+ *   conversation, so clients can navigate straight to it. `sends_turn_complete` is
+ *   present only when this session sends `turn_complete`; when it is absent (older
+ *   servers, or a voice provider without a response-level completion signal),
+ *   infer the end of an agent response from silence.
  * - `ready`: Agent is ready to receive audio
  * - `audio`: Audio response chunk
  *   `{ data: string (base64 PCM), mime_type: string }`
@@ -327,6 +330,11 @@ export interface VoiceSessionResponse {
  *   retry later.
  * - `transcript`: Real-time transcription
  *   `{ role: "user" | "agent", text: string, turn_index?: number }`
+ * - `turn_complete`: The agent finished its response `{ turn_index: number }`.
+ *   Sent only when `started` carried `sends_turn_complete: true`. Every
+ *   `transcript` event for the response is sent before it; audio and `tool_call`
+ *   status events for the same response can still arrive after it. `turn_index`
+ *   matches the `turn_index` of the response's last agent `transcript` event.
  * - `citation`: Source citation
  *   `{ citations: VoiceCitations, timestamp_ms: number, message_id: string, turn_index?: number }`.
  *   Each source is a superset of the SSE `/v1/converse` `CitationSource` schema —
@@ -348,9 +356,10 @@ export interface VoiceWebsocketMessage {
     | VoiceWebsocketMessage.UnionMember2
     | VoiceWebsocketMessage.UnionMember3
     | VoiceWebsocketMessage.UnionMember4
-    | VoiceWebsocketMessage.UnionMember5
+    | VoiceWebsocketMessage.TurnIndex
+    | VoiceWebsocketMessage.UnionMember6
     | VoiceWebsocketMessage.Text
-    | VoiceWebsocketMessage.UnionMember7;
+    | VoiceWebsocketMessage.UnionMember8;
 
   /**
    * Message type.
@@ -368,6 +377,7 @@ export interface VoiceWebsocketMessage {
     | 'interrupted'
     | 'error'
     | 'transcript'
+    | 'turn_complete'
     | 'citation'
     | 'ended';
 }
@@ -380,6 +390,12 @@ export namespace VoiceWebsocketMessage {
     conversation_id?: string;
 
     message_id?: string;
+
+    /**
+     * Present only when this session sends `turn_complete` events. Absent on older
+     * servers and for voice providers without a response-level completion signal.
+     */
+    sends_turn_complete?: true;
 
     session_id?: string;
   }
@@ -453,14 +469,24 @@ export namespace VoiceWebsocketMessage {
   }
 
   /**
+   * For 'turn_complete' messages
+   */
+  export interface TurnIndex {
+    /**
+     * One-based commit-window ordinal of the response's last agent transcript event.
+     */
+    turn_index: number;
+  }
+
+  /**
    * For 'citation' messages
    */
-  export interface UnionMember5 {
+  export interface UnionMember6 {
     /**
      * Array of voice citations. Each source is a superset of the SSE `/v1/converse`
      * `CitationSource` schema.
      */
-    citations: Array<UnionMember5.Citation>;
+    citations: Array<UnionMember6.Citation>;
 
     /**
      * Stable id of the persisted voice message row for this session. Always present
@@ -482,7 +508,7 @@ export namespace VoiceWebsocketMessage {
     turn_index?: number;
   }
 
-  export namespace UnionMember5 {
+  export namespace UnionMember6 {
     export interface Citation {
       /**
        * The text snippet from the response that is being cited.
@@ -681,13 +707,13 @@ export namespace VoiceWebsocketMessage {
   /**
    * For 'ended' messages
    */
-  export interface UnionMember7 {
+  export interface UnionMember8 {
     credits_consumed?: number;
 
-    transcript?: Array<UnionMember7.Transcript>;
+    transcript?: Array<UnionMember8.Transcript>;
   }
 
-  export namespace UnionMember7 {
+  export namespace UnionMember8 {
     export interface Transcript {
       role?: 'user' | 'agent';
 
