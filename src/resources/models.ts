@@ -30,6 +30,13 @@ export interface Model {
   available: boolean;
 
   /**
+   * The model line this LLM belongs to across versions, as a snake_case token, e.g.
+   * `claude_opus` or `gemini_pro`. The same family is shared by a model served on
+   * different platforms. Always `null` for `agent` models.
+   */
+  family: string | null;
+
+  /**
    * The display name of the model.
    */
   name: string;
