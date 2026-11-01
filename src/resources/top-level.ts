@@ -859,11 +859,6 @@ export namespace ConverseParams {
        * - `llm-only` — Runs a direct LLM conversation with no planning or tool calls. A
        *   400 error will be returned if tools are specified.
        *
-       * **BETA**: Magpie 3.0. Behavior and schema may change.
-       *
-       * - `magpie-3.0` — **BETA**. Available on the public Converse API. In-app rollout
-       *   flags do not apply to this request.
-       *
        * Can also accept any custom string value for future model versions.
        */
       agent_model?:
@@ -872,7 +867,6 @@ export namespace ConverseParams {
         | 'magpie-2.0'
         | 'magpie-2.5'
         | 'magpie-2.5-flash'
-        | 'magpie-3.0'
         | 'llm-only'
         | (string & {})
         | null;
@@ -1136,11 +1130,6 @@ export namespace ConverseParams {
      * - `llm-only` — Runs a direct LLM conversation with no planning or tool calls. A
      *   400 error will be returned if tools are specified.
      *
-     * **BETA**: Magpie 3.0. Behavior and schema may change.
-     *
-     * - `magpie-3.0` — **BETA**. Available on the public Converse API. In-app rollout
-     *   flags do not apply to this request.
-     *
      * Can also accept any custom string value for future model versions.
      */
     agent_model?:
@@ -1149,7 +1138,6 @@ export namespace ConverseParams {
       | 'magpie-2.0'
       | 'magpie-2.5'
       | 'magpie-2.5-flash'
-      | 'magpie-3.0'
       | 'llm-only'
       | (string & {})
       | null;

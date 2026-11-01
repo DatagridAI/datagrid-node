@@ -132,7 +132,6 @@ export {
   type ProcoreCompany,
   type ProcoreCompanyList,
   type ProcoreProject,
-  type ProcoreProjectConnection,
   type ProcoreProjectList,
   type ProcoreListCompaniesParams,
   type ProcoreListProjectsParams,

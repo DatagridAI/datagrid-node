@@ -108,7 +108,6 @@ import {
   ProcoreListCompaniesParams,
   ProcoreListProjectsParams,
   ProcoreProject,
-  ProcoreProjectConnection,
   ProcoreProjectList,
 } from './resources/procore';
 import {
@@ -686,7 +685,6 @@ export declare namespace Datagrid {
     type ProcoreCompany as ProcoreCompany,
     type ProcoreCompanyList as ProcoreCompanyList,
     type ProcoreProject as ProcoreProject,
-    type ProcoreProjectConnection as ProcoreProjectConnection,
     type ProcoreProjectList as ProcoreProjectList,
     type ProcoreListCompaniesParams as ProcoreListCompaniesParams,
     type ProcoreListProjectsParams as ProcoreListProjectsParams,
