@@ -306,12 +306,14 @@ Types:
 - <code><a href="./src/resources/procore.ts">ProcoreCompany</a></code>
 - <code><a href="./src/resources/procore.ts">ProcoreCompanyList</a></code>
 - <code><a href="./src/resources/procore.ts">ProcoreProject</a></code>
+- <code><a href="./src/resources/procore.ts">ProcoreProjectConnection</a></code>
 - <code><a href="./src/resources/procore.ts">ProcoreProjectList</a></code>
 
 Methods:
 
 - <code title="get /procore/companies">client.procore.<a href="./src/resources/procore.ts">listCompanies</a>({ ...params }) -> ProcoreCompanyList</code>
 - <code title="get /procore/companies/{company_id}/projects">client.procore.<a href="./src/resources/procore.ts">listProjects</a>(companyId, { ...params }) -> ProcoreProjectList</code>
+- <code title="get /procore/companies/{company_id}/projects/{project_id}/connection">client.procore.<a href="./src/resources/procore.ts">retrieveProjectConnection</a>(companyId, projectId) -> ProcoreProjectConnection</code>
 
 # Pages
 
