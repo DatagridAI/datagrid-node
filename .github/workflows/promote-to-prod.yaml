@@ -1,11 +1,14 @@
 name: Promote SDKs
 
-# Merge-commit PR variant of ../sdk-repo's stlc-promote.yml, for when the
-# production repo requires a PR for changes to main. On push to staging main
-# (and manual dispatch) it pushes staging main to a stainless/release branch on
-# production, opens a PR into production main, and enables auto-merge. That PR
-# MUST merge with a MERGE COMMIT — never squash/rebase, or the SHAs get rewritten
-# and the trunks fork. Self-routed to staging; needs PRODUCTION_REPO_TOKEN with Contents + Pull requests: write on production.
+# Merge-commit PR variant of stlc's examples/sdk-repo-pr stlc-promote.yml, for
+# when the production repo requires a PR for changes to main. On push to
+# staging main (and manual dispatch) it pushes staging main to the stlc/release
+# branch on production and opens (or refreshes) a PR into production main.
+# A person reviews and merges that PR. It MUST merge with a MERGE COMMIT —
+# never squash/rebase, or the SHAs get rewritten and the trunks fork. Merging
+# it triggers release-please on production, whose own release PR is the
+# publish gate. Self-routed to staging; needs DATAGRID_PROD_REPO_TOKEN with
+# Contents + Pull requests: write on production.
 on:
   push:
     # main only. stlc preview/integrated/codegen branches never push to main.
@@ -74,15 +77,13 @@ jobs:
               --base main \
               --head stlc/release \
               --title "Release SDK updates" \
-              --body "$(git log --oneline production/main..origin/main)"
+              --body "$(printf '%s\n\n%s\n' \
+                '**Merge with a merge commit** (never squash or rebase): staging and production must share these commits, or the next back-sync and stlc build break.' \
+                "$(git log --oneline production/main..origin/main)")"
           else
             echo "Promote PR #${EXISTING_PR} already exists. The force-push has updated it."
           fi
-          # --merge = MERGE COMMIT — never --squash/--rebase (that rewrites SHAs
-          # and forks the trunks). Auto-merge still waits for production's
-          # required reviews and checks — they gate when the code publishes.
-          gh pr merge stlc/release --repo "${PRODUCTION_REPO}" --merge --auto \
-            || echo "Auto-merge unavailable — review and merge the promote PR manually with a merge commit."
+          # No auto-merge: a person reviews and merges the promote PR.
 
       - name: Alert on failure
         if: failure()
