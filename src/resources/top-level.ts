@@ -9,8 +9,8 @@ import * as MessagesAPI from './conversations/messages';
 export interface ConverseResponse extends MessagesAPI.Message {
   /**
    * The chat mode used for this response (web app: Execute = full_agent, Extended =
-   * light_agent, Ask = llm_router). For Auto mode conversations, this is the mode
-   * selected by the router for this turn.
+   * light_agent, Ask = llm_router). Auto mode currently runs and reports as Execute
+   * (full_agent).
    */
   chat_mode?: 'full_agent' | 'light_agent' | 'llm_router' | null;
 
@@ -25,6 +25,13 @@ export interface ConverseResponse extends MessagesAPI.Message {
    * with status completed or failed.
    */
   reasoning?: Array<ConverseResponse.Reasoning> | null;
+
+  /**
+   * Array of skills that were force-activated for this turn via `skill_ids` or
+   * `slash_keys`. Null when no skills were explicitly requested, or when none of the
+   * requested skills survived resolution for this turn.
+   */
+  skills?: Array<ConverseResponse.Skill> | null;
 
   /**
    * Array of tool calls that were executed during this response.
@@ -71,6 +78,32 @@ export namespace ConverseResponse {
     task?: string | null;
   }
 
+  /**
+   * A skill that was force-activated for this turn.
+   */
+  export interface Skill {
+    /**
+     * The unique identifier of the skill.
+     */
+    id: string;
+
+    /**
+     * The human-readable name of the skill.
+     */
+    name: string;
+
+    /**
+     * The visibility scope of the skill. `user` (private) never appears here:
+     * `skill_ids` and `slash_keys` can only name account-shared or builtin skills.
+     */
+    scope: 'account' | 'builtin';
+
+    /**
+     * The slash key used to invoke the skill (without leading slash).
+     */
+    slash_key: string;
+  }
+
   export interface ToolCall {
     /**
      * The ID of the tool call.
@@ -106,6 +139,7 @@ export type Properties =
   | Properties.ConverseStatusEvent
   | Properties.ConverseCitationsEvent
   | Properties.ConverseGeneratedTitleEvent
+  | Properties.ConverseSkillsEvent
   | Properties.ConverseContentMessageDeltaEvent
   | Properties.ConverseToolCallDeltaEvent
   | Properties.ConverseReasoningDeltaEvent;
@@ -136,8 +170,8 @@ export namespace Properties {
 
       /**
        * The chat mode used for this response (web app: Execute = full_agent, Extended =
-       * light_agent, Ask = llm_router). Present on `end` events. For Auto mode
-       * conversations, this is the mode selected by the router for this turn.
+       * light_agent, Ask = llm_router). Present on `end` events. Auto mode currently
+       * runs and reports as Execute (full_agent).
        */
       chat_mode?: 'full_agent' | 'light_agent' | 'llm_router' | null;
     }
@@ -204,14 +238,90 @@ export namespace Properties {
           type: 'image' | 'pdf_page' | 'record' | 'web_search' | 'sql_query_result' | 'action';
 
           /**
-           * Id of the source.
+           * Origin-system deep-link for the source (e.g. an `app.procore.com` universal
+           * link), when one exists. Unlike `source_uri`, it is never overridden by the
+           * signed Datagrid file URI, so clients can offer an "open in source" action.
+           */
+          external_url?: string;
+
+          /**
+           * record only. Backend-normalized, render-ready structured fields promoted from
+           * the record row (due date, ball-in-court, assignee, revision, type, vendor,
+           * scope, …). Excludes `status`, which is surfaced on its own.
+           */
+          fields?: Array<Source.Field>;
+
+          /**
+           * record / pdf_page only. Procore tool type of the underlying record (e.g.
+           * "rfi_headers", "submittal_logs"), read from the indexed Procore item type on the
+           * source row; present only for sources ingested from Procore. Lets clients render
+           * a reliable type label (RFI, Submittal, Observation, …) without parsing the
+           * deep-link URL.
+           */
+          item_type?: string;
+
+          /**
+           * pdf_page only. 1-based page number within the source document. Omitted when the
+           * page is unknown; never `0`.
+           */
+          page_number?: number;
+
+          /**
+           * Id of the source when Datagrid holds one (dataset id, or data-lake item id for
+           * file-backed `pdf_page`). Omitted for `pdf_page` sources with no Datagrid-backed
+           * file.
            */
           source_id?: string;
 
           /**
-           * URI of the source.
+           * URI of the source. For file-backed sources this is the in-app target (signed
+           * Datagrid file URI when available); use `external_url` for the origin-system
+           * deep-link. For `pdf_page` sources with no Datagrid file, this is the
+           * origin-system deep-link and matches `external_url`; locate the page with
+           * `page_number`.
            */
           source_uri?: string;
+
+          /**
+           * record only. Primary status value for the record (e.g. "Open", "Pending
+           * Review"), surfaced separately from `fields` so clients can render a status chip.
+           */
+          status?: string;
+
+          /**
+           * record only. Locale-stable status bucket from the source mapped field
+           * (`mapped_to_status`), never parsed from the display `status` string. `open`,
+           * `closed`, and `in_progress` map to semantic fills; `custom` and omission both
+           * mean a default gray fill.
+           */
+          status_category?: 'open' | 'closed' | 'in_progress' | 'custom';
+
+          /**
+           * record only. Source-system color for the record status (hex or named token),
+           * when the indexed row carries one. Omitted when absent. Clients must not invent a
+           * color from `status`.
+           */
+          status_color?: string;
+
+          /**
+           * record only. Preview image URL from the indexed row (e.g. a Drawings thumbnail).
+           * Omitted when the row has none.
+           */
+          thumbnail_url?: string;
+        }
+
+        export namespace Source {
+          export interface Field {
+            /**
+             * Human-readable field label (e.g. "Due Date").
+             */
+            label: string;
+
+            /**
+             * Human-readable field value (e.g. "2025-09-14").
+             */
+            value: string;
+          }
         }
       }
     }
@@ -251,6 +361,69 @@ export namespace Properties {
     }
   }
 
+  export interface ConverseSkillsEvent {
+    data: ConverseSkillsEvent.Data;
+
+    /**
+     * Type of the event, which is always skills
+     */
+    event: 'skills';
+  }
+
+  export namespace ConverseSkillsEvent {
+    export interface Data {
+      /**
+       * The ID of the agent used for the converse.
+       */
+      agent_id: string;
+
+      /**
+       * The ID of the agent conversation.
+       */
+      conversation_id: string;
+
+      /**
+       * Skills that were force-activated for this turn via `skill_ids` or `slash_keys`.
+       * Null when no skills were explicitly requested, or when none of the requested
+       * skills survived resolution for this turn.
+       */
+      skills: Array<Data.Skill> | null;
+
+      /**
+       * The chat mode used for this response turn when available.
+       */
+      chat_mode?: 'full_agent' | 'light_agent' | 'llm_router' | null;
+    }
+
+    export namespace Data {
+      /**
+       * A skill that was force-activated for this turn.
+       */
+      export interface Skill {
+        /**
+         * The unique identifier of the skill.
+         */
+        id: string;
+
+        /**
+         * The human-readable name of the skill.
+         */
+        name: string;
+
+        /**
+         * The visibility scope of the skill. `user` (private) never appears here:
+         * `skill_ids` and `slash_keys` can only name account-shared or builtin skills.
+         */
+        scope: 'account' | 'builtin';
+
+        /**
+         * The slash key used to invoke the skill (without leading slash).
+         */
+        slash_key: string;
+      }
+    }
+  }
+
   export interface ConverseContentMessageDeltaEvent {
     data: ConverseContentMessageDeltaEvent.Data;
 
@@ -265,17 +438,23 @@ export namespace Properties {
       /**
        * Delta of the response message produced by the agent.
        */
-      delta: Data.Delta;
+      delta: Data.ConverseContentMessageTextDelta | Data.ConverseContentMessageJsonDelta;
     }
 
     export namespace Data {
-      /**
-       * Delta of the response message produced by the agent.
-       */
-      export interface Delta {
+      export interface ConverseContentMessageTextDelta {
         text: string;
 
         type: 'text';
+      }
+
+      export interface ConverseContentMessageJsonDelta {
+        /**
+         * The latest parsed structured-output JSON value.
+         */
+        json: unknown;
+
+        type: 'json';
       }
     }
   }
@@ -399,10 +578,15 @@ export interface ConverseParams {
   /**
    * Controls how the agent processes the request for this turn. Matches the chat
    * mode selector in the Datagrid web app: **Execute** (`full_agent`), **Extended**
-   * (`light_agent`), **Ask** (`llm_router`). When set to `auto`, the router jointly
-   * predicts the best agent and concrete mode (`full_agent` / `light_agent` /
-   * `llm_router`) per message. When set to a concrete mode, that mode is used
-   * directly. When omitted, the mode is determined by the `agent_model` in `config`.
+   * (`light_agent`), **Ask** (`llm_router`). Ask uses the agent path with Magpie 2.5
+   * and Ask-specific prompt guidance. When omitted, the request inherits the
+   * conversation's persisted `chat_mode`; new conversations default to **Execute**
+   * (`full_agent`). When set to `auto`, the request also runs as **Execute**
+   * (`full_agent`); Auto is currently accepted for compatibility but does not
+   * predict Ask, Extended, or Execute per message. When set to a concrete mode, that
+   * concrete mode is used directly. The default `agent_model` for Execute is
+   * `magpie-2.5` unless `config.agent_model` explicitly sets another supported
+   * model.
    */
   chat_mode?: 'auto' | 'full_agent' | 'light_agent' | 'llm_router' | null;
 
@@ -460,6 +644,24 @@ export interface ConverseParams {
   secret_ids?: Array<string> | null;
 
   /**
+   * Array of skill IDs to force-activate for this turn. Each ID must refer to an
+   * account-shared or builtin skill reachable by the API key's teamspace.
+   * User-scoped (private) skills are not accessible from API keys. Deduped and
+   * merged with `slash_keys` before the turn begins. Maximum 32 entries. Returns 400
+   * if any ID is unresolved, disabled, or out of scope.
+   */
+  skill_ids?: Array<string> | null;
+
+  /**
+   * Array of slash-key tokens (e.g. `"budget-check"` or `"/rfi-triage"`) to
+   * force-activate for this turn. Leading slashes are stripped. Resolved
+   * account-shared → builtin in precedence order. Deduped and merged with
+   * `skill_ids` before the turn begins. Maximum 32 entries. Returns 400 if any token
+   * cannot be resolved to an enabled, reachable skill.
+   */
+  slash_keys?: Array<string> | null;
+
+  /**
    * Determines the response type of the converse. Response is the Server-Sent Events
    * if stream is set to true.
    */
@@ -469,7 +671,8 @@ export interface ConverseParams {
    * Contains the format property used to specify the structured output schema
    * (`text.format`). Structured output is supported for all `agent_model` values and
    * `chat_mode` settings when `text.format` is provided (same JSON Schema mechanism
-   * everywhere). **Ask** in the web app maps to `chat_mode` `magpie-2.5-flash`;.
+   * everywhere). **Ask** in the web app maps to `chat_mode: llm_router`; `auto`
+   * currently maps to **Execute** (`full_agent`).
    */
   text?: ConverseParams.Text | null;
 
@@ -638,9 +841,8 @@ export namespace ConverseParams {
        * **Execute** (full tool use, planning, and multi-step reasoning; aligns with
        * **Execute** in the web app / `full_agent`):
        *
-       * - `magpie-2.0` — Default. Full agent model with proactive planning and
-       *   reasoning.
-       * - `magpie-2.5` — Beta. Latest full-agent model — faster, more adaptable, and
+       * - `magpie-2.0` — Legacy full-agent model with proactive planning and reasoning.
+       * - `magpie-2.5` — Default. Latest full-agent model — faster, more adaptable, and
        *   built to handle a broader range of real-world tasks.
        * - `magpie-1.1` — Previous-generation full agent model.
        *
@@ -657,6 +859,11 @@ export namespace ConverseParams {
        * - `llm-only` — Runs a direct LLM conversation with no planning or tool calls. A
        *   400 error will be returned if tools are specified.
        *
+       * **BETA**: Magpie 3.0. Behavior and schema may change.
+       *
+       * - `magpie-3.0` — **BETA**. Available on the public Converse API. In-app rollout
+       *   flags do not apply to this request.
+       *
        * Can also accept any custom string value for future model versions.
        */
       agent_model?:
@@ -665,6 +872,7 @@ export namespace ConverseParams {
         | 'magpie-2.0'
         | 'magpie-2.5'
         | 'magpie-2.5-flash'
+        | 'magpie-3.0'
         | 'llm-only'
         | (string & {})
         | null;
@@ -696,44 +904,65 @@ export namespace ConverseParams {
       knowledge_ids?: Array<string> | null;
 
       /**
-       * The LLM used to generate responses. Deprecated Gemini 2.0 Flash ids are accepted
-       * for backward compatibility and automatically run as gemini-3.1-flash-lite.
+       * The LLM used to generate responses. Any id returned by `GET /v1/models` with
+       * `type: llm` is accepted; the enum lists the ids known when this spec was
+       * generated. Deprecated Gemini 2.x Flash ids are accepted for backward
+       * compatibility and automatically run as gemini-3.1-flash-lite.
        */
       llm_model?:
-        | 'gemini-3.5-flash'
-        | 'gemini-3.1-flash-lite'
-        | 'gemini-3-pro-preview'
-        | 'gemini-3.1-pro-preview'
-        | 'gemini-3-flash-preview'
-        | 'gemini-2.5-pro'
-        | 'gemini-2.5-pro-preview-05-06'
-        | 'gemini-2.5-flash'
-        | 'gemini-2.5-flash-preview-04-17'
-        | 'gemini-2.5-flash-native-audio-preview-12-2025'
-        | 'gemini-2.5-flash-lite'
-        | 'gpt-5'
-        | 'gpt-5.1'
-        | 'gemini-2.0-flash-001'
         | 'gemini-2.0-flash'
+        | 'gemini-2.5-flash'
+        | 'gemini-2.5-flash-lite'
+        | 'gemini-2.5-pro'
+        | 'gemini-3-flash-preview'
+        | 'gemini-3-pro-preview'
+        | 'gemini-3.1-flash-lite'
+        | 'gemini-3.1-pro-preview'
+        | 'gemini-3.5-flash'
+        | 'gemini-3.5-flash-lite'
+        | 'gemini-3.6-flash'
+        | 'gemini-3.8-flash'
+        | 'gemini-live-2.5-flash-native-audio'
+        | 'gemini-1.5-flash-001'
+        | 'gemini-1.5-flash-002'
+        | 'gemini-2.0-flash-001'
+        | 'gemini-2.5-flash-preview-04-17'
         | 'gemini-1.5-pro-001'
         | 'gemini-1.5-pro-002'
-        | 'gemini-1.5-flash-002'
-        | 'gemini-1.5-flash-001'
-        | 'chatgpt-4o-latest'
-        | 'gpt-4o'
-        | 'gpt-4'
-        | 'gpt-4-turbo'
-        | 'gpt-4o-mini'
+        | 'gemini-2.5-pro-preview-05-06'
         | 'claude-haiku-4-5@20251001'
         | 'claude-sonnet-4-6@default'
         | 'claude-opus-4-6@default'
         | 'claude-opus-4-7'
         | 'claude-opus-4-8'
+        | 'claude-sonnet-5'
+        | 'claude-opus-5'
+        | 'claude-opus-5-5'
         | 'anthropic.claude-haiku-4-5-20251001-v1:0'
+        | 'anthropic.claude-sonnet-4-5-20250929-v1:0'
         | 'anthropic.claude-sonnet-4-6'
+        | 'anthropic.claude-opus-4-5-20251101-v1:0'
         | 'anthropic.claude-opus-4-6-v1'
         | 'anthropic.claude-opus-4-7'
         | 'anthropic.claude-opus-4-8'
+        | 'anthropic.claude-sonnet-5'
+        | 'anthropic.claude-opus-5'
+        | 'anthropic.claude-opus-5-5'
+        | 'gpt-4o-mini'
+        | 'gpt-4o'
+        | 'gpt-4.1-mini'
+        | 'gpt-4.1'
+        | 'gpt-5-mini'
+        | 'gpt-5'
+        | 'gpt-5.1'
+        | 'chatgpt-4o-latest'
+        | 'gpt-4-turbo'
+        | 'gpt-4'
+        | 'openai.gpt-5.5'
+        | 'openai.gpt-5.6-luna'
+        | 'openai.gpt-5.6-sol'
+        | 'openai.gpt-5.6-terra'
+        | 'amazon.nova-2-lite-v1:0'
         | (string & {})
         | null;
 
@@ -766,7 +995,11 @@ export namespace ConverseParams {
        * connection instead of the default one.
        *
        * **Structured outputs (Converse):** All `agent_model` values support JSON Schema
-       * constrained responses via **`text.format`** on the Converse request.
+       * constrained responses via **`text.format`** on the Converse request. Responses
+       * are validated server-side against the schema and returned as a `json` content
+       * item; output that cannot be made schema-valid is rejected with a deterministic
+       * `structured_output_generation_failed` error instead of being returned as a
+       * success.
        *
        * **Tool availability by agent model** (aligned with in-app **Execute** /
        * **Extended** / direct LLM; see Converse `chat_mode` for **Ask** vs
@@ -872,9 +1105,8 @@ export namespace ConverseParams {
      * **Execute** (full tool use, planning, and multi-step reasoning; aligns with
      * **Execute** in the web app / `full_agent`):
      *
-     * - `magpie-2.0` — Default. Full agent model with proactive planning and
-     *   reasoning.
-     * - `magpie-2.5` — Beta. Latest full-agent model — faster, more adaptable, and
+     * - `magpie-2.0` — Legacy full-agent model with proactive planning and reasoning.
+     * - `magpie-2.5` — Default. Latest full-agent model — faster, more adaptable, and
      *   built to handle a broader range of real-world tasks.
      * - `magpie-1.1` — Previous-generation full agent model.
      *
@@ -891,6 +1123,11 @@ export namespace ConverseParams {
      * - `llm-only` — Runs a direct LLM conversation with no planning or tool calls. A
      *   400 error will be returned if tools are specified.
      *
+     * **BETA**: Magpie 3.0. Behavior and schema may change.
+     *
+     * - `magpie-3.0` — **BETA**. Available on the public Converse API. In-app rollout
+     *   flags do not apply to this request.
+     *
      * Can also accept any custom string value for future model versions.
      */
     agent_model?:
@@ -899,6 +1136,7 @@ export namespace ConverseParams {
       | 'magpie-2.0'
       | 'magpie-2.5'
       | 'magpie-2.5-flash'
+      | 'magpie-3.0'
       | 'llm-only'
       | (string & {})
       | null;
@@ -941,44 +1179,65 @@ export namespace ConverseParams {
     knowledge_ids?: Array<string> | null;
 
     /**
-     * The LLM used to generate responses. Deprecated Gemini 2.0 Flash ids are accepted
-     * for backward compatibility and automatically run as gemini-3.1-flash-lite.
+     * The LLM used to generate responses. Any id returned by `GET /v1/models` with
+     * `type: llm` is accepted; the enum lists the ids known when this spec was
+     * generated. Deprecated Gemini 2.x Flash ids are accepted for backward
+     * compatibility and automatically run as gemini-3.1-flash-lite.
      */
     llm_model?:
-      | 'gemini-3.5-flash'
-      | 'gemini-3.1-flash-lite'
-      | 'gemini-3-pro-preview'
-      | 'gemini-3.1-pro-preview'
-      | 'gemini-3-flash-preview'
-      | 'gemini-2.5-pro'
-      | 'gemini-2.5-pro-preview-05-06'
-      | 'gemini-2.5-flash'
-      | 'gemini-2.5-flash-preview-04-17'
-      | 'gemini-2.5-flash-native-audio-preview-12-2025'
-      | 'gemini-2.5-flash-lite'
-      | 'gpt-5'
-      | 'gpt-5.1'
-      | 'gemini-2.0-flash-001'
       | 'gemini-2.0-flash'
+      | 'gemini-2.5-flash'
+      | 'gemini-2.5-flash-lite'
+      | 'gemini-2.5-pro'
+      | 'gemini-3-flash-preview'
+      | 'gemini-3-pro-preview'
+      | 'gemini-3.1-flash-lite'
+      | 'gemini-3.1-pro-preview'
+      | 'gemini-3.5-flash'
+      | 'gemini-3.5-flash-lite'
+      | 'gemini-3.6-flash'
+      | 'gemini-3.8-flash'
+      | 'gemini-live-2.5-flash-native-audio'
+      | 'gemini-1.5-flash-001'
+      | 'gemini-1.5-flash-002'
+      | 'gemini-2.0-flash-001'
+      | 'gemini-2.5-flash-preview-04-17'
       | 'gemini-1.5-pro-001'
       | 'gemini-1.5-pro-002'
-      | 'gemini-1.5-flash-002'
-      | 'gemini-1.5-flash-001'
-      | 'chatgpt-4o-latest'
-      | 'gpt-4o'
-      | 'gpt-4'
-      | 'gpt-4-turbo'
-      | 'gpt-4o-mini'
+      | 'gemini-2.5-pro-preview-05-06'
       | 'claude-haiku-4-5@20251001'
       | 'claude-sonnet-4-6@default'
       | 'claude-opus-4-6@default'
       | 'claude-opus-4-7'
       | 'claude-opus-4-8'
+      | 'claude-sonnet-5'
+      | 'claude-opus-5'
+      | 'claude-opus-5-5'
       | 'anthropic.claude-haiku-4-5-20251001-v1:0'
+      | 'anthropic.claude-sonnet-4-5-20250929-v1:0'
       | 'anthropic.claude-sonnet-4-6'
+      | 'anthropic.claude-opus-4-5-20251101-v1:0'
       | 'anthropic.claude-opus-4-6-v1'
       | 'anthropic.claude-opus-4-7'
       | 'anthropic.claude-opus-4-8'
+      | 'anthropic.claude-sonnet-5'
+      | 'anthropic.claude-opus-5'
+      | 'anthropic.claude-opus-5-5'
+      | 'gpt-4o-mini'
+      | 'gpt-4o'
+      | 'gpt-4.1-mini'
+      | 'gpt-4.1'
+      | 'gpt-5-mini'
+      | 'gpt-5'
+      | 'gpt-5.1'
+      | 'chatgpt-4o-latest'
+      | 'gpt-4-turbo'
+      | 'gpt-4'
+      | 'openai.gpt-5.5'
+      | 'openai.gpt-5.6-luna'
+      | 'openai.gpt-5.6-sol'
+      | 'openai.gpt-5.6-terra'
+      | 'amazon.nova-2-lite-v1:0'
       | (string & {})
       | null;
 
@@ -1019,7 +1278,11 @@ export namespace ConverseParams {
      * connection instead of the default one.
      *
      * **Structured outputs (Converse):** All `agent_model` values support JSON Schema
-     * constrained responses via **`text.format`** on the Converse request.
+     * constrained responses via **`text.format`** on the Converse request. Responses
+     * are validated server-side against the schema and returned as a `json` content
+     * item; output that cannot be made schema-valid is rejected with a deterministic
+     * `structured_output_generation_failed` error instead of being returned as a
+     * success.
      *
      * **Tool availability by agent model** (aligned with in-app **Execute** /
      * **Extended** / direct LLM; see Converse `chat_mode` for **Ask** vs
@@ -1140,12 +1403,24 @@ export namespace ConverseParams {
    * Contains the format property used to specify the structured output schema
    * (`text.format`). Structured output is supported for all `agent_model` values and
    * `chat_mode` settings when `text.format` is provided (same JSON Schema mechanism
-   * everywhere). **Ask** in the web app maps to `chat_mode` `magpie-2.5-flash`;.
+   * everywhere). **Ask** in the web app maps to `chat_mode: llm_router`; `auto`
+   * currently maps to **Execute** (`full_agent`).
    */
   export interface Text {
     /**
-     * The converse response will be a JSON string object, that adheres to the provided
-     * JSON schema.
+     * Constrain the Converse response to the provided JSON Schema. The agent's output
+     * is **validated server-side against this schema**: a conforming result is
+     * returned as structured content, while non-conforming output (missing required
+     * fields, invalid enum values, or disallowed properties) is converted into an
+     * application-level error payload rather than returned as a structured success.
+     *
+     * On success the structured result is returned as a `json` content item with the
+     * value already parsed (no `JSON.parse` required), alongside a JSON-string `text`
+     * content item kept for backward compatibility with callers that read
+     * `content[0].text`. When the agent cannot produce schema-valid JSON, no `json`
+     * item is returned — a `text` content item carries a deterministic error object
+     * instead:
+     * `{ "error": { "code": "structured_output_generation_failed", "message": "..." } }`.
      *
      * ```javascript
      * const exampleJsonSchema = {
@@ -1175,8 +1450,12 @@ export namespace ConverseParams {
      *   text: { format: exampleJsonSchema },
      * });
      *
-     * // Example response: "{ "name": "Gladiator", "director": "Ridley Scott", "release_year": 2000 }"
-     * const parsedResponse = JSON.parse(response.content[0].text);
+     * // Structured output is returned as a `json` content item (already
+     * // parsed); `content[0].text` still holds the JSON string for
+     * // backward compatibility.
+     * const jsonPart = response.content.find((part) => part.type === "json");
+     * const movie = jsonPart?.json;
+     * // => { name: "Gladiator", director: "Ridley Scott", release_year: 2000 }
      * ```
      */
     format?: unknown;

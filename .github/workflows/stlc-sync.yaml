@@ -1,6 +1,6 @@
 name: Sync SDK repos
 
-# Merge-commit PR variant of ../sdk-repo's stlc-sync.yml, for when the staging
+# Merge-commit PR variant of stlc's examples/sdk-repo stlc-sync.yml, for when the staging
 # repo requires a PR for changes to main. Same three self-routed jobs; only
 # back-sync differs — it opens + auto-merges a merge-commit PR instead of a
 # fast-forward push. That PR MUST merge with a MERGE COMMIT — never
@@ -96,8 +96,11 @@ jobs:
           # --merge = MERGE COMMIT — never --squash/--rebase (that rewrites SHAs
           # and forks the trunks). If main gates on the trunk-synced status,
           # exclude stlc/from-prod from that check so this PR isn't deadlocked.
+          # Staging main has no required checks and auto-merge is off on this
+          # repo, so fall back to merging immediately.
           gh pr merge stlc/from-prod --merge --auto \
-            || echo "Auto-merge unavailable — merge the back-sync PR manually with a merge commit."
+            || gh pr merge stlc/from-prod --merge \
+            || echo "Merge unavailable — merge the back-sync PR manually with a merge commit."
 
       - name: Alert on failure
         if: failure()

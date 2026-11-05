@@ -22,18 +22,6 @@ import * as API from './resources/index';
 import * as TopLevelAPI from './resources/top-level';
 import { ConverseParams, ConverseResponse, Properties } from './resources/top-level';
 import {
-  Agent as AgentsAPIAgent,
-  AgentClaimParams,
-  AgentClaimResponse,
-  AgentCreateParams,
-  AgentGenerateParams,
-  AgentGenerateResponse,
-  AgentListParams,
-  AgentUpdateParams,
-  Agents,
-  AgentsCursorIDPage,
-} from './resources/agents';
-import {
   BatchPrediction,
   BatchPredictionCreateParams,
   BatchPredictionListParams,
@@ -45,6 +33,29 @@ import {
   ValidationProblemDetails,
   ValidationProblemError,
 } from './resources/batch-predictions';
+import {
+  Channel,
+  ChannelAddMembersParams,
+  ChannelAddMembersResponse,
+  ChannelAddReactionParams,
+  ChannelCreateMessageParams,
+  ChannelCreateParams,
+  ChannelCreateThreadMessageParams,
+  ChannelListMembersParams,
+  ChannelListMessagesParams,
+  ChannelListParams,
+  ChannelListThreadMessagesParams,
+  ChannelListThreadsParams,
+  ChannelMember,
+  ChannelMembersCursorIDPage,
+  ChannelMessage,
+  ChannelMessagesCursorIDPage,
+  ChannelThread,
+  ChannelThreadsCursorIDPage,
+  ChannelUpdateParams,
+  Channels,
+  ChannelsCursorIDPage,
+} from './resources/channels';
 import {
   ConnectionProvider,
   ConnectionProviderCreateParams,
@@ -80,7 +91,8 @@ import {
   KnowledgeCreatedPayload,
   ResizePayload,
 } from './resources/i-frame-events';
-import { Identity, IdentityResource, IdentityTeamspace } from './resources/identity';
+import { Identity, IdentityProcore, IdentityResource, IdentityTeamspace } from './resources/identity';
+import { Model, ModelListResponse, Models } from './resources/models';
 import {
   Page,
   PageCreateParams,
@@ -89,6 +101,16 @@ import {
   Pages,
   PagesCursorIDPage,
 } from './resources/pages';
+import {
+  Procore,
+  ProcoreCompany,
+  ProcoreCompanyList,
+  ProcoreListCompaniesParams,
+  ProcoreListProjectsParams,
+  ProcoreProject,
+  ProcoreProjectConnection,
+  ProcoreProjectList,
+} from './resources/procore';
 import {
   AISource,
   Search,
@@ -110,6 +132,19 @@ import {
   Secrets,
   SecretsCursorIDPage,
 } from './resources/secrets';
+import {
+  BuiltinSkill,
+  Skill,
+  SkillCreateParams,
+  SkillDraft,
+  SkillGenerateParams,
+  SkillGenerateResponse,
+  SkillListBuiltinsResponse,
+  SkillListParams,
+  SkillUpdateParams,
+  Skills,
+  SkillsCursorIDPage,
+} from './resources/skills';
 import { Tool, ToolDef, ToolDefsCursorNamePage, ToolListParams, ToolName, Tools } from './resources/tools';
 import {
   Webhook,
@@ -123,6 +158,19 @@ import {
   Webhooks,
   WebhooksWebhookCursorPage,
 } from './resources/webhooks';
+import {
+  Agent as AgentsAPIAgent,
+  AgentClaimParams,
+  AgentClaimResponse,
+  AgentCreateParams,
+  AgentGenerateParams,
+  AgentGenerateResponse,
+  AgentListItem,
+  AgentListItemsCursorIDPage,
+  AgentListParams,
+  AgentUpdateParams,
+  Agents,
+} from './resources/agents/agents';
 import { Beta } from './resources/beta/beta';
 import {
   Conversation,
@@ -180,7 +228,7 @@ export interface ClientOptions {
   apiKey?: string | undefined;
 
   /**
-   * Teamspace to use
+   * Teamspace ID sent as the `Datagrid-Teamspace` header. Honored only for API keys with "All Teamspaces" access, or "Selected Teamspaces" access that includes the target; otherwise requests run in the key's home teamspace.
    */
   teamspace?: string | null | undefined;
 
@@ -317,10 +365,14 @@ export class Datagrid extends Core.APIClient {
   secrets: API.Secrets = new API.Secrets(this);
   webhooks: API.Webhooks = new API.Webhooks(this);
   search: API.Search = new API.Search(this);
+  skills: API.Skills = new API.Skills(this);
   agents: API.Agents = new API.Agents(this);
+  channels: API.Channels = new API.Channels(this);
   identity: API.IdentityResource = new API.IdentityResource(this);
+  procore: API.Procore = new API.Procore(this);
   pages: API.Pages = new API.Pages(this);
   tools: API.Tools = new API.Tools(this);
+  models: API.Models = new API.Models(this);
   memory: API.Memory = new API.Memory(this);
   iFrameEvents: API.IFrameEvents = new API.IFrameEvents(this);
   organization: API.Organization = new API.Organization(this);
@@ -413,13 +465,22 @@ Datagrid.SecretsCursorIDPage = SecretsCursorIDPage;
 Datagrid.Webhooks = Webhooks;
 Datagrid.WebhooksWebhookCursorPage = WebhooksWebhookCursorPage;
 Datagrid.Search = Search;
+Datagrid.Skills = Skills;
+Datagrid.SkillsCursorIDPage = SkillsCursorIDPage;
 Datagrid.Agents = Agents;
-Datagrid.AgentsCursorIDPage = AgentsCursorIDPage;
+Datagrid.AgentListItemsCursorIDPage = AgentListItemsCursorIDPage;
+Datagrid.Channels = Channels;
+Datagrid.ChannelsCursorIDPage = ChannelsCursorIDPage;
+Datagrid.ChannelMembersCursorIDPage = ChannelMembersCursorIDPage;
+Datagrid.ChannelMessagesCursorIDPage = ChannelMessagesCursorIDPage;
+Datagrid.ChannelThreadsCursorIDPage = ChannelThreadsCursorIDPage;
 Datagrid.IdentityResource = IdentityResource;
+Datagrid.Procore = Procore;
 Datagrid.Pages = Pages;
 Datagrid.PagesCursorIDPage = PagesCursorIDPage;
 Datagrid.Tools = Tools;
 Datagrid.ToolDefsCursorNamePage = ToolDefsCursorNamePage;
+Datagrid.Models = Models;
 Datagrid.Memory = Memory;
 Datagrid.IFrameEvents = IFrameEvents;
 Datagrid.Organization = Organization;
@@ -562,11 +623,26 @@ export declare namespace Datagrid {
   };
 
   export {
+    Skills as Skills,
+    type BuiltinSkill as BuiltinSkill,
+    type Skill as Skill,
+    type SkillDraft as SkillDraft,
+    type SkillGenerateResponse as SkillGenerateResponse,
+    type SkillListBuiltinsResponse as SkillListBuiltinsResponse,
+    SkillsCursorIDPage as SkillsCursorIDPage,
+    type SkillCreateParams as SkillCreateParams,
+    type SkillUpdateParams as SkillUpdateParams,
+    type SkillListParams as SkillListParams,
+    type SkillGenerateParams as SkillGenerateParams,
+  };
+
+  export {
     Agents as Agents,
     type AgentsAPIAgent as Agent,
+    type AgentListItem as AgentListItem,
     type AgentClaimResponse as AgentClaimResponse,
     type AgentGenerateResponse as AgentGenerateResponse,
-    AgentsCursorIDPage as AgentsCursorIDPage,
+    AgentListItemsCursorIDPage as AgentListItemsCursorIDPage,
     type AgentCreateParams as AgentCreateParams,
     type AgentUpdateParams as AgentUpdateParams,
     type AgentListParams as AgentListParams,
@@ -575,9 +651,45 @@ export declare namespace Datagrid {
   };
 
   export {
+    Channels as Channels,
+    type Channel as Channel,
+    type ChannelMember as ChannelMember,
+    type ChannelMessage as ChannelMessage,
+    type ChannelThread as ChannelThread,
+    type ChannelAddMembersResponse as ChannelAddMembersResponse,
+    ChannelsCursorIDPage as ChannelsCursorIDPage,
+    ChannelMembersCursorIDPage as ChannelMembersCursorIDPage,
+    ChannelMessagesCursorIDPage as ChannelMessagesCursorIDPage,
+    ChannelThreadsCursorIDPage as ChannelThreadsCursorIDPage,
+    type ChannelCreateParams as ChannelCreateParams,
+    type ChannelUpdateParams as ChannelUpdateParams,
+    type ChannelListParams as ChannelListParams,
+    type ChannelAddMembersParams as ChannelAddMembersParams,
+    type ChannelAddReactionParams as ChannelAddReactionParams,
+    type ChannelCreateMessageParams as ChannelCreateMessageParams,
+    type ChannelCreateThreadMessageParams as ChannelCreateThreadMessageParams,
+    type ChannelListMembersParams as ChannelListMembersParams,
+    type ChannelListMessagesParams as ChannelListMessagesParams,
+    type ChannelListThreadMessagesParams as ChannelListThreadMessagesParams,
+    type ChannelListThreadsParams as ChannelListThreadsParams,
+  };
+
+  export {
     IdentityResource as IdentityResource,
     type Identity as Identity,
+    type IdentityProcore as IdentityProcore,
     type IdentityTeamspace as IdentityTeamspace,
+  };
+
+  export {
+    Procore as Procore,
+    type ProcoreCompany as ProcoreCompany,
+    type ProcoreCompanyList as ProcoreCompanyList,
+    type ProcoreProject as ProcoreProject,
+    type ProcoreProjectConnection as ProcoreProjectConnection,
+    type ProcoreProjectList as ProcoreProjectList,
+    type ProcoreListCompaniesParams as ProcoreListCompaniesParams,
+    type ProcoreListProjectsParams as ProcoreListProjectsParams,
   };
 
   export {
@@ -597,6 +709,8 @@ export declare namespace Datagrid {
     ToolDefsCursorNamePage as ToolDefsCursorNamePage,
     type ToolListParams as ToolListParams,
   };
+
+  export { Models as Models, type Model as Model, type ModelListResponse as ModelListResponse };
 
   export { Memory as Memory };
 

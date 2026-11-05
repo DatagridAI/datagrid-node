@@ -16,9 +16,8 @@ export class OrchestratorTasks extends APIResource {
    * List delegated voice tasks for the authenticated user. By default this returns
    * active, non-expired queued or running tasks plus unacknowledged terminal tasks
    * and omits task result content from list views. Pass an explicit status filter to
-   * request a specific task state. A `cancelled` status is reserved for terminal
-   * task records produced by future cancellation flows; the current voice task inbox
-   * does not add a user-facing cancel endpoint.
+   * request a specific task state. A `cancelled` status marks tasks stopped via the
+   * cancel endpoint (`PATCH /voice-orchestrator/tasks/{task_id}/cancel`).
    */
   list(
     query?: OrchestratorTaskListParams,
@@ -40,6 +39,13 @@ export class OrchestratorTasks extends APIResource {
    */
   acknowledge(taskId: string, options?: Core.RequestOptions): Core.APIPromise<VoiceOrchestratorTask> {
     return this._client.patch(`/voice-orchestrator/tasks/${taskId}/acknowledge`, options);
+  }
+
+  /**
+   * Cancel voice orchestrator task
+   */
+  cancel(taskId: string, options?: Core.RequestOptions): Core.APIPromise<VoiceOrchestratorTask> {
+    return this._client.patch(`/voice-orchestrator/tasks/${taskId}/cancel`, options);
   }
 }
 
@@ -71,10 +77,44 @@ export interface VoiceOrchestratorTask {
   error_message?: string;
 
   /**
+   * Present when this task was created by follow_up_task to continue an earlier
+   * delegated task.
+   */
+  parent_task_id?: string;
+
+  /**
+   * Present on retrieve responses when the delegated agent halted on an
+   * approval-required action that is still awaiting user review. Omitted from list
+   * responses and once the action has been submitted.
+   */
+  pending_action?: VoiceOrchestratorTask.PendingAction;
+
+  /**
    * Present on retrieve responses when a user-owned task has a result. Omitted from
    * list responses.
    */
   result?: string;
+}
+
+export namespace VoiceOrchestratorTask {
+  /**
+   * Present on retrieve responses when the delegated agent halted on an
+   * approval-required action that is still awaiting user review. Omitted from list
+   * responses and once the action has been submitted.
+   */
+  export interface PendingAction {
+    action_name: string;
+
+    agent_explanation: string;
+
+    payload_id: string;
+
+    connector_id?: string;
+
+    submit_button_text?: string;
+
+    tool_id?: string;
+  }
 }
 
 export interface VoiceOrchestratorTaskList {

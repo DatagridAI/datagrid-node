@@ -4,11 +4,17 @@ export { Credits, type CreditsReport } from './credits';
 export {
   McpServers,
   type CreateMcpServerRequest,
+  type HandleMcpOAuthCallbackRequest,
+  type HandleMcpOAuthCallbackResponse,
   type ListMcpServersResponse,
   type McpServer,
+  type StartMcpOAuthRequest,
+  type StartMcpOAuthResponse,
   type UpdateMcpServerRequest,
   type McpServerCreateParams,
   type McpServerUpdateParams,
+  type McpServerHandleOAuthCallbackParams,
+  type McpServerStartOAuthParams,
 } from './mcp-servers';
 export { Organization } from './organization';
 export {
@@ -18,6 +24,7 @@ export {
   type UserUpdateParams,
   type UserListParams,
 } from './users';
+export { Reports } from './reports/index';
 export {
   TeamspacesCursorIDPage,
   Teamspaces,

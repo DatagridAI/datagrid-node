@@ -108,15 +108,39 @@ export interface SearchAIRequestBody {
   query: string;
 
   /**
+   * Product-facing grouping of one result card, aligned with the result tabs in the
+   * Datagrid web app. Derived from the card's structure and media type: tables and
+   * records are `dataset`, files with an `image/*` media type are `image`, other
+   * files and pages are `document`, and channels are `channel`.
+   */
+  display_type?: 'dataset' | 'document' | 'image' | 'channel' | null;
+
+  /**
    * Maximum number of search results to consider when generating the answer.
    */
   limit?: number | null;
+
+  /**
+   * Number of results to skip before the returned page, for paginating search
+   * results. Combine with `skip_ai_generation: true` to fetch subsequent pages
+   * without regenerating the AI answer. Honored when paginated search is enabled for
+   * the teamspace (Gen Search phase 3).
+   */
+  offset?: number | null;
 
   /**
    * Optional filter to restrict search to specific record types (rows, tables,
    * files, pages, cells).
    */
   record_types?: Array<'rows' | 'tables' | 'files' | 'pages' | 'cells'> | null;
+
+  /**
+   * When true, returns the requested page of search results without generating an AI
+   * answer (`answer` is null and `sources` is empty). Cannot be combined with
+   * streaming. Honored when paginated search is enabled for the teamspace (Gen
+   * Search phase 3).
+   */
+  skip_ai_generation?: boolean | null;
 }
 
 /**
@@ -126,8 +150,9 @@ export interface SearchAIResult {
   /**
    * AI-generated natural language answer based on the search results. Contains
    * numbered citations like [1], [2] that reference entries in the `sources` array.
+   * Null when the request set `skip_ai_generation: true`.
    */
-  answer: string;
+  answer: string | null;
 
   /**
    * Credit consumption for this search. When present, `consumed` reflects the actual
@@ -263,10 +288,30 @@ export interface SearchTreeResult {
   query: string;
 
   /**
+   * Result counts per display type across the entire result pool.
+   */
+  counts_by_display_type?: SearchTreeResult.CountsByDisplayType | null;
+
+  /**
+   * Canonical ordered result cards for this page — one item per result, in ranked
+   * order with pinned dataset/channel supplements first. Render these directly
+   * instead of traversing `data`. Only present when paginated search is enabled for
+   * the teamspace (Gen Search phase 3).
+   */
+  display_items?: Array<SearchTreeResult.DisplayItem> | null;
+
+  /**
    * Pagination cursor (numeric offset as string). Pass this value as the `next`
    * query parameter to `/search/tree` to fetch the next page.
    */
   next?: string | null;
+
+  /**
+   * Total number of grouped results in the ranked result pool across all pages
+   * (capped by the retrieval pool limit). Only present when paginated search is
+   * enabled for the teamspace (Gen Search phase 3).
+   */
+  total_count?: number | null;
 }
 
 export namespace SearchTreeResult {
@@ -280,6 +325,221 @@ export namespace SearchTreeResult {
      * The number of credits consumed by the operation.
      */
     consumed: number;
+  }
+
+  /**
+   * Result counts per display type across the entire result pool.
+   */
+  export interface CountsByDisplayType {
+    /**
+     * Number of name-matched channel results.
+     */
+    channels: number;
+
+    /**
+     * Number of dataset results: tables, data records, and name-matched datasets.
+     */
+    datasets: number;
+
+    /**
+     * Number of document results: non-image files and standalone pages (multiple
+     * matched pages of one file count as a single file).
+     */
+    documents: number;
+
+    /**
+     * Number of image results: files with an `image/*` media type.
+     */
+    images: number;
+  }
+
+  /**
+   * One search result card with no structural children. Items arrive in ranked page
+   * order; each corresponds to exactly one rendered result.
+   */
+  export interface DisplayItem {
+    /**
+     * Stable identifier of the result (document id for retrieval results, entity id
+     * for dataset/channel supplements).
+     */
+    id: string;
+
+    /**
+     * Product-facing grouping of one result card, aligned with the result tabs in the
+     * Datagrid web app. Derived from the card's structure and media type: tables and
+     * records are `dataset`, files with an `image/*` media type are `image`, other
+     * files and pages are `document`, and channels are `channel`.
+     */
+    display_type: 'dataset' | 'document' | 'image' | 'channel';
+
+    /**
+     * The kind of result card: a data record, a file, a single file page, a dataset,
+     * or a channel.
+     */
+    kind: 'record' | 'file' | 'page' | 'dataset' | 'channel';
+
+    /**
+     * The object type, always `search_display_item`.
+     */
+    object: 'search_display_item';
+
+    /**
+     * Identifier of the table this result belongs to.
+     */
+    table_id: string;
+
+    /**
+     * Card body text (matched content snippet).
+     */
+    body?: string;
+
+    /**
+     * Channel membership and visibility details for channel search results.
+     */
+    channel_data?: DisplayItem.ChannelData;
+
+    /**
+     * When the underlying item was created.
+     */
+    created_at?: string;
+
+    /**
+     * Identifier of the data-lake item backing the file.
+     */
+    data_lake_item_id?: string;
+
+    /**
+     * Name of the dataset this result belongs to.
+     */
+    dataset_name?: string;
+
+    /**
+     * Emoji icon of the dataset or channel.
+     */
+    emoji?: string;
+
+    /**
+     * Datagrid file URI for file/page media, used to resolve thumbnails and viewers.
+     */
+    file_uri?: string;
+
+    /**
+     * Media type of the file (e.g. `application/pdf`, `image/png`).
+     */
+    media_type?: string;
+
+    /**
+     * Identifier of the navigation item for the dataset or channel.
+     */
+    navigation_item_id?: string;
+
+    /**
+     * 1-based page number within the source document, for `page` items.
+     */
+    page_number?: number;
+
+    /**
+     * Datagrid file URI scoped to this page, for `page` items.
+     */
+    page_url?: string;
+
+    /**
+     * The record (row) a file or page search result is attached to.
+     */
+    parent_record?: DisplayItem.ParentRecord;
+
+    /**
+     * Relevance score of the result, between 0 and 1.
+     */
+    score?: number;
+
+    /**
+     * Fingerprint of the table, used to build dataset URLs.
+     */
+    table_fingerprint?: string;
+
+    /**
+     * Name of the table this result belongs to.
+     */
+    table_name?: string;
+
+    /**
+     * Card title.
+     */
+    title?: string;
+
+    /**
+     * Total number of pages in the source document.
+     */
+    total_pages?: number;
+
+    /**
+     * When the underlying item was last updated.
+     */
+    updated_at?: string;
+
+    /**
+     * Resolved navigation target: a trusted source deep link when available, otherwise
+     * the dataset URL in the Datagrid web app.
+     */
+    url?: string;
+  }
+
+  export namespace DisplayItem {
+    /**
+     * Channel membership and visibility details for channel search results.
+     */
+    export interface ChannelData {
+      /**
+       * Number of AI/agent members.
+       */
+      agent_count: number;
+
+      /**
+       * One of `channel`, `directMessage`, or `chats`.
+       */
+      channel_type: string;
+
+      /**
+       * Whether the requesting user is a member of this channel.
+       */
+      is_joined: boolean;
+
+      /**
+       * Whether the channel is private.
+       */
+      is_private: boolean;
+
+      /**
+       * Total number of members (people + agents).
+       */
+      participant_count: number;
+
+      /**
+       * Number of human members.
+       */
+      people_count: number;
+    }
+
+    /**
+     * The record (row) a file or page search result is attached to.
+     */
+    export interface ParentRecord {
+      /**
+       * Document identifier of the record.
+       */
+      id: string;
+
+      /**
+       * Record summary text.
+       */
+      body?: string;
+
+      /**
+       * Record title.
+       */
+      title?: string;
+    }
   }
 }
 
@@ -350,15 +610,39 @@ export interface SearchSearchAIParams {
   query: string;
 
   /**
+   * Product-facing grouping of one result card, aligned with the result tabs in the
+   * Datagrid web app. Derived from the card's structure and media type: tables and
+   * records are `dataset`, files with an `image/*` media type are `image`, other
+   * files and pages are `document`, and channels are `channel`.
+   */
+  display_type?: 'dataset' | 'document' | 'image' | 'channel' | null;
+
+  /**
    * Maximum number of search results to consider when generating the answer.
    */
   limit?: number | null;
+
+  /**
+   * Number of results to skip before the returned page, for paginating search
+   * results. Combine with `skip_ai_generation: true` to fetch subsequent pages
+   * without regenerating the AI answer. Honored when paginated search is enabled for
+   * the teamspace (Gen Search phase 3).
+   */
+  offset?: number | null;
 
   /**
    * Optional filter to restrict search to specific record types (rows, tables,
    * files, pages, cells).
    */
   record_types?: Array<'rows' | 'tables' | 'files' | 'pages' | 'cells'> | null;
+
+  /**
+   * When true, returns the requested page of search results without generating an AI
+   * answer (`answer` is null and `sources` is empty). Cannot be combined with
+   * streaming. Honored when paginated search is enabled for the teamspace (Gen
+   * Search phase 3).
+   */
+  skip_ai_generation?: boolean | null;
 }
 
 export interface SearchSearchTreeParams {
@@ -366,6 +650,14 @@ export interface SearchSearchTreeParams {
    * The natural language search query.
    */
   query: string;
+
+  /**
+   * Filter results to one display type (dataset, document, image, or channel).
+   * Applied before pagination, so pages cover the full filtered result pool. When
+   * omitted, all display types are returned. Honored when paginated search is
+   * enabled for the teamspace (Gen Search phase 3).
+   */
+  display_type?: 'dataset' | 'document' | 'image' | 'channel';
 
   /**
    * The limit on the number of objects to return, ranging between 1 and 100.

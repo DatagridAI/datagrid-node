@@ -42,6 +42,23 @@ export class Messages extends APIResource {
       ...options,
     });
   }
+
+  /**
+   * Record a like or dislike on a conversation message. When the user has consented
+   * to data sharing, the associated trace is donated for troubleshooting.
+   */
+  submitFeedback(
+    conversationId: string,
+    messageId: string,
+    body: MessageSubmitFeedbackParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<void> {
+    return this._client.post(`/conversations/${conversationId}/messages/${messageId}`, {
+      body,
+      ...options,
+      headers: { Accept: '*/*', ...options?.headers },
+    });
+  }
 }
 
 export class MessagesCursorIDPage extends CursorIDPage<Message> {}
@@ -69,7 +86,12 @@ export interface Message {
   /**
    * Contents of the message.
    */
-  content: Array<Message.MessageContentText | Message.MessageContentVoice | Message.MessageContentFile>;
+  content: Array<
+    | Message.MessageContentText
+    | Message.MessageContentJson
+    | Message.MessageContentVoice
+    | Message.MessageContentFile
+  >;
 
   /**
    * The ID of the conversation the message belongs to.
@@ -126,14 +148,90 @@ export namespace Message {
       type: 'image' | 'pdf_page' | 'record' | 'web_search' | 'sql_query_result' | 'action';
 
       /**
-       * Id of the source.
+       * Origin-system deep-link for the source (e.g. an `app.procore.com` universal
+       * link), when one exists. Unlike `source_uri`, it is never overridden by the
+       * signed Datagrid file URI, so clients can offer an "open in source" action.
+       */
+      external_url?: string;
+
+      /**
+       * record only. Backend-normalized, render-ready structured fields promoted from
+       * the record row (due date, ball-in-court, assignee, revision, type, vendor,
+       * scope, …). Excludes `status`, which is surfaced on its own.
+       */
+      fields?: Array<Source.Field>;
+
+      /**
+       * record / pdf_page only. Procore tool type of the underlying record (e.g.
+       * "rfi_headers", "submittal_logs"), read from the indexed Procore item type on the
+       * source row; present only for sources ingested from Procore. Lets clients render
+       * a reliable type label (RFI, Submittal, Observation, …) without parsing the
+       * deep-link URL.
+       */
+      item_type?: string;
+
+      /**
+       * pdf_page only. 1-based page number within the source document. Omitted when the
+       * page is unknown; never `0`.
+       */
+      page_number?: number;
+
+      /**
+       * Id of the source when Datagrid holds one (dataset id, or data-lake item id for
+       * file-backed `pdf_page`). Omitted for `pdf_page` sources with no Datagrid-backed
+       * file.
        */
       source_id?: string;
 
       /**
-       * URI of the source.
+       * URI of the source. For file-backed sources this is the in-app target (signed
+       * Datagrid file URI when available); use `external_url` for the origin-system
+       * deep-link. For `pdf_page` sources with no Datagrid file, this is the
+       * origin-system deep-link and matches `external_url`; locate the page with
+       * `page_number`.
        */
       source_uri?: string;
+
+      /**
+       * record only. Primary status value for the record (e.g. "Open", "Pending
+       * Review"), surfaced separately from `fields` so clients can render a status chip.
+       */
+      status?: string;
+
+      /**
+       * record only. Locale-stable status bucket from the source mapped field
+       * (`mapped_to_status`), never parsed from the display `status` string. `open`,
+       * `closed`, and `in_progress` map to semantic fills; `custom` and omission both
+       * mean a default gray fill.
+       */
+      status_category?: 'open' | 'closed' | 'in_progress' | 'custom';
+
+      /**
+       * record only. Source-system color for the record status (hex or named token),
+       * when the indexed row carries one. Omitted when absent. Clients must not invent a
+       * color from `status`.
+       */
+      status_color?: string;
+
+      /**
+       * record only. Preview image URL from the indexed row (e.g. a Drawings thumbnail).
+       * Omitted when the row has none.
+       */
+      thumbnail_url?: string;
+    }
+
+    export namespace Source {
+      export interface Field {
+        /**
+         * Human-readable field label (e.g. "Due Date").
+         */
+        label: string;
+
+        /**
+         * Human-readable field value (e.g. "2025-09-14").
+         */
+        value: string;
+      }
     }
   }
 
@@ -147,6 +245,18 @@ export namespace Message {
     text: string;
 
     type: 'text';
+  }
+
+  /**
+   * JSON content for structured-output responses.
+   */
+  export interface MessageContentJson {
+    /**
+     * The JSON value produced by the agent.
+     */
+    json: unknown;
+
+    type: 'json';
   }
 
   /**
@@ -176,9 +286,9 @@ export namespace Message {
     agent_transcript?: string | null;
 
     /**
-     * Per-turn transcript, citation, and tool-call status events in chronological
-     * order. Each entry includes a timestamp offset from the start of the voice
-     * session. Present only for voice sessions that recorded timeline data.
+     * Per-turn transcript, citation, tool-call status, and attachment events in
+     * chronological order. Each entry includes a timestamp offset from the start of
+     * the voice session. Present only for voice sessions that recorded timeline data.
      */
     timeline_events?: Array<MessageContentVoice.TimelineEvent>;
   }
@@ -229,7 +339,7 @@ export namespace Message {
 
     /**
      * A single event from a voice session timeline, representing a transcript turn,
-     * citation, or tool-call status update.
+     * citation, tool-call status update, or an attached file.
      */
     export interface TimelineEvent {
       /**
@@ -240,12 +350,30 @@ export namespace Message {
       /**
        * The type of timeline event.
        */
-      type: 'transcript' | 'citation' | 'tool_call_status';
+      type: 'transcript' | 'citation' | 'tool_call_status' | 'attachment';
 
       /**
        * Citations for this event. Present when type is 'citation'.
        */
       citations?: Array<TimelineEvent.Citation>;
+
+      /**
+       * Identifier of the attached file, as returned by the files endpoint. Retrieve its
+       * bytes from `/v1/files/{file_id}/content`. Present when type is 'attachment'.
+       */
+      file_id?: string;
+
+      /**
+       * Original name of the attached file. Present when type is 'attachment', and only
+       * when the file was uploaded with a name.
+       */
+      filename?: string;
+
+      /**
+       * Media type of the attached file, for example `image/jpeg`. Present when type is
+       * 'attachment'.
+       */
+      media_type?: string;
 
       /**
        * The role of the participant for this event.
@@ -263,9 +391,27 @@ export namespace Message {
       text?: string;
 
       /**
+       * Server-generated id shared by the started, completed, and failed events of one
+       * call. Present when type is 'tool_call_status'. Optional on events recorded
+       * before this field existed.
+       */
+      tool_call_id?: string;
+
+      /**
        * Name of the tool whose status changed. Present when type is 'tool_call_status'.
        */
       tool_name?: string;
+
+      /**
+       * Identifies the conversational turn this event belongs to. Every 'transcript' and
+       * 'citation' event produced by the same turn shares one value, so a citation can
+       * be grouped with the transcripts it came from without relying on the order events
+       * appear in. On 'tool_call_status', this is the turn the call started in; a later
+       * completed or failed event keeps that value even if the session has moved on.
+       * Absent on events recorded before this field existed, and on the 'attachment'
+       * type; fall back to event order in those cases.
+       */
+      turn_index?: number;
     }
 
     export namespace TimelineEvent {
@@ -296,14 +442,90 @@ export namespace Message {
           type: 'image' | 'pdf_page' | 'record' | 'web_search' | 'sql_query_result' | 'action';
 
           /**
-           * Id of the source.
+           * Origin-system deep-link for the source (e.g. an `app.procore.com` universal
+           * link), when one exists. Unlike `source_uri`, it is never overridden by the
+           * signed Datagrid file URI, so clients can offer an "open in source" action.
+           */
+          external_url?: string;
+
+          /**
+           * record only. Backend-normalized, render-ready structured fields promoted from
+           * the record row (due date, ball-in-court, assignee, revision, type, vendor,
+           * scope, …). Excludes `status`, which is surfaced on its own.
+           */
+          fields?: Array<Source.Field>;
+
+          /**
+           * record / pdf_page only. Procore tool type of the underlying record (e.g.
+           * "rfi_headers", "submittal_logs"), read from the indexed Procore item type on the
+           * source row; present only for sources ingested from Procore. Lets clients render
+           * a reliable type label (RFI, Submittal, Observation, …) without parsing the
+           * deep-link URL.
+           */
+          item_type?: string;
+
+          /**
+           * pdf_page only. 1-based page number within the source document. Omitted when the
+           * page is unknown; never `0`.
+           */
+          page_number?: number;
+
+          /**
+           * Id of the source when Datagrid holds one (dataset id, or data-lake item id for
+           * file-backed `pdf_page`). Omitted for `pdf_page` sources with no Datagrid-backed
+           * file.
            */
           source_id?: string;
 
           /**
-           * URI of the source.
+           * URI of the source. For file-backed sources this is the in-app target (signed
+           * Datagrid file URI when available); use `external_url` for the origin-system
+           * deep-link. For `pdf_page` sources with no Datagrid file, this is the
+           * origin-system deep-link and matches `external_url`; locate the page with
+           * `page_number`.
            */
           source_uri?: string;
+
+          /**
+           * record only. Primary status value for the record (e.g. "Open", "Pending
+           * Review"), surfaced separately from `fields` so clients can render a status chip.
+           */
+          status?: string;
+
+          /**
+           * record only. Locale-stable status bucket from the source mapped field
+           * (`mapped_to_status`), never parsed from the display `status` string. `open`,
+           * `closed`, and `in_progress` map to semantic fills; `custom` and omission both
+           * mean a default gray fill.
+           */
+          status_category?: 'open' | 'closed' | 'in_progress' | 'custom';
+
+          /**
+           * record only. Source-system color for the record status (hex or named token),
+           * when the indexed row carries one. Omitted when absent. Clients must not invent a
+           * color from `status`.
+           */
+          status_color?: string;
+
+          /**
+           * record only. Preview image URL from the indexed row (e.g. a Drawings thumbnail).
+           * Omitted when the row has none.
+           */
+          thumbnail_url?: string;
+        }
+
+        export namespace Source {
+          export interface Field {
+            /**
+             * Human-readable field label (e.g. "Due Date").
+             */
+            label: string;
+
+            /**
+             * Human-readable field value (e.g. "2025-09-14").
+             */
+            value: string;
+          }
         }
       }
     }
@@ -337,6 +559,23 @@ export namespace Message {
 
 export interface MessageListParams extends CursorIDPageParams {}
 
+export interface MessageSubmitFeedbackParams {
+  /**
+   * `1` for thumbs up, `-1` for thumbs down.
+   */
+  like: 1 | -1;
+
+  /**
+   * Optional free-text comment.
+   */
+  feedback?: string | null;
+
+  /**
+   * Client surface where the user submitted feedback.
+   */
+  ui_surface?: 'datagrid_web' | 'procore_embed' | 'field_ai_mobile' | null;
+}
+
 Messages.MessagesCursorIDPage = MessagesCursorIDPage;
 
 export declare namespace Messages {
@@ -344,5 +583,6 @@ export declare namespace Messages {
     type Message as Message,
     MessagesCursorIDPage as MessagesCursorIDPage,
     type MessageListParams as MessageListParams,
+    type MessageSubmitFeedbackParams as MessageSubmitFeedbackParams,
   };
 }

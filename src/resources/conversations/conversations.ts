@@ -4,7 +4,13 @@ import { APIResource } from '../../resource';
 import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
 import * as MessagesAPI from './messages';
-import { Message, MessageListParams, Messages, MessagesCursorIDPage } from './messages';
+import {
+  Message,
+  MessageListParams,
+  MessageSubmitFeedbackParams,
+  Messages,
+  MessagesCursorIDPage,
+} from './messages';
 import { CursorIDPage, type CursorIDPageParams } from '../../pagination';
 
 export class Conversations extends APIResource {
@@ -139,6 +145,36 @@ export interface ConversationListParams extends CursorIDPageParams {
   direction?: 'asc' | 'desc';
 
   /**
+   * When true, excludes conversations that never had a message sent (e.g. abandoned
+   * sessions). Defaults to false, returning every conversation regardless of message
+   * count. Changing this value between requests that reuse the same `before`/`after`
+   * cursor is not supported — the cursor was computed against a different result
+   * set, so pass a consistent value for the lifetime of a given pagination sequence.
+   */
+  has_messages?: boolean;
+
+  /**
+   * When true, restricts the list to conversations that contain at least one voice
+   * message. Defaults to false, returning conversations regardless of modality.
+   * Changing this value between requests that reuse the same `before`/`after` cursor
+   * is not supported — the cursor was computed against a different result set, so
+   * pass a consistent value for the lifetime of a given pagination sequence.
+   */
+  has_voice_messages?: boolean;
+
+  /**
+   * When true, restricts the list to conversations that contain at least one voice
+   * message or had a message sent from the Datagrid mobile app. Defaults to false,
+   * returning conversations regardless of modality or client. Combined with
+   * `has_voice_messages=true`, both filters apply and only voice conversations are
+   * returned. Changing this value between requests that reuse the same
+   * `before`/`after` cursor is not supported — the cursor was computed against a
+   * different result set, so pass a consistent value for the lifetime of a given
+   * pagination sequence.
+   */
+  has_voice_or_mobile_messages?: boolean;
+
+  /**
    * The field to sort the conversations by.
    */
   sort?: ConversationSortField;
@@ -163,5 +199,6 @@ export declare namespace Conversations {
     type Message as Message,
     MessagesCursorIDPage as MessagesCursorIDPage,
     type MessageListParams as MessageListParams,
+    type MessageSubmitFeedbackParams as MessageSubmitFeedbackParams,
   };
 }

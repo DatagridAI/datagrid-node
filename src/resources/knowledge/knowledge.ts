@@ -37,12 +37,20 @@ export class KnowledgeResource extends APIResource {
 
   /**
    * Update a knowledge's attributes. Each request can include either `files` or
-   * `sync`, but not both. When `files` are provided, all existing data is replaced
-   * and a re-processing pipeline runs asynchronously — this consumes credits based
-   * on the volume of data processed. Metadata-only and sync-only updates do not
-   * consume credits and are not blocked by credit eligibility checks. If the
-   * asynchronous processing run later fails, subsequent retrievals surface that
-   * terminal state through `status` and `last_error`.
+   * `sync`, but not both, and `files` cannot be combined with
+   * `semantic_indexing_enabled: true` — upload files first, then enable indexing in
+   * a separate request. When `files` are provided, all existing data is replaced and
+   * a re-processing pipeline runs asynchronously — this consumes credits based on
+   * the volume of data processed. Setting `semantic_indexing_enabled` to `true` on
+   * SQL-only knowledge is a one-way upgrade: it enables semantic indexing, consumes
+   * credits, and triggers an asynchronous backfill of existing records. If the
+   * upgrade is persisted but the backfill fails to start, the request returns `503`
+   * — retry the backfill with `POST /v1/knowledge/{knowledge_id}/reindex` (repeating
+   * the PATCH will not re-trigger it, because indexing is already enabled).
+   * Metadata-only and sync-only updates do not consume credits and are not blocked
+   * by credit eligibility checks. If the asynchronous processing run later fails,
+   * subsequent retrievals surface that terminal state through `status` and
+   * `last_error`.
    */
   update(
     knowledgeId: string,
@@ -196,6 +204,12 @@ export interface Knowledge {
   credits: Knowledge.Credits | null;
 
   /**
+   * The knowledge-level indexing override. `none` means semantic indexing is
+   * disabled; `null` means Datagrid uses its normal indexing defaults.
+   */
+  default_indexing_quality: 'none' | null;
+
+  /**
    * The last terminal processing error for this knowledge, if any. Present when the
    * latest asynchronous processing or re-index run ended unsuccessfully; `null` when
    * the knowledge is `failed` only because every row ended in a persistent failed
@@ -232,13 +246,15 @@ export interface Knowledge {
 
   /**
    * The current knowledge status. `pending` indicates that processing has started
-   * but no rows have been learned yet. `partial` indicates that some rows are
-   * available, but processing is either still running or ended with incomplete
-   * results. `ready` indicates that processing finished successfully and the
-   * knowledge is fully available. `failed` indicates that no rows are currently
-   * available and the knowledge reached a terminal failure state, either because the
-   * latest asynchronous processing or re-index run ended unsuccessfully before any
-   * rows became available, or because every row ended in a persistent failed state.
+   * but no rows have reached a terminal state yet (none learned, none failed).
+   * `partial` indicates that processing has not finished for every row — some rows
+   * may already be learned or failed while others are still being processed. `ready`
+   * indicates that processing has finished and the knowledge is available for use;
+   * some individual rows may have failed to process, so check `row_counts.failed`.
+   * `failed` indicates that no rows are currently available and the knowledge
+   * reached a terminal failure state, either because the latest asynchronous
+   * processing or re-index run ended unsuccessfully before any rows became
+   * available, or because every row ended in a persistent failed state.
    */
   status: 'pending' | 'partial' | 'ready' | 'failed';
 
@@ -642,6 +658,12 @@ export interface KnowledgeCreateParams {
    * created at the root level.
    */
   parent?: KnowledgeCreateParams.ParentPage | KnowledgeCreateParams.RootPage | null;
+
+  /**
+   * Whether semantic indexing is enabled for tables created under this knowledge.
+   * Set to `false` to keep records SQL-queryable without vector indexing.
+   */
+  semantic_indexing_enabled?: boolean | null;
 }
 
 export namespace KnowledgeCreateParams {
@@ -696,6 +718,15 @@ export interface KnowledgeUpdateParams {
    * organization.
    */
   scope?: 'teamspace' | 'organization' | null;
+
+  /**
+   * Whether semantic indexing is enabled for this knowledge. Set to `true` to
+   * upgrade SQL-only knowledge so existing and future records are semantically
+   * indexed. This transition is one-way: setting `false` is rejected, as is
+   * combining it with `files`. Omitted leaves indexing unchanged. Already-indexed
+   * knowledge is a no-op.
+   */
+  semantic_indexing_enabled?: boolean | null;
 
   /**
    * Sync configuration updates for knowledge created from a connection. Note: For

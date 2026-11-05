@@ -5,10 +5,13 @@ import { isRequestOptions } from '../../../core';
 import * as Core from '../../../core';
 import * as RecordsAPI from './records';
 import { Record, RecordListParams, Records, RecordsCursorPage } from './records';
+import * as SummariesAPI from './summaries';
+import { Summaries, SummariesCursorPage, Summary, SummaryListParams } from './summaries';
 import { CursorIDPage, type CursorIDPageParams } from '../../../pagination';
 
 export class Tables extends APIResource {
   records: RecordsAPI.Records = new RecordsAPI.Records(this._client);
+  summaries: SummariesAPI.Summaries = new SummariesAPI.Summaries(this._client);
 
   /**
    * Retrieves a table by id.
@@ -80,6 +83,8 @@ export interface TableListParams extends CursorIDPageParams {
 Tables.TablesCursorIDPage = TablesCursorIDPage;
 Tables.Records = Records;
 Tables.RecordsCursorPage = RecordsCursorPage;
+Tables.Summaries = Summaries;
+Tables.SummariesCursorPage = SummariesCursorPage;
 
 export declare namespace Tables {
   export {
@@ -93,5 +98,12 @@ export declare namespace Tables {
     type Record as Record,
     RecordsCursorPage as RecordsCursorPage,
     type RecordListParams as RecordListParams,
+  };
+
+  export {
+    Summaries as Summaries,
+    type Summary as Summary,
+    SummariesCursorPage as SummariesCursorPage,
+    type SummaryListParams as SummaryListParams,
   };
 }

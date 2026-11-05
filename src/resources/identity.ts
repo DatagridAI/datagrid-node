@@ -18,12 +18,15 @@ export interface Identity {
    * The teamspace ID this request is scoped to. Resolution depends on the caller
    * type:
    *
-   * - **Org-scoped API keys** (default): always the teamspace the key was minted in.
-   *   The `Datagrid-Teamspace` header is ignored.
-   * - **Account-scoped API keys** (`scopeLevel: "account"`): the teamspace selected
-   *   by the `Datagrid-Teamspace` header, when that teamspace lives under the same
-   *   account as the key. Falls back to the key's home teamspace when the header is
-   *   absent.
+   * - **API keys with "All Teamspaces" access** (`scopeLevel: "account"`): the
+   *   teamspace selected by the `Datagrid-Teamspace` header, when that teamspace
+   *   lives under the same account as the key's home teamspace.
+   * - **API keys with "Selected Teamspaces" access** (`scopeLevel: "org"`): the
+   *   teamspace selected by the `Datagrid-Teamspace` header, when it is on the key's
+   *   teamspace list. A key whose list holds only its home teamspace ignores the
+   *   header.
+   * - For either kind of key, the key's home teamspace (the one it was created in)
+   *   when the header is absent.
    * - **JWT callers**: the `Datagrid-Teamspace` header when present (and the user is
    *   a member), otherwise the user's default teamspace.
    */
@@ -40,6 +43,35 @@ export interface Identity {
    * The ID of the authenticated user.
    */
   user_id: string;
+
+  /**
+   * The Procore company and project the current teamspace is bound to. Omitted when
+   * the teamspace's account is not linked to a Procore company.
+   */
+  procore?: IdentityProcore;
+}
+
+export interface IdentityProcore {
+  /**
+   * The Procore company ID the current teamspace's account is linked to.
+   */
+  company_id: string;
+
+  /**
+   * The name of the linked Procore company, as stored in Datagrid.
+   */
+  company_name: string;
+
+  /**
+   * The Procore project ID the current teamspace is bound to. Omitted when the
+   * teamspace is not project-scoped.
+   */
+  project_id?: string;
+
+  /**
+   * The Procore zone the company lives in. Omitted when unknown.
+   */
+  zone?: string;
 }
 
 export interface IdentityTeamspace {
@@ -84,5 +116,9 @@ export namespace IdentityTeamspace {
 }
 
 export declare namespace IdentityResource {
-  export { type Identity as Identity, type IdentityTeamspace as IdentityTeamspace };
+  export {
+    type Identity as Identity,
+    type IdentityProcore as IdentityProcore,
+    type IdentityTeamspace as IdentityTeamspace,
+  };
 }

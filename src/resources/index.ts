@@ -1,9 +1,10 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export {
-  AgentsCursorIDPage,
+  AgentListItemsCursorIDPage,
   Agents,
   type Agent,
+  type AgentListItem,
   type AgentClaimResponse,
   type AgentGenerateResponse,
   type AgentCreateParams,
@@ -11,7 +12,7 @@ export {
   type AgentListParams,
   type AgentClaimParams,
   type AgentGenerateParams,
-} from './agents';
+} from './agents/agents';
 export {
   BatchPredictionsAfterCursorPage,
   BatchPredictions,
@@ -25,6 +26,29 @@ export {
   type BatchPredictionListParams,
 } from './batch-predictions';
 export { Beta } from './beta/beta';
+export {
+  ChannelsCursorIDPage,
+  ChannelMembersCursorIDPage,
+  ChannelMessagesCursorIDPage,
+  ChannelThreadsCursorIDPage,
+  Channels,
+  type Channel,
+  type ChannelMember,
+  type ChannelMessage,
+  type ChannelThread,
+  type ChannelAddMembersResponse,
+  type ChannelCreateParams,
+  type ChannelUpdateParams,
+  type ChannelListParams,
+  type ChannelAddMembersParams,
+  type ChannelAddReactionParams,
+  type ChannelCreateMessageParams,
+  type ChannelCreateThreadMessageParams,
+  type ChannelListMembersParams,
+  type ChannelListMessagesParams,
+  type ChannelListThreadMessagesParams,
+  type ChannelListThreadsParams,
+} from './channels';
 export {
   ConnectionProvidersCursorIDPage,
   ConnectionProviders,
@@ -77,7 +101,7 @@ export {
   type KnowledgeCreatedPayload,
   type ResizePayload,
 } from './i-frame-events';
-export { IdentityResource, type Identity, type IdentityTeamspace } from './identity';
+export { IdentityResource, type Identity, type IdentityProcore, type IdentityTeamspace } from './identity';
 export {
   KnowledgesCursorIDPage,
   KnowledgeResource,
@@ -93,6 +117,7 @@ export {
   type KnowledgeConnectParams,
 } from './knowledge/knowledge';
 export { Memory } from './memory/memory';
+export { Models, type Model, type ModelListResponse } from './models';
 export { Organization } from './organization/organization';
 export {
   PagesCursorIDPage,
@@ -102,6 +127,16 @@ export {
   type PageUpdateParams,
   type PageListParams,
 } from './pages';
+export {
+  Procore,
+  type ProcoreCompany,
+  type ProcoreCompanyList,
+  type ProcoreProject,
+  type ProcoreProjectConnection,
+  type ProcoreProjectList,
+  type ProcoreListCompaniesParams,
+  type ProcoreListProjectsParams,
+} from './procore';
 export {
   Search,
   type AISource,
@@ -123,6 +158,19 @@ export {
   type SecretCreateParams,
   type SecretListParams,
 } from './secrets';
+export {
+  SkillsCursorIDPage,
+  Skills,
+  type BuiltinSkill,
+  type Skill,
+  type SkillDraft,
+  type SkillGenerateResponse,
+  type SkillListBuiltinsResponse,
+  type SkillCreateParams,
+  type SkillUpdateParams,
+  type SkillListParams,
+  type SkillGenerateParams,
+} from './skills';
 export {
   ToolDefsCursorNamePage,
   Tools,

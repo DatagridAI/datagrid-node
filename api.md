@@ -51,6 +51,16 @@ Methods:
 
 - <code title="get /tables/{table_id}/records">client.knowledge.tables.records.<a href="./src/resources/knowledge/tables/records.ts">list</a>(tableId, { ...params }) -> RecordsCursorPage</code>
 
+### Summaries
+
+Types:
+
+- <code><a href="./src/resources/knowledge/tables/summaries.ts">Summary</a></code>
+
+Methods:
+
+- <code title="get /tables/{table_id}/summaries">client.knowledge.tables.summaries.<a href="./src/resources/knowledge/tables/summaries.ts">list</a>(tableId, { ...params }) -> SummariesCursorPage</code>
+
 # Connections
 
 Types:
@@ -174,34 +184,136 @@ Methods:
 - <code title="post /search/ai">client.search.<a href="./src/resources/search.ts">searchAI</a>({ ...params }) -> SearchAIResult</code>
 - <code title="get /search/tree">client.search.<a href="./src/resources/search.ts">searchTree</a>({ ...params }) -> SearchTreeResult</code>
 
+# Skills
+
+Types:
+
+- <code><a href="./src/resources/skills.ts">BuiltinSkill</a></code>
+- <code><a href="./src/resources/skills.ts">Skill</a></code>
+- <code><a href="./src/resources/skills.ts">SkillDraft</a></code>
+- <code><a href="./src/resources/skills.ts">SkillGenerateResponse</a></code>
+- <code><a href="./src/resources/skills.ts">SkillListBuiltinsResponse</a></code>
+
+Methods:
+
+- <code title="post /skills">client.skills.<a href="./src/resources/skills.ts">create</a>({ ...params }) -> Skill</code>
+- <code title="get /skills/{skill_id}">client.skills.<a href="./src/resources/skills.ts">retrieve</a>(skillId) -> Skill</code>
+- <code title="patch /skills/{skill_id}">client.skills.<a href="./src/resources/skills.ts">update</a>(skillId, { ...params }) -> Skill</code>
+- <code title="get /skills">client.skills.<a href="./src/resources/skills.ts">list</a>({ ...params }) -> SkillsCursorIDPage</code>
+- <code title="delete /skills/{skill_id}">client.skills.<a href="./src/resources/skills.ts">delete</a>(skillId) -> void</code>
+- <code title="post /skills/{skill_id}/clone">client.skills.<a href="./src/resources/skills.ts">clone</a>(skillId) -> Skill</code>
+- <code title="post /skills/{skill_id}/demote">client.skills.<a href="./src/resources/skills.ts">demote</a>(skillId) -> Skill</code>
+- <code title="post /skills/generate">client.skills.<a href="./src/resources/skills.ts">generate</a>({ ...params }) -> SkillGenerateResponse</code>
+- <code title="get /skills/builtin">client.skills.<a href="./src/resources/skills.ts">listBuiltins</a>() -> SkillListBuiltinsResponse</code>
+- <code title="post /skills/builtin/{builtin_key}/override">client.skills.<a href="./src/resources/skills.ts">overrideBuiltin</a>(builtinKey) -> Skill</code>
+- <code title="post /skills/{skill_id}/promote">client.skills.<a href="./src/resources/skills.ts">promote</a>(skillId) -> Skill</code>
+- <code title="post /skills/builtin/{builtin_key}/reset">client.skills.<a href="./src/resources/skills.ts">resetBuiltinOverride</a>(builtinKey) -> void</code>
+
 # Agents
 
 Types:
 
-- <code><a href="./src/resources/agents.ts">Agent</a></code>
-- <code><a href="./src/resources/agents.ts">AgentClaimResponse</a></code>
-- <code><a href="./src/resources/agents.ts">AgentGenerateResponse</a></code>
+- <code><a href="./src/resources/agents/agents.ts">Agent</a></code>
+- <code><a href="./src/resources/agents/agents.ts">AgentListItem</a></code>
+- <code><a href="./src/resources/agents/agents.ts">AgentClaimResponse</a></code>
+- <code><a href="./src/resources/agents/agents.ts">AgentGenerateResponse</a></code>
 
 Methods:
 
-- <code title="post /agents">client.agents.<a href="./src/resources/agents.ts">create</a>({ ...params }) -> Agent</code>
-- <code title="get /agents/{agent_id}">client.agents.<a href="./src/resources/agents.ts">retrieve</a>(agentId) -> Agent</code>
-- <code title="patch /agents/{agent_id}">client.agents.<a href="./src/resources/agents.ts">update</a>(agentId, { ...params }) -> Agent</code>
-- <code title="get /agents">client.agents.<a href="./src/resources/agents.ts">list</a>({ ...params }) -> AgentsCursorIDPage</code>
-- <code title="delete /agents/{agent_id}">client.agents.<a href="./src/resources/agents.ts">delete</a>(agentId) -> void</code>
-- <code title="post /agents/claim">client.agents.<a href="./src/resources/agents.ts">claim</a>({ ...params }) -> AgentClaimResponse</code>
-- <code title="post /agents/generate">client.agents.<a href="./src/resources/agents.ts">generate</a>({ ...params }) -> AgentGenerateResponse</code>
+- <code title="post /agents">client.agents.<a href="./src/resources/agents/agents.ts">create</a>({ ...params }) -> Agent</code>
+- <code title="get /agents/{agent_id}">client.agents.<a href="./src/resources/agents/agents.ts">retrieve</a>(agentId) -> Agent</code>
+- <code title="patch /agents/{agent_id}">client.agents.<a href="./src/resources/agents/agents.ts">update</a>(agentId, { ...params }) -> Agent</code>
+- <code title="get /agents">client.agents.<a href="./src/resources/agents/agents.ts">list</a>({ ...params }) -> AgentListItemsCursorIDPage</code>
+- <code title="delete /agents/{agent_id}">client.agents.<a href="./src/resources/agents/agents.ts">delete</a>(agentId) -> void</code>
+- <code title="post /agents/claim">client.agents.<a href="./src/resources/agents/agents.ts">claim</a>({ ...params }) -> AgentClaimResponse</code>
+- <code title="post /agents/generate">client.agents.<a href="./src/resources/agents/agents.ts">generate</a>({ ...params }) -> AgentGenerateResponse</code>
+
+## Automations
+
+Types:
+
+- <code><a href="./src/resources/agents/automations.ts">Automation</a></code>
+
+Methods:
+
+- <code title="post /agents/{agent_id}/automations">client.agents.automations.<a href="./src/resources/agents/automations.ts">create</a>(agentId, { ...params }) -> Automation</code>
+- <code title="get /agents/{agent_id}/automations/{automation_id}">client.agents.automations.<a href="./src/resources/agents/automations.ts">retrieve</a>(agentId, automationId) -> Automation</code>
+- <code title="patch /agents/{agent_id}/automations/{automation_id}">client.agents.automations.<a href="./src/resources/agents/automations.ts">update</a>(agentId, automationId, { ...params }) -> Automation</code>
+- <code title="get /agents/{agent_id}/automations">client.agents.automations.<a href="./src/resources/agents/automations.ts">list</a>(agentId, { ...params }) -> AutomationsCursorIDPage</code>
+- <code title="delete /agents/{agent_id}/automations/{automation_id}">client.agents.automations.<a href="./src/resources/agents/automations.ts">delete</a>(agentId, automationId) -> void</code>
+
+## EventTriggers
+
+Types:
+
+- <code><a href="./src/resources/agents/event-triggers.ts">AgentEventTrigger</a></code>
+- <code><a href="./src/resources/agents/event-triggers.ts">EventTriggerCreateResponse</a></code>
+- <code><a href="./src/resources/agents/event-triggers.ts">EventTriggerUpdateResponse</a></code>
+- <code><a href="./src/resources/agents/event-triggers.ts">EventTriggerListResponse</a></code>
+
+Methods:
+
+- <code title="post /agents/{agent_id}/event-triggers">client.agents.eventTriggers.<a href="./src/resources/agents/event-triggers.ts">create</a>(agentId, { ...params }) -> EventTriggerCreateResponse</code>
+- <code title="patch /agents/{agent_id}/event-triggers/{trigger_id}">client.agents.eventTriggers.<a href="./src/resources/agents/event-triggers.ts">update</a>(agentId, triggerId, { ...params }) -> EventTriggerUpdateResponse</code>
+- <code title="get /agents/{agent_id}/event-triggers">client.agents.eventTriggers.<a href="./src/resources/agents/event-triggers.ts">list</a>(agentId) -> EventTriggerListResponse</code>
+- <code title="delete /agents/{agent_id}/event-triggers/{trigger_id}">client.agents.eventTriggers.<a href="./src/resources/agents/event-triggers.ts">delete</a>(agentId, triggerId) -> void</code>
+
+# Channels
+
+Types:
+
+- <code><a href="./src/resources/channels.ts">Channel</a></code>
+- <code><a href="./src/resources/channels.ts">ChannelMember</a></code>
+- <code><a href="./src/resources/channels.ts">ChannelMessage</a></code>
+- <code><a href="./src/resources/channels.ts">ChannelThread</a></code>
+- <code><a href="./src/resources/channels.ts">ChannelAddMembersResponse</a></code>
+
+Methods:
+
+- <code title="post /channels">client.channels.<a href="./src/resources/channels.ts">create</a>({ ...params }) -> Channel</code>
+- <code title="get /channels/{channel_id}">client.channels.<a href="./src/resources/channels.ts">retrieve</a>(channelId) -> Channel</code>
+- <code title="patch /channels/{channel_id}">client.channels.<a href="./src/resources/channels.ts">update</a>(channelId, { ...params }) -> Channel</code>
+- <code title="get /channels">client.channels.<a href="./src/resources/channels.ts">list</a>({ ...params }) -> ChannelsCursorIDPage</code>
+- <code title="post /channels/{channel_id}/members">client.channels.<a href="./src/resources/channels.ts">addMembers</a>(channelId, { ...params }) -> ChannelAddMembersResponse</code>
+- <code title="post /channels/{channel_id}/messages/{message_id}/reactions">client.channels.<a href="./src/resources/channels.ts">addReaction</a>(channelId, messageId, { ...params }) -> ChannelMessage</code>
+- <code title="post /channels/{channel_id}/messages">client.channels.<a href="./src/resources/channels.ts">createMessage</a>(channelId, { ...params }) -> ChannelMessage</code>
+- <code title="post /channels/{channel_id}/messages/{message_id}/threads">client.channels.<a href="./src/resources/channels.ts">createThread</a>(channelId, messageId) -> ChannelThread</code>
+- <code title="post /channels/{channel_id}/threads/{thread_id}/messages">client.channels.<a href="./src/resources/channels.ts">createThreadMessage</a>(channelId, threadId, { ...params }) -> ChannelMessage</code>
+- <code title="get /channels/{channel_id}/members">client.channels.<a href="./src/resources/channels.ts">listMembers</a>(channelId, { ...params }) -> ChannelMembersCursorIDPage</code>
+- <code title="get /channels/{channel_id}/messages">client.channels.<a href="./src/resources/channels.ts">listMessages</a>(channelId, { ...params }) -> ChannelMessagesCursorIDPage</code>
+- <code title="get /channels/{channel_id}/threads/{thread_id}/messages">client.channels.<a href="./src/resources/channels.ts">listThreadMessages</a>(channelId, threadId, { ...params }) -> ChannelMessagesCursorIDPage</code>
+- <code title="get /channels/{channel_id}/threads">client.channels.<a href="./src/resources/channels.ts">listThreads</a>(channelId, { ...params }) -> ChannelThreadsCursorIDPage</code>
+- <code title="delete /channels/{channel_id}/members/{member_id}">client.channels.<a href="./src/resources/channels.ts">removeMember</a>(channelId, memberId) -> void</code>
+- <code title="delete /channels/{channel_id}/messages/{message_id}/reactions/{reaction}">client.channels.<a href="./src/resources/channels.ts">removeReaction</a>(channelId, messageId, reaction) -> ChannelMessage</code>
+- <code title="get /channels/{channel_id}/threads/{thread_id}">client.channels.<a href="./src/resources/channels.ts">retrieveThread</a>(channelId, threadId) -> ChannelThread</code>
 
 # Identity
 
 Types:
 
 - <code><a href="./src/resources/identity.ts">Identity</a></code>
+- <code><a href="./src/resources/identity.ts">IdentityProcore</a></code>
 - <code><a href="./src/resources/identity.ts">IdentityTeamspace</a></code>
 
 Methods:
 
 - <code title="get /identity">client.identity.<a href="./src/resources/identity.ts">retrieve</a>() -> Identity</code>
+
+# Procore
+
+Types:
+
+- <code><a href="./src/resources/procore.ts">ProcoreCompany</a></code>
+- <code><a href="./src/resources/procore.ts">ProcoreCompanyList</a></code>
+- <code><a href="./src/resources/procore.ts">ProcoreProject</a></code>
+- <code><a href="./src/resources/procore.ts">ProcoreProjectConnection</a></code>
+- <code><a href="./src/resources/procore.ts">ProcoreProjectList</a></code>
+
+Methods:
+
+- <code title="get /procore/companies">client.procore.<a href="./src/resources/procore.ts">listCompanies</a>({ ...params }) -> ProcoreCompanyList</code>
+- <code title="get /procore/companies/{company_id}/projects">client.procore.<a href="./src/resources/procore.ts">listProjects</a>(companyId, { ...params }) -> ProcoreProjectList</code>
+- <code title="get /procore/companies/{company_id}/projects/{project_id}/connection">client.procore.<a href="./src/resources/procore.ts">retrieveProjectConnection</a>(companyId, projectId) -> ProcoreProjectConnection</code>
 
 # Pages
 
@@ -229,6 +341,17 @@ Methods:
 
 - <code title="get /tools/{tool_name}">client.tools.<a href="./src/resources/tools.ts">retrieve</a>(toolName) -> ToolDef</code>
 - <code title="get /tools">client.tools.<a href="./src/resources/tools.ts">list</a>({ ...params }) -> ToolDefsCursorNamePage</code>
+
+# Models
+
+Types:
+
+- <code><a href="./src/resources/models.ts">Model</a></code>
+- <code><a href="./src/resources/models.ts">ModelListResponse</a></code>
+
+Methods:
+
+- <code title="get /models">client.models.<a href="./src/resources/models.ts">list</a>() -> ModelListResponse</code>
 
 # Memory
 
@@ -315,8 +438,12 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/organization/mcp-servers.ts">CreateMcpServerRequest</a></code>
+- <code><a href="./src/resources/organization/mcp-servers.ts">HandleMcpOAuthCallbackRequest</a></code>
+- <code><a href="./src/resources/organization/mcp-servers.ts">HandleMcpOAuthCallbackResponse</a></code>
 - <code><a href="./src/resources/organization/mcp-servers.ts">ListMcpServersResponse</a></code>
 - <code><a href="./src/resources/organization/mcp-servers.ts">McpServer</a></code>
+- <code><a href="./src/resources/organization/mcp-servers.ts">StartMcpOAuthRequest</a></code>
+- <code><a href="./src/resources/organization/mcp-servers.ts">StartMcpOAuthResponse</a></code>
 - <code><a href="./src/resources/organization/mcp-servers.ts">UpdateMcpServerRequest</a></code>
 
 Methods:
@@ -326,6 +453,8 @@ Methods:
 - <code title="patch /organization/mcp-servers/{server_id}">client.organization.mcpServers.<a href="./src/resources/organization/mcp-servers.ts">update</a>(serverId, { ...params }) -> McpServer</code>
 - <code title="get /organization/mcp-servers">client.organization.mcpServers.<a href="./src/resources/organization/mcp-servers.ts">list</a>() -> ListMcpServersResponse</code>
 - <code title="delete /organization/mcp-servers/{server_id}">client.organization.mcpServers.<a href="./src/resources/organization/mcp-servers.ts">delete</a>(serverId) -> void</code>
+- <code title="post /organization/mcp-servers/{server_id}/oauth-callback">client.organization.mcpServers.<a href="./src/resources/organization/mcp-servers.ts">handleOAuthCallback</a>(serverId, { ...params }) -> HandleMcpOAuthCallbackResponse</code>
+- <code title="post /organization/mcp-servers/{server_id}/start-oauth">client.organization.mcpServers.<a href="./src/resources/organization/mcp-servers.ts">startOAuth</a>(serverId, { ...params }) -> StartMcpOAuthResponse</code>
 
 ## Credits
 
@@ -336,6 +465,30 @@ Types:
 Methods:
 
 - <code title="get /organization/credits">client.organization.credits.<a href="./src/resources/organization/credits.ts">get</a>() -> CreditsReport</code>
+
+## Reports
+
+### UserCreditsConsumption
+
+Types:
+
+- <code><a href="./src/resources/organization/reports/user-credits-consumption.ts">UserCreditConsumption</a></code>
+- <code><a href="./src/resources/organization/reports/user-credits-consumption.ts">UserCreditConsumptionList</a></code>
+
+Methods:
+
+- <code title="get /organization/reports/user-credits-consumption">client.organization.reports.userCreditsConsumption.<a href="./src/resources/organization/reports/user-credits-consumption.ts">list</a>({ ...params }) -> UserCreditConsumptionList</code>
+
+### ConsumptionBreakdown
+
+Types:
+
+- <code><a href="./src/resources/organization/reports/consumption-breakdown.ts">ConsumptionBreakdown</a></code>
+- <code><a href="./src/resources/organization/reports/consumption-breakdown.ts">ConsumptionBreakdownList</a></code>
+
+Methods:
+
+- <code title="get /organization/reports/consumption-breakdown">client.organization.reports.consumptionBreakdown.<a href="./src/resources/organization/reports/consumption-breakdown.ts">list</a>({ ...params }) -> ConsumptionBreakdownList</code>
 
 # Conversations
 
@@ -362,6 +515,7 @@ Methods:
 
 - <code title="get /conversations/{conversation_id}/messages/{message_id}">client.conversations.messages.<a href="./src/resources/conversations/messages.ts">retrieve</a>(conversationId, messageId) -> Message</code>
 - <code title="get /conversations/{conversation_id}/messages">client.conversations.messages.<a href="./src/resources/conversations/messages.ts">list</a>(conversationId, { ...params }) -> MessagesCursorIDPage</code>
+- <code title="post /conversations/{conversation_id}/messages/{message_id}">client.conversations.messages.<a href="./src/resources/conversations/messages.ts">submitFeedback</a>(conversationId, messageId, { ...params }) -> void</code>
 
 # DataViews
 
@@ -393,6 +547,16 @@ Methods:
 - <code title="get /data-views/service-accounts/{service_account_id}/credentials">client.dataViews.serviceAccounts.<a href="./src/resources/data-views/service-accounts.ts">credentials</a>(serviceAccountId) -> ServiceAccountCredentials</code>
 
 # Beta
+
+## Converse
+
+Types:
+
+- <code><a href="./src/resources/beta/converse.ts">BetaConverseRequest</a></code>
+
+Methods:
+
+- <code title="post /beta/converse">client.beta.converse.<a href="./src/resources/beta/converse.ts">converse</a>({ ...params }) -> ConverseResponse</code>
 
 ## Rewrite
 
@@ -429,3 +593,4 @@ Methods:
 - <code title="get /voice-orchestrator/tasks/{task_id}">client.voice.orchestratorTasks.<a href="./src/resources/voice/orchestrator-tasks.ts">retrieve</a>(taskId) -> VoiceOrchestratorTask</code>
 - <code title="get /voice-orchestrator/tasks">client.voice.orchestratorTasks.<a href="./src/resources/voice/orchestrator-tasks.ts">list</a>({ ...params }) -> VoiceOrchestratorTaskList</code>
 - <code title="patch /voice-orchestrator/tasks/{task_id}/acknowledge">client.voice.orchestratorTasks.<a href="./src/resources/voice/orchestrator-tasks.ts">acknowledge</a>(taskId) -> VoiceOrchestratorTask</code>
+- <code title="patch /voice-orchestrator/tasks/{task_id}/cancel">client.voice.orchestratorTasks.<a href="./src/resources/voice/orchestrator-tasks.ts">cancel</a>(taskId) -> VoiceOrchestratorTask</code>
