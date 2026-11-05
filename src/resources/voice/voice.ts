@@ -210,6 +210,14 @@ export namespace VoiceSessionRequest {
     input_transcription?: boolean | null;
 
     /**
+     * BCP-47 tag for the client's locale (e.g. 'en-US'). Used as the transcription
+     * language hint when the agent has no configured language; without it the provider
+     * detects the language per utterance and can transcribe speech in an unexpected
+     * script. The agent's configured language takes precedence.
+     */
+    language?: string | null;
+
+    /**
      * Enable transcription of agent output audio. Default: true.
      */
     output_transcription?: boolean | null;
@@ -875,6 +883,14 @@ export namespace VoiceStartSessionParams {
      * Enable transcription of user input audio. Default: true.
      */
     input_transcription?: boolean | null;
+
+    /**
+     * BCP-47 tag for the client's locale (e.g. 'en-US'). Used as the transcription
+     * language hint when the agent has no configured language; without it the provider
+     * detects the language per utterance and can transcribe speech in an unexpected
+     * script. The agent's configured language takes precedence.
+     */
+    language?: string | null;
 
     /**
      * Enable transcription of agent output audio. Default: true.
