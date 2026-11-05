@@ -5,8 +5,9 @@ import * as Core from '../core';
 
 export class Models extends APIResource {
   /**
-   * Returns the agent models and LLMs accepted by `config.agent_model` and
-   * `config.llm_model` on `POST /converse`.
+   * Returns the agent models and released LLMs accepted by `config.agent_model` and
+   * `config.llm_model` on `POST /converse`. LLMs still in rollout appear here once
+   * they are released.
    */
   list(options?: Core.RequestOptions): Core.APIPromise<ModelListResponse> {
     return this._client.get('/models', options);
