@@ -10,9 +10,20 @@ export interface ConverseResponse extends MessagesAPI.Message {
   /**
    * The chat mode used for this response (web app: Execute = full_agent, Extended =
    * light_agent, Ask = llm_router). Auto mode currently runs and reports as Execute
-   * (full_agent).
+   * (full_agent). A turn that runs on the orchestrator agent always runs and reports
+   * as full_agent, whatever `chat_mode` was requested.
    */
   chat_mode?: 'full_agent' | 'light_agent' | 'llm_router' | null;
+
+  /**
+   * Each delegation the orchestrator made on this turn, in the order they finished.
+   * One entry per delegation call, not per specialist run: a message sent to a
+   * specialist that is still running is its own entry, and only the entry that ended
+   * the run carries its `credits_consumed`. `credits.consumed` includes what they
+   * consumed. Null when no delegation finished, and on turns that do not run on the
+   * orchestrator agent.
+   */
+  delegations?: Array<ConverseResponse.Delegation> | null;
 
   /**
    * Auto-generated conversation title for this turn. Null when title generation does
@@ -40,6 +51,51 @@ export interface ConverseResponse extends MessagesAPI.Message {
 }
 
 export namespace ConverseResponse {
+  /**
+   * A delegation call to a specialist agent that finished. A delegation still
+   * running when the turn ends is not listed.
+   */
+  export interface Delegation {
+    /**
+     * Identifies the delegation. Matches the `id` of its `delegation` events.
+     */
+    id: string;
+
+    /**
+     * The ID of the specialist agent.
+     */
+    agent_id: string;
+
+    /**
+     * The name of the specialist agent.
+     */
+    agent_name: string;
+
+    /**
+     * Credits the specialist's run consumed. Null when the run reported no charge.
+     */
+    credits_consumed: number | null;
+
+    /**
+     * How long the specialist's run took, in milliseconds. Null when it was not
+     * measured.
+     */
+    elapsed_ms: number | null;
+
+    /**
+     * True when the specialist's text was salvaged mid-run rather than returned in
+     * full.
+     */
+    is_partial: boolean;
+
+    /**
+     * Why the run ended: `completed`, or a failure (`failed`, `timed_out`,
+     * `budget_exhausted`, `cancelled`). `cancelled` means the user or host stopped the
+     * run.
+     */
+    status: 'completed' | 'failed' | 'timed_out' | 'budget_exhausted' | 'cancelled';
+  }
+
   export interface Reasoning {
     /**
      * The ID of the reasoning step.
@@ -47,9 +103,10 @@ export namespace ConverseResponse {
     id: string;
 
     /**
-     * The current status of the reasoning step.
+     * The current status of the reasoning step. `cancelled` when the conversation was
+     * stopped while the step was in progress.
      */
-    status: 'in_progress' | 'completed' | 'failed';
+    status: 'in_progress' | 'completed' | 'failed' | 'cancelled';
 
     /**
      * The type of the delta, which is always reasoning.
@@ -110,7 +167,11 @@ export namespace ConverseResponse {
      */
     id: string;
 
-    status: 'in_progress' | 'completed' | 'failed';
+    /**
+     * The status of the tool call. `cancelled` when the conversation was stopped while
+     * the tool call was in progress.
+     */
+    status: 'in_progress' | 'completed' | 'failed' | 'cancelled';
 
     /**
      * The `Tool` object represents a tool that can be used by agents.
@@ -142,7 +203,8 @@ export type Properties =
   | Properties.ConverseSkillsEvent
   | Properties.ConverseContentMessageDeltaEvent
   | Properties.ConverseToolCallDeltaEvent
-  | Properties.ConverseReasoningDeltaEvent;
+  | Properties.ConverseReasoningDeltaEvent
+  | Properties.ConverseDelegationEvent;
 
 export namespace Properties {
   export interface ConverseStatusEvent {
@@ -171,9 +233,66 @@ export namespace Properties {
       /**
        * The chat mode used for this response (web app: Execute = full_agent, Extended =
        * light_agent, Ask = llm_router). Present on `end` events. Auto mode currently
-       * runs and reports as Execute (full_agent).
+       * runs and reports as Execute (full_agent). A turn that runs on the orchestrator
+       * agent always runs and reports as full_agent, whatever `chat_mode` was requested.
        */
       chat_mode?: 'full_agent' | 'light_agent' | 'llm_router' | null;
+
+      /**
+       * On `end` events. Each delegation the orchestrator made on this turn, in the
+       * order they finished. One entry per delegation call, not per specialist run: a
+       * message sent to a specialist that is still running is its own entry, and only
+       * the entry that ended the run carries its `credits_consumed`. Null when no
+       * delegation finished, and on turns that do not run on the orchestrator agent.
+       */
+      delegations?: Array<Data.Delegation> | null;
+    }
+
+    export namespace Data {
+      /**
+       * A delegation call to a specialist agent that finished. A delegation still
+       * running when the turn ends is not listed.
+       */
+      export interface Delegation {
+        /**
+         * Identifies the delegation. Matches the `id` of its `delegation` events.
+         */
+        id: string;
+
+        /**
+         * The ID of the specialist agent.
+         */
+        agent_id: string;
+
+        /**
+         * The name of the specialist agent.
+         */
+        agent_name: string;
+
+        /**
+         * Credits the specialist's run consumed. Null when the run reported no charge.
+         */
+        credits_consumed: number | null;
+
+        /**
+         * How long the specialist's run took, in milliseconds. Null when it was not
+         * measured.
+         */
+        elapsed_ms: number | null;
+
+        /**
+         * True when the specialist's text was salvaged mid-run rather than returned in
+         * full.
+         */
+        is_partial: boolean;
+
+        /**
+         * Why the run ended: `completed`, or a failure (`failed`, `timed_out`,
+         * `budget_exhausted`, `cancelled`). `cancelled` means the user or host stopped the
+         * run.
+         */
+        status: 'completed' | 'failed' | 'timed_out' | 'budget_exhausted' | 'cancelled';
+      }
     }
   }
 
@@ -481,7 +600,11 @@ export namespace Properties {
        */
       id: string;
 
-      status: 'in_progress' | 'completed' | 'failed';
+      /**
+       * The status of the tool call. `cancelled` when the conversation was stopped while
+       * the tool call was in progress.
+       */
+      status: 'in_progress' | 'completed' | 'failed' | 'cancelled';
 
       /**
        * The `Tool` object represents a tool that can be used by agents.
@@ -523,9 +646,10 @@ export namespace Properties {
       id: string;
 
       /**
-       * The current status of the reasoning step.
+       * The current status of the reasoning step. `cancelled` when the conversation was
+       * stopped while the step was in progress.
        */
-      status: 'in_progress' | 'completed' | 'failed';
+      status: 'in_progress' | 'completed' | 'failed' | 'cancelled';
 
       /**
        * The type of the delta, which is always reasoning.
@@ -554,6 +678,81 @@ export namespace Properties {
       task?: string | null;
     }
   }
+
+  /**
+   * Emitted on turns that run on the orchestrator agent (`agent_routing.mode`
+   * `orchestrator`, or a `conversation_id`-only follow-up on a conversation started
+   * in that mode) as the orchestrator hands work to a specialist agent. Each
+   * delegation sends `selected` once, then exactly one of `completed` or `failed`
+   * when the specialist's run is over. A delegation still running when the turn ends
+   * sends no terminal phase. Omitted when `include_steps` is false.
+   */
+  export interface ConverseDelegationEvent {
+    /**
+     * One phase of a delegation to a specialist agent. Does not include the task the
+     * orchestrator sent the specialist.
+     */
+    data: ConverseDelegationEvent.Data;
+
+    /**
+     * Type of the event, which is always delegation
+     */
+    event: 'delegation';
+  }
+
+  export namespace ConverseDelegationEvent {
+    /**
+     * One phase of a delegation to a specialist agent. Does not include the task the
+     * orchestrator sent the specialist.
+     */
+    export interface Data {
+      /**
+       * Identifies the delegation. The same across its phases.
+       */
+      id: string;
+
+      /**
+       * The ID of the specialist agent.
+       */
+      agent_id: string;
+
+      /**
+       * The name of the specialist agent.
+       */
+      agent_name: string;
+
+      /**
+       * `selected` when the specialist starts; `completed` or `failed` when its run is
+       * over.
+       */
+      phase: 'selected' | 'completed' | 'failed';
+
+      /**
+       * On `selected`. Names of the skills forced for this turn that were carried into
+       * the specialist's run. Null when none were.
+       */
+      applied_skills?: Array<string> | null;
+
+      /**
+       * On `completed` and `failed`. Credits the specialist's run consumed. Null when
+       * the run reported no charge.
+       */
+      credits_consumed?: number | null;
+
+      /**
+       * On `completed` and `failed`. True when the specialist's text was salvaged
+       * mid-run rather than returned in full.
+       */
+      is_partial?: boolean;
+
+      /**
+       * On `completed` and `failed`. Why the run ended: `completed`, or a failure
+       * (`failed`, `timed_out`, `budget_exhausted`, `cancelled`). `cancelled` means the
+       * user or host stopped the run, and is sent with phase `failed`.
+       */
+      status?: 'completed' | 'failed' | 'timed_out' | 'budget_exhausted' | 'cancelled';
+    }
+  }
 }
 
 export interface ConverseParams {
@@ -573,7 +772,7 @@ export interface ConverseParams {
   /**
    * Determines how the API routes the converse request to an agent.
    */
-  agent_routing?: ConverseParams.Auto | ConverseParams.Manual | null;
+  agent_routing?: ConverseParams.Auto | ConverseParams.Manual | ConverseParams.Orchestrator | null;
 
   /**
    * Controls how the agent processes the request for this turn. Matches the chat
@@ -623,9 +822,9 @@ export interface ConverseParams {
   generate_title?: boolean | null;
 
   /**
-   * When set to false, tool call and reasoning step events are omitted from SSE
-   * streams. Non-streaming responses always include the tool_calls and reasoning
-   * fields (as null when empty).
+   * When set to false, tool call, reasoning step and delegation events are omitted
+   * from SSE streams. Non-streaming responses always include the tool_calls and
+   * reasoning fields (as null when empty).
    */
   include_steps?: boolean | null;
 
@@ -1088,6 +1287,21 @@ export namespace ConverseParams {
         credential_id?: string | null;
       }
     }
+  }
+
+  /**
+   * The Teamspace's orchestrator answers the turn and delegates parts of it to
+   * specialist agents. The response reports the orchestrator as `agent_id`. A
+   * conversation started in this mode stays with the orchestrator when a later turn
+   * sends only `conversation_id`. Only a personal conversation can be continued in
+   * this mode. The orchestrator cannot be named as `agent_id` or as a `manual`
+   * target.
+   */
+  export interface Orchestrator {
+    /**
+     * The Teamspace's orchestrator answers and delegates to specialist agents.
+     */
+    mode: 'orchestrator';
   }
 
   /**
