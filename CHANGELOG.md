@@ -1,5 +1,94 @@
 # Changelog
 
+## [0.18.0](https://github.com/DatagridAI/datagrid-node/compare/v0.17.2...v0.18.0) (2026-11-05)
+
+
+### Features
+
+* **connectors:** add Redis-backed connector health checks ([9ca85f2](https://github.com/DatagridAI/datagrid-node/commit/9ca85f27f04de435bbb40d7de59fb1f9a5e8235c))
+* **converse:** add skill_ids/slash_keys to public converse API ([190d4bb](https://github.com/DatagridAI/datagrid-node/commit/190d4bbb31e360cbff9e66aa063302be417365f7))
+* **converse:** structured outputs at the prediction level (enforce text.format on /v1/converse) ([cef233d](https://github.com/DatagridAI/datagrid-node/commit/cef233d4d4496934bac7a3b1dee999e99badd524))
+* **datagrid-ai:** expose beta magpie-3.0 on public Converse API ([d2d3f50](https://github.com/DatagridAI/datagrid-node/commit/d2d3f5020afed2daa357cfa94715a2a5f3ddadfb))
+* **datagrid-api:** add GET /v1/models listing converse agent models and LLMs ([5c60cab](https://github.com/DatagridAI/datagrid-node/commit/5c60cabcf02f1b8cc5476b5b43124c63772bb16c))
+* **datagrid-api:** add model family to GET /v1/models ([46a19b1](https://github.com/DatagridAI/datagrid-node/commit/46a19b11d1bcecf4b6c928a066bb915ea33dcc3c))
+* **datagrid-api:** expose agent automations on public API [DGAAI-587] ([4c45edb](https://github.com/DatagridAI/datagrid-node/commit/4c45edbd1316f221505fd547d9cc82a245ea6224))
+* **datagrid-api:** expose agent event-triggers in the public API ([10da380](https://github.com/DatagridAI/datagrid-node/commit/10da38045de3651858fe2a8aca368504352519e7))
+* **datagrid-api:** expose knowledge summaries on public API ([0ca3872](https://github.com/DatagridAI/datagrid-node/commit/0ca38723799da8277b7156e60ac38a478e43b165))
+* **event-triggers:** add Egnyte as an agent event-trigger source ([502141c](https://github.com/DatagridAI/datagrid-node/commit/502141cd1fe3f97f9a6f8f35a7eafcf29e3411a0))
+* **event-triggers:** add SharePoint Graph provider and enrich client ([304e24e](https://github.com/DatagridAI/datagrid-node/commit/304e24ef378dddd1a036177fb6f31edd0aee5f27))
+* **FAI-390:** structured recort fields for citation ([b6afa97](https://github.com/DatagridAI/datagrid-node/commit/b6afa97f3e58f20b4ff4a377d113b6df872b7759))
+* **FAI-391:** item-type for citation ([a62edea](https://github.com/DatagridAI/datagrid-node/commit/a62edea411a6c263e781e489ab8a96b8fd270c6b))
+* failsafe when font is not available ([#26269](https://github.com/DatagridAI/datagrid-node/issues/26269)) ([#26271](https://github.com/DatagridAI/datagrid-node/issues/26271)) ([7cc7b6e](https://github.com/DatagridAI/datagrid-node/commit/7cc7b6e70bbc9034985f20a65b3468d029c9e772))
+* **ledger:** let the S2S rollup fold catch up on history unattended ([#29063](https://github.com/DatagridAI/datagrid-node/issues/29063)) ([aaf8465](https://github.com/DatagridAI/datagrid-node/commit/aaf84655a8cd709634a8c5826f0ff0ba87559ec2))
+* **mcp-oauth:** persist redirectUri on pending flow and reject callback mismatch ([42004e0](https://github.com/DatagridAI/datagrid-node/commit/42004e0df7ee178030d935c33f5d0fc04a8dc556))
+* **mcp:** add public Datagrid API MCP OAuth endpoints ([3306779](https://github.com/DatagridAI/datagrid-node/commit/33067792c24f92837563b43e66c6f499bd932f37))
+* **observability:** capture the stack of a wedged agent-api-server event loop ([#26115](https://github.com/DatagridAI/datagrid-node/issues/26115)) ([#26347](https://github.com/DatagridAI/datagrid-node/issues/26347)) ([18791f1](https://github.com/DatagridAI/datagrid-node/commit/18791f1ed138f861668c317926964b194dcb03e2))
+* **PAIO-37:** add one-off procore_file_id_kind backfill task ([#30996](https://github.com/DatagridAI/datagrid-node/issues/30996)) ([c217406](https://github.com/DatagridAI/datagrid-node/commit/c217406ae9ac1f182e3cf72f7c6cb25073a446ac))
+* **procore-reporting:** clearer answers and dashboards that match the chat (ENRP-10958) ([#28363](https://github.com/DatagridAI/datagrid-node/issues/28363)) ([c4483e2](https://github.com/DatagridAI/datagrid-node/commit/c4483e265153dc665ddb1c4b5d2e13516397b218))
+* **procore-reporting:** make the Reporting tool available in the company teamspace [ENRP-11119] ([#28931](https://github.com/DatagridAI/datagrid-node/issues/28931)) ([095470a](https://github.com/DatagridAI/datagrid-node/commit/095470aba71a3b7240f86bdb259ca01df3f9725a))
+* **procore-reporting:** update tool description (ENRP-10958) ([#28391](https://github.com/DatagridAI/datagrid-node/issues/28391)) ([5d9b8df](https://github.com/DatagridAI/datagrid-node/commit/5d9b8dfe15715118538fd0bec226aff9a3e85d4e))
+* public Skills generate (DGAAI-860) ([843941f](https://github.com/DatagridAI/datagrid-node/commit/843941f3be100c9e0f537097640aef926c85a787))
+* **server:** page authoring places knowledge images by reference, plus media evals ([64d8d71](https://github.com/DatagridAI/datagrid-node/commit/64d8d7188753c1742821f37f4f4d7cb12781a05f))
+* **skills:** Public Skills API (DGAAI-857 + DGAAI-858) ([4cf978e](https://github.com/DatagridAI/datagrid-node/commit/4cf978e878432fa8518ae78579cbc33486f44c77))
+* **voice:** follow-up delegation with persisted turns and action review ([c6dc9ed](https://github.com/DatagridAI/datagrid-node/commit/c6dc9ed94bb1b0cbbf4ad42d17b0a324b0ea4f24))
+* **voice:** publish turn_index on live transcript and citation events ([2cb2cf7](https://github.com/DatagridAI/datagrid-node/commit/2cb2cf70c016ef469b7149a187cc3d2a74042407))
+* **voice:** task cancellation via voice and Inbox API ([1caeaa2](https://github.com/DatagridAI/datagrid-node/commit/1caeaa251ea450c01ec957a3bf02550721e17ac2))
+* **voice:** tie tool calls to the turn they started in ([37f2df4](https://github.com/DatagridAI/datagrid-node/commit/37f2df4fe3e4e63ad34087a62df9d471fa2a4f4c))
+
+
+### Bug Fixes
+
+* **1150:** avoid joining nested-table dataset manifest array into chunk label ([#29014](https://github.com/DatagridAI/datagrid-node/issues/29014)) ([04785d1](https://github.com/DatagridAI/datagrid-node/commit/04785d14a7ed405fda787f7a7b109b8273b3af4d))
+* **agents:** do not run a turn that was stopped during agent build ([#29852](https://github.com/DatagridAI/datagrid-node/issues/29852)) ([d767e8a](https://github.com/DatagridAI/datagrid-node/commit/d767e8a5ba605f63ff87849eec99c64f887b5e78))
+* **agents:** stop resolving tenant knowledge on GET /v1/agents ([2213711](https://github.com/DatagridAI/datagrid-node/commit/2213711b407b14876d3484433ae989081a595059))
+* **ai:** drop resourceTouch from fallback empty-response check ([#27047](https://github.com/DatagridAI/datagrid-node/issues/27047)) ([10de5fc](https://github.com/DatagridAI/datagrid-node/commit/10de5fc8c9be974497472eba21256b45e1601b11))
+* **ai:** steer Magpie 3.0 to Procore Enterprise tools before 360 Reporting ([#30558](https://github.com/DatagridAI/datagrid-node/issues/30558)) ([932a531](https://github.com/DatagridAI/datagrid-node/commit/932a531da04708f758fc33b82076bcad441effe9))
+* **ai:** use enterprise procore tools for mcp templates ([#27647](https://github.com/DatagridAI/datagrid-node/issues/27647)) ([53d1680](https://github.com/DatagridAI/datagrid-node/commit/53d16801a86260169d8697bbbbe6314b88be095a))
+* **api:** expose Gemini 3.8 Flash and remove rollout flag ([e27ea65](https://github.com/DatagridAI/datagrid-node/commit/e27ea65802bd1dcd8808cd45655aab66486e295a))
+* **bim360:** improve ACC sync coverage and import history status ([#30042](https://github.com/DatagridAI/datagrid-node/issues/30042)) ([5a8d349](https://github.com/DatagridAI/datagrid-node/commit/5a8d3497505d1e8ef1a0dbe33e6f4e33eb1ac1c0))
+* **blob-cache-hydrator:** update Apryse CAD module checksum ([#30125](https://github.com/DatagridAI/datagrid-node/issues/30125)) ([5fae115](https://github.com/DatagridAI/datagrid-node/commit/5fae115d7dbf4189e77456e13979f7277ff2ce5c))
+* **converse:** deliver the final response before the final DB patch ([#27820](https://github.com/DatagridAI/datagrid-node/issues/27820)) ([6eaa7fd](https://github.com/DatagridAI/datagrid-node/commit/6eaa7fdef6422d178ae2710e7d9e4db1a2b83152))
+* **DGAP-2448:** keep AI Overview on daily cap, hide "No results found" on monthly cap ([#30006](https://github.com/DatagridAI/datagrid-node/issues/30006)) ([d98eeb0](https://github.com/DatagridAI/datagrid-node/commit/d98eeb002ef905e573208ea5f770cc284cb5c456))
+* **DGDC-1324:** Fix issue root categories and add timestamps ([#30458](https://github.com/DatagridAI/datagrid-node/issues/30458)) ([33e523d](https://github.com/DatagridAI/datagrid-node/commit/33e523d151a309b82039086e916bc916e9e2c585))
+* **DGDC-1407:** stop infinite spinner on import config for private credentials ([#30499](https://github.com/DatagridAI/datagrid-node/issues/30499)) ([559d398](https://github.com/DatagridAI/datagrid-node/commit/559d39828cd2be7c22348467b92652cc491caac5))
+* **DGDC-1412:** stop ingest.run.completed Sentry noise, surface configure-task failures ([#30614](https://github.com/DatagridAI/datagrid-node/issues/30614)) ([4b96a6a](https://github.com/DatagridAI/datagrid-node/commit/4b96a6afa82b017629ce6e740d077f1db8e9da01))
+* **DGDC-16:** Fix to avoid droppig agent traces ([#27462](https://github.com/DatagridAI/datagrid-node/issues/27462)) ([1d35dc6](https://github.com/DatagridAI/datagrid-node/commit/1d35dc684c64c7561aeb1a3ecea3aa1da0a767c0))
+* **DGDC-808:** Fix ACC issue limit blob decode ([#27550](https://github.com/DatagridAI/datagrid-node/issues/27550)) ([a707956](https://github.com/DatagridAI/datagrid-node/commit/a707956dba0fee864536c591ea7c274aa009ad99))
+* **FAI-673:** error code ([cd954f1](https://github.com/DatagridAI/datagrid-node/commit/cd954f1661c63772e3cbe22f5efc6667a0cf0e3f))
+* **graph_editor:** hide elapsed time on the specialist invocation card ([#28145](https://github.com/DatagridAI/datagrid-node/issues/28145)) ([e13774c](https://github.com/DatagridAI/datagrid-node/commit/e13774c64ea8ec8409dbaf77062b79415d0de81d))
+* **knowledge:** return "ready" once all rows reach a terminal state (persistent failures no longer hang evals) ([b90008a](https://github.com/DatagridAI/datagrid-node/commit/b90008aae9070c6b7773a86ff5f9d73838806897))
+* **magpie-3-0:** unwrap Procore MCP call_tool results and outline spilled JSON ([#28700](https://github.com/DatagridAI/datagrid-node/issues/28700)) ([9e7dd03](https://github.com/DatagridAI/datagrid-node/commit/9e7dd0338f259a9aea6e5cf2dcf90514f8b08ab2))
+* **magpie-3-0:** unwrap Procore MCP call_tool results and outline spilled JSON ([#28700](https://github.com/DatagridAI/datagrid-node/issues/28700)) ([2e5c6c4](https://github.com/DatagridAI/datagrid-node/commit/2e5c6c4d2ed3b8418c79348682fcb6140a9bb178))
+* make AddAffectsCreditBalanceToLedger migration idempotent ([#26148](https://github.com/DatagridAI/datagrid-node/issues/26148)) ([#26153](https://github.com/DatagridAI/datagrid-node/issues/26153)) ([64702c1](https://github.com/DatagridAI/datagrid-node/commit/64702c1299ef99f2f7d5485bbca54c3154a87365))
+* migrate Contract Review Agent calibration ([#30026](https://github.com/DatagridAI/datagrid-node/issues/30026)) ([e26fc5f](https://github.com/DatagridAI/datagrid-node/commit/e26fc5f44918a316c492829611e4efa1f718481f))
+* **procore-reporting:** answers read every row, and unlinked objects get one answer each Stack 2/2 ([#29329](https://github.com/DatagridAI/datagrid-node/issues/29329)) ([2c9da23](https://github.com/DatagridAI/datagrid-node/commit/2c9da23d8c3e7b2d1261a3fbf407b48a585a688a))
+
+
+### Performance Improvements
+
+* **copilot:** assemble tenant knowledge without scanning every table ([a3055ea](https://github.com/DatagridAI/datagrid-node/commit/a3055ea0264330543da0cffc2828fa20ea33f3ec))
+
+
+### Chores
+
+* merge production main into the release ([d85deff](https://github.com/DatagridAI/datagrid-node/commit/d85deff1277135e99eb28757ddd0ec028e739917))
+
+
+### Documentation
+
+* **api-keys:** update API key docs for teamspace access and retire the service-key script ([103ab88](https://github.com/DatagridAI/datagrid-node/commit/103ab88aa1ca9a98e9155f8268541b4751e079a4))
+
+
+### Refactors
+
+* **event-triggers:** consolidate provider-contract and triggerSource enablement groundwork ([64f7141](https://github.com/DatagridAI/datagrid-node/commit/64f71417727772a2402f8f076e8a111d35a240a5))
+* **shared-ai-types,graph-editor,server,infra:** derive model lists from the registry and delete the hand-maintained arrays (DGAI-972, DGAI-973) ([6260013](https://github.com/DatagridAI/datagrid-node/commit/626001308022f8a3068ea09799248b802261a9a1))
+
+
+### Build System
+
+* migrate the workspace from npm to pnpm ([3fbb8f9](https://github.com/DatagridAI/datagrid-node/commit/3fbb8f90fafa5f7b03b43c26980be5bade5b1fbd))
+
 ## 0.17.2 (2026-06-24)
 
 Full Changelog: [v0.17.1...v0.17.2](https://github.com/DatagridAI/datagrid-node/compare/v0.17.1...v0.17.2)
