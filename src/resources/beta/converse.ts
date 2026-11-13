@@ -55,7 +55,11 @@ export interface BetaConverseRequest {
   /**
    * Determines how the API routes the converse request to an agent.
    */
-  agent_routing?: BetaConverseRequest.Auto | BetaConverseRequest.Manual | null;
+  agent_routing?:
+    | BetaConverseRequest.Auto
+    | BetaConverseRequest.Manual
+    | BetaConverseRequest.Orchestrator
+    | null;
 
   /**
    * Controls how the agent processes the request for this turn. Matches the chat
@@ -105,9 +109,9 @@ export interface BetaConverseRequest {
   generate_title?: boolean | null;
 
   /**
-   * When set to false, tool call and reasoning step events are omitted from SSE
-   * streams. Non-streaming responses always include the tool_calls and reasoning
-   * fields (as null when empty).
+   * When set to false, tool call, reasoning step and delegation events are omitted
+   * from SSE streams. Non-streaming responses always include the tool_calls and
+   * reasoning fields (as null when empty).
    */
   include_steps?: boolean | null;
 
@@ -588,6 +592,21 @@ export namespace BetaConverseRequest {
   }
 
   /**
+   * The Teamspace's orchestrator answers the turn and delegates parts of it to
+   * specialist agents. The response reports the orchestrator as `agent_id`. A
+   * conversation started in this mode stays with the orchestrator when a later turn
+   * sends only `conversation_id`. Only a personal conversation can be continued in
+   * this mode. The orchestrator cannot be named as `agent_id` or as a `manual`
+   * target.
+   */
+  export interface Orchestrator {
+    /**
+     * The Teamspace's orchestrator answers and delegates to specialist agents.
+     */
+    mode: 'orchestrator';
+  }
+
+  /**
    * Override the agent config for this converse call. This is applied as a partial
    * override.
    */
@@ -1013,7 +1032,11 @@ export interface ConverseConverseParams {
   /**
    * Determines how the API routes the converse request to an agent.
    */
-  agent_routing?: ConverseConverseParams.Auto | ConverseConverseParams.Manual | null;
+  agent_routing?:
+    | ConverseConverseParams.Auto
+    | ConverseConverseParams.Manual
+    | ConverseConverseParams.Orchestrator
+    | null;
 
   /**
    * Controls how the agent processes the request for this turn. Matches the chat
@@ -1063,9 +1086,9 @@ export interface ConverseConverseParams {
   generate_title?: boolean | null;
 
   /**
-   * When set to false, tool call and reasoning step events are omitted from SSE
-   * streams. Non-streaming responses always include the tool_calls and reasoning
-   * fields (as null when empty).
+   * When set to false, tool call, reasoning step and delegation events are omitted
+   * from SSE streams. Non-streaming responses always include the tool_calls and
+   * reasoning fields (as null when empty).
    */
   include_steps?: boolean | null;
 
@@ -1543,6 +1566,21 @@ export namespace ConverseConverseParams {
         credential_id?: string | null;
       }
     }
+  }
+
+  /**
+   * The Teamspace's orchestrator answers the turn and delegates parts of it to
+   * specialist agents. The response reports the orchestrator as `agent_id`. A
+   * conversation started in this mode stays with the orchestrator when a later turn
+   * sends only `conversation_id`. Only a personal conversation can be continued in
+   * this mode. The orchestrator cannot be named as `agent_id` or as a `manual`
+   * target.
+   */
+  export interface Orchestrator {
+    /**
+     * The Teamspace's orchestrator answers and delegates to specialist agents.
+     */
+    mode: 'orchestrator';
   }
 
   /**
