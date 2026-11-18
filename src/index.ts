@@ -22,6 +22,11 @@ import * as API from './resources/index';
 import * as TopLevelAPI from './resources/top-level';
 import { ConverseParams, ConverseResponse, Properties } from './resources/top-level';
 import {
+  AgenticAutomation,
+  AgenticAutomationCreateScheduledParams,
+  AgenticAutomations,
+} from './resources/agentic-automations';
+import {
   BatchPrediction,
   BatchPredictionCreateParams,
   BatchPredictionListParams,
@@ -366,6 +371,7 @@ export class Datagrid extends Core.APIClient {
   webhooks: API.Webhooks = new API.Webhooks(this);
   search: API.Search = new API.Search(this);
   skills: API.Skills = new API.Skills(this);
+  agenticAutomations: API.AgenticAutomations = new API.AgenticAutomations(this);
   agents: API.Agents = new API.Agents(this);
   channels: API.Channels = new API.Channels(this);
   identity: API.IdentityResource = new API.IdentityResource(this);
@@ -467,6 +473,7 @@ Datagrid.WebhooksWebhookCursorPage = WebhooksWebhookCursorPage;
 Datagrid.Search = Search;
 Datagrid.Skills = Skills;
 Datagrid.SkillsCursorIDPage = SkillsCursorIDPage;
+Datagrid.AgenticAutomations = AgenticAutomations;
 Datagrid.Agents = Agents;
 Datagrid.AgentListItemsCursorIDPage = AgentListItemsCursorIDPage;
 Datagrid.Channels = Channels;
@@ -634,6 +641,12 @@ export declare namespace Datagrid {
     type SkillUpdateParams as SkillUpdateParams,
     type SkillListParams as SkillListParams,
     type SkillGenerateParams as SkillGenerateParams,
+  };
+
+  export {
+    AgenticAutomations as AgenticAutomations,
+    type AgenticAutomation as AgenticAutomation,
+    type AgenticAutomationCreateScheduledParams as AgenticAutomationCreateScheduledParams,
   };
 
   export {

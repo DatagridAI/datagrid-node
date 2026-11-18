@@ -209,6 +209,16 @@ Methods:
 - <code title="post /skills/{skill_id}/promote">client.skills.<a href="./src/resources/skills.ts">promote</a>(skillId) -> Skill</code>
 - <code title="post /skills/builtin/{builtin_key}/reset">client.skills.<a href="./src/resources/skills.ts">resetBuiltinOverride</a>(builtinKey) -> void</code>
 
+# AgenticAutomations
+
+Types:
+
+- <code><a href="./src/resources/agentic-automations.ts">AgenticAutomation</a></code>
+
+Methods:
+
+- <code title="post /agentic-automations/scheduled">client.agenticAutomations.<a href="./src/resources/agentic-automations.ts">createScheduled</a>({ ...params }) -> AgenticAutomation</code>
+
 # Agents
 
 Types:
