@@ -224,13 +224,14 @@ export namespace VoiceSessionRequest {
 
     /**
      * Maximum duration in milliseconds of a buffered segment before force-commit.
-     * Default: 180000 (3 minutes).
+     * Default: 60000 (1 minute).
      */
     segment_max_duration_ms?: number | null;
 
     /**
-     * Duration of silence (no agent audio) in milliseconds before auto-committing a
-     * segment. Default: 30000 (30 seconds).
+     * Silence in the agent's audio, in milliseconds, before the buffered conversation
+     * segment is committed to history. Does not decide when the user's turn ends; see
+     * turn_end_mode. Default: 2000 (2 seconds).
      */
     silence_commit_ms?: number | null;
 
@@ -338,6 +339,13 @@ export interface VoiceSessionResponse {
  *   retry later.
  * - `transcript`: Real-time transcription
  *   `{ role: "user" | "agent", text: string, turn_index?: number }`
+ * - `response_status`: Whether the agent is working on a response
+ *   `{ status: "in_progress" | "idle" }`. `in_progress` is sent when the agent
+ *   starts speaking (its first `audio` event of a response) and, on models that
+ *   report it, while it is still thinking after going quiet; `idle` when the
+ *   response is complete or was interrupted. Only changes are sent. Agent
+ *   `transcript` events can trail `idle` briefly, since output transcription is
+ *   not ordered against the model turn.
  * - `turn_complete`: The agent finished its response `{ turn_index: number }`.
  *   Sent only when `started` carried `sends_turn_complete: true`. Every
  *   `transcript` event for the response is sent before it; audio and `tool_call`
@@ -364,10 +372,11 @@ export interface VoiceWebsocketMessage {
     | VoiceWebsocketMessage.UnionMember2
     | VoiceWebsocketMessage.UnionMember3
     | VoiceWebsocketMessage.UnionMember4
+    | VoiceWebsocketMessage.Status
     | VoiceWebsocketMessage.TurnIndex
-    | VoiceWebsocketMessage.UnionMember6
+    | VoiceWebsocketMessage.UnionMember7
     | VoiceWebsocketMessage.Text
-    | VoiceWebsocketMessage.UnionMember8;
+    | VoiceWebsocketMessage.UnionMember9;
 
   /**
    * Message type.
@@ -385,6 +394,7 @@ export interface VoiceWebsocketMessage {
     | 'interrupted'
     | 'error'
     | 'transcript'
+    | 'response_status'
     | 'turn_complete'
     | 'citation'
     | 'ended';
@@ -477,6 +487,18 @@ export namespace VoiceWebsocketMessage {
   }
 
   /**
+   * For 'response_status' messages
+   */
+  export interface Status {
+    /**
+     * in_progress once the agent starts speaking (first audio event); idle when the
+     * response is complete or was interrupted. Agent transcript events can trail idle
+     * briefly.
+     */
+    status: 'in_progress' | 'idle';
+  }
+
+  /**
    * For 'turn_complete' messages
    */
   export interface TurnIndex {
@@ -489,12 +511,12 @@ export namespace VoiceWebsocketMessage {
   /**
    * For 'citation' messages
    */
-  export interface UnionMember6 {
+  export interface UnionMember7 {
     /**
      * Array of voice citations. Each source is a superset of the SSE `/v1/converse`
      * `CitationSource` schema.
      */
-    citations: Array<UnionMember6.Citation>;
+    citations: Array<UnionMember7.Citation>;
 
     /**
      * Stable id of the persisted voice message row for this session. Always present
@@ -516,7 +538,7 @@ export namespace VoiceWebsocketMessage {
     turn_index?: number;
   }
 
-  export namespace UnionMember6 {
+  export namespace UnionMember7 {
     export interface Citation {
       /**
        * The text snippet from the response that is being cited.
@@ -715,13 +737,13 @@ export namespace VoiceWebsocketMessage {
   /**
    * For 'ended' messages
    */
-  export interface UnionMember8 {
+  export interface UnionMember9 {
     credits_consumed?: number;
 
-    transcript?: Array<UnionMember8.Transcript>;
+    transcript?: Array<UnionMember9.Transcript>;
   }
 
-  export namespace UnionMember8 {
+  export namespace UnionMember9 {
     export interface Transcript {
       role?: 'user' | 'agent';
 
@@ -899,13 +921,14 @@ export namespace VoiceStartSessionParams {
 
     /**
      * Maximum duration in milliseconds of a buffered segment before force-commit.
-     * Default: 180000 (3 minutes).
+     * Default: 60000 (1 minute).
      */
     segment_max_duration_ms?: number | null;
 
     /**
-     * Duration of silence (no agent audio) in milliseconds before auto-committing a
-     * segment. Default: 30000 (30 seconds).
+     * Silence in the agent's audio, in milliseconds, before the buffered conversation
+     * segment is committed to history. Does not decide when the user's turn ends; see
+     * turn_end_mode. Default: 2000 (2 seconds).
      */
     silence_commit_ms?: number | null;
 
