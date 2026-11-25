@@ -69,6 +69,12 @@ export interface IdentityProcore {
   project_id?: string;
 
   /**
+   * The name of the Procore project the current teamspace is bound to, as stored in
+   * Datagrid. Omitted when `project_id` is omitted or no name is stored.
+   */
+  project_name?: string;
+
+  /**
    * The Procore zone the company lives in. Omitted when unknown.
    */
   zone?: string;

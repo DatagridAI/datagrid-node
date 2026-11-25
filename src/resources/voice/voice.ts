@@ -69,6 +69,14 @@ export interface VoiceSessionRequest {
   allow_delegation?: boolean | null;
 
   /**
+   * Set to `binary` to exchange audio as raw PCM binary WebSocket frames instead of
+   * base64 inside JSON `audio` messages. Binary audio is in use only when `started`
+   * carries `audio_transport: binary`; do not send binary frames before then.
+   * Omitted or unrecognized values keep JSON audio.
+   */
+  audio_transport?: 'binary' | null;
+
+  /**
    * Override the agent config for this voice session. Only prompt overrides are
    * supported — voice sessions always use Gemini Live, so LLM model, agent model,
    * planning prompt, and tool settings are not applicable. Prompt overrides fully
@@ -224,13 +232,14 @@ export namespace VoiceSessionRequest {
 
     /**
      * Maximum duration in milliseconds of a buffered segment before force-commit.
-     * Default: 180000 (3 minutes).
+     * Default: 60000 (1 minute).
      */
     segment_max_duration_ms?: number | null;
 
     /**
-     * Duration of silence (no agent audio) in milliseconds before auto-committing a
-     * segment. Default: 30000 (30 seconds).
+     * Silence in the agent's audio, in milliseconds, before the buffered conversation
+     * segment is committed to history. Does not decide when the user's turn ends; see
+     * turn_end_mode. Default: 2000 (2 seconds).
      */
     silence_commit_ms?: number | null;
 
@@ -301,6 +310,11 @@ export interface VoiceSessionResponse {
  *
  * - `start`: Initialize session (payload matches VoiceSessionRequest)
  * - `audio`: Send audio chunk `{ data: string (base64 PCM), mime_type?: string }`
+ * - Binary frame: when `started` carried `audio_transport: "binary"`, a binary
+ *   WebSocket frame is an audio chunk of raw 16-bit mono PCM at 16 kHz, with no
+ *   JSON envelope. JSON `audio` messages are still accepted. On any other session
+ *   a binary frame is read as a JSON message, so raw PCM sent there is answered
+ *   with an `error` message.
  * - `stop`: End session gracefully
  * - `interrupt`: Signal user interruption
  * - `end_turn`: Commit the current user audio turn immediately (no payload).
@@ -314,16 +328,22 @@ export interface VoiceSessionResponse {
  * **Server to Client Messages:**
  *
  * - `started`: Session established
- *   `{ session_id: string, conversation_id: string, message_id: string, agent_id: string, dm_navigation_item_id?: string, sends_turn_complete?: true }`.
+ *   `{ session_id: string, conversation_id: string, message_id: string, agent_id: string, dm_navigation_item_id?: string, sends_turn_complete?: true, audio_transport?: "binary" }`.
  *   `agent_id` is the agent the session is bound to after supervisor resolution.
  *   `dm_navigation_item_id` is present only when the session ran in that DM's
  *   conversation, so clients can navigate straight to it. `sends_turn_complete` is
  *   present only when this session sends `turn_complete`; when it is absent (older
  *   servers, or a voice provider without a response-level completion signal),
- *   infer the end of an agent response from silence.
+ *   infer the end of an agent response from silence. `audio_transport` is present
+ *   only when the `start` message asked for `binary` and the server granted it;
+ *   when it is absent (older servers, not requested, or declined), audio stays
+ *   base64 JSON in both directions.
  * - `ready`: Agent is ready to receive audio
  * - `audio`: Audio response chunk
  *   `{ data: string (base64 PCM), mime_type: string }`
+ * - Binary frame: when `started` carried `audio_transport: "binary"`, audio
+ *   response chunks arrive as binary WebSocket frames of raw 16-bit mono PCM at 24
+ *   kHz instead of `audio` messages. Every other message stays a JSON text frame.
  * - `tool_call`: Tool invocation status
  *   `{ tool_name: string, status: "started" | "completed" | "failed", args?: object, tool_call_id?: string, turn_index?: number }`.
  *   `args` contains bounded, JSON-safe function arguments and is present only when
@@ -338,6 +358,13 @@ export interface VoiceSessionResponse {
  *   retry later.
  * - `transcript`: Real-time transcription
  *   `{ role: "user" | "agent", text: string, turn_index?: number }`
+ * - `response_status`: Whether the agent is working on a response
+ *   `{ status: "in_progress" | "idle" }`. `in_progress` is sent when the agent
+ *   starts speaking (its first `audio` event of a response) and, on models that
+ *   report it, while it is still thinking after going quiet; `idle` when the
+ *   response is complete or was interrupted. Only changes are sent. Agent
+ *   `transcript` events can trail `idle` briefly, since output transcription is
+ *   not ordered against the model turn.
  * - `turn_complete`: The agent finished its response `{ turn_index: number }`.
  *   Sent only when `started` carried `sends_turn_complete: true`. Every
  *   `transcript` event for the response is sent before it; audio and `tool_call`
@@ -364,10 +391,11 @@ export interface VoiceWebsocketMessage {
     | VoiceWebsocketMessage.UnionMember2
     | VoiceWebsocketMessage.UnionMember3
     | VoiceWebsocketMessage.UnionMember4
+    | VoiceWebsocketMessage.Status
     | VoiceWebsocketMessage.TurnIndex
-    | VoiceWebsocketMessage.UnionMember6
+    | VoiceWebsocketMessage.UnionMember7
     | VoiceWebsocketMessage.Text
-    | VoiceWebsocketMessage.UnionMember8;
+    | VoiceWebsocketMessage.UnionMember9;
 
   /**
    * Message type.
@@ -385,6 +413,7 @@ export interface VoiceWebsocketMessage {
     | 'interrupted'
     | 'error'
     | 'transcript'
+    | 'response_status'
     | 'turn_complete'
     | 'citation'
     | 'ended';
@@ -395,6 +424,13 @@ export namespace VoiceWebsocketMessage {
    * For 'started' messages
    */
   export interface UnionMember0 {
+    /**
+     * Present only when the `start` message asked for binary audio and the server
+     * granted it. Absent on older servers, when not requested, and when declined;
+     * audio then stays base64 JSON.
+     */
+    audio_transport?: 'binary';
+
     conversation_id?: string;
 
     message_id?: string;
@@ -477,6 +513,18 @@ export namespace VoiceWebsocketMessage {
   }
 
   /**
+   * For 'response_status' messages
+   */
+  export interface Status {
+    /**
+     * in_progress once the agent starts speaking (first audio event); idle when the
+     * response is complete or was interrupted. Agent transcript events can trail idle
+     * briefly.
+     */
+    status: 'in_progress' | 'idle';
+  }
+
+  /**
    * For 'turn_complete' messages
    */
   export interface TurnIndex {
@@ -489,12 +537,12 @@ export namespace VoiceWebsocketMessage {
   /**
    * For 'citation' messages
    */
-  export interface UnionMember6 {
+  export interface UnionMember7 {
     /**
      * Array of voice citations. Each source is a superset of the SSE `/v1/converse`
      * `CitationSource` schema.
      */
-    citations: Array<UnionMember6.Citation>;
+    citations: Array<UnionMember7.Citation>;
 
     /**
      * Stable id of the persisted voice message row for this session. Always present
@@ -516,7 +564,7 @@ export namespace VoiceWebsocketMessage {
     turn_index?: number;
   }
 
-  export namespace UnionMember6 {
+  export namespace UnionMember7 {
     export interface Citation {
       /**
        * The text snippet from the response that is being cited.
@@ -715,13 +763,13 @@ export namespace VoiceWebsocketMessage {
   /**
    * For 'ended' messages
    */
-  export interface UnionMember8 {
+  export interface UnionMember9 {
     credits_consumed?: number;
 
-    transcript?: Array<UnionMember8.Transcript>;
+    transcript?: Array<UnionMember9.Transcript>;
   }
 
-  export namespace UnionMember8 {
+  export namespace UnionMember9 {
     export interface Transcript {
       role?: 'user' | 'agent';
 
@@ -742,6 +790,14 @@ export interface VoiceStartSessionParams {
    * the session. Ignored for direct-agent sessions.
    */
   allow_delegation?: boolean | null;
+
+  /**
+   * Set to `binary` to exchange audio as raw PCM binary WebSocket frames instead of
+   * base64 inside JSON `audio` messages. Binary audio is in use only when `started`
+   * carries `audio_transport: binary`; do not send binary frames before then.
+   * Omitted or unrecognized values keep JSON audio.
+   */
+  audio_transport?: 'binary' | null;
 
   /**
    * Override the agent config for this voice session. Only prompt overrides are
@@ -899,13 +955,14 @@ export namespace VoiceStartSessionParams {
 
     /**
      * Maximum duration in milliseconds of a buffered segment before force-commit.
-     * Default: 180000 (3 minutes).
+     * Default: 60000 (1 minute).
      */
     segment_max_duration_ms?: number | null;
 
     /**
-     * Duration of silence (no agent audio) in milliseconds before auto-committing a
-     * segment. Default: 30000 (30 seconds).
+     * Silence in the agent's audio, in milliseconds, before the buffered conversation
+     * segment is committed to history. Does not decide when the user's turn ends; see
+     * turn_end_mode. Default: 2000 (2 seconds).
      */
     silence_commit_ms?: number | null;
 

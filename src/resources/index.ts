@@ -14,6 +14,13 @@ export {
   type AgentGenerateParams,
 } from './agents/agents';
 export {
+  AgenticAutomations,
+  type AgenticAutomation,
+  type AppEventAgenticAutomation,
+  type AgenticAutomationCreateEventParams,
+  type AgenticAutomationCreateScheduledParams,
+} from './agentic-automations';
+export {
   BatchPredictionsAfterCursorPage,
   BatchPredictions,
   type BatchPrediction,
