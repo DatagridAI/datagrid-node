@@ -202,6 +202,7 @@ export type Properties =
   | Properties.ConverseGeneratedTitleEvent
   | Properties.ConverseSkillsEvent
   | Properties.ConverseContentMessageDeltaEvent
+  | Properties.ConverseContentMessageRetractEvent
   | Properties.ConverseToolCallDeltaEvent
   | Properties.ConverseReasoningDeltaEvent
   | Properties.ConverseDelegationEvent;
@@ -575,6 +576,36 @@ export namespace Properties {
 
         type: 'json';
       }
+    }
+  }
+
+  export interface ConverseContentMessageRetractEvent {
+    /**
+     * Sent when the agent abandons a response it already started streaming, for
+     * example after the model calls a tool it was not given. The withdrawn text is the
+     * exact suffix of the text accumulated from earlier `text` deltas; remove it from
+     * the end of that text. Later `delta` events continue from the shortened text.
+     */
+    data: ConverseContentMessageRetractEvent.Data;
+
+    /**
+     * Type of the event which is always retract
+     */
+    event: 'retract';
+  }
+
+  export namespace ConverseContentMessageRetractEvent {
+    /**
+     * Sent when the agent abandons a response it already started streaming, for
+     * example after the model calls a tool it was not given. The withdrawn text is the
+     * exact suffix of the text accumulated from earlier `text` deltas; remove it from
+     * the end of that text. Later `delta` events continue from the shortened text.
+     */
+    export interface Data {
+      /**
+       * The text to remove from the end of the accumulated message text.
+       */
+      text: string;
     }
   }
 

@@ -177,6 +177,12 @@ export interface SearchAIResult {
    * to the original data in your teamspace.
    */
   sources: Array<AISource>;
+
+  /**
+   * Present when the model declined to answer. `answer` is then an empty string.
+   * Search results are still returned.
+   */
+  refusal?: SearchAIResult.Refusal;
 }
 
 export namespace SearchAIResult {
@@ -190,6 +196,19 @@ export namespace SearchAIResult {
      * The number of credits consumed by the operation.
      */
     consumed: number;
+  }
+
+  /**
+   * Present when the model declined to answer. `answer` is then an empty string.
+   * Search results are still returned.
+   */
+  export interface Refusal {
+    /**
+     * `aggregate_question`: the question needs every matching record (a count, a
+     * total, or a complete list), but AI search only reads the top results. Ask it in
+     * a Datagrid or Procore AI chat instead.
+     */
+    reason: 'aggregate_question';
   }
 }
 

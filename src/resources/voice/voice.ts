@@ -69,6 +69,14 @@ export interface VoiceSessionRequest {
   allow_delegation?: boolean | null;
 
   /**
+   * Set to `binary` to exchange audio as raw PCM binary WebSocket frames instead of
+   * base64 inside JSON `audio` messages. Binary audio is in use only when `started`
+   * carries `audio_transport: binary`; do not send binary frames before then.
+   * Omitted or unrecognized values keep JSON audio.
+   */
+  audio_transport?: 'binary' | null;
+
+  /**
    * Override the agent config for this voice session. Only prompt overrides are
    * supported — voice sessions always use Gemini Live, so LLM model, agent model,
    * planning prompt, and tool settings are not applicable. Prompt overrides fully
@@ -302,6 +310,11 @@ export interface VoiceSessionResponse {
  *
  * - `start`: Initialize session (payload matches VoiceSessionRequest)
  * - `audio`: Send audio chunk `{ data: string (base64 PCM), mime_type?: string }`
+ * - Binary frame: when `started` carried `audio_transport: "binary"`, a binary
+ *   WebSocket frame is an audio chunk of raw 16-bit mono PCM at 16 kHz, with no
+ *   JSON envelope. JSON `audio` messages are still accepted. On any other session
+ *   a binary frame is read as a JSON message, so raw PCM sent there is answered
+ *   with an `error` message.
  * - `stop`: End session gracefully
  * - `interrupt`: Signal user interruption
  * - `end_turn`: Commit the current user audio turn immediately (no payload).
@@ -315,16 +328,22 @@ export interface VoiceSessionResponse {
  * **Server to Client Messages:**
  *
  * - `started`: Session established
- *   `{ session_id: string, conversation_id: string, message_id: string, agent_id: string, dm_navigation_item_id?: string, sends_turn_complete?: true }`.
+ *   `{ session_id: string, conversation_id: string, message_id: string, agent_id: string, dm_navigation_item_id?: string, sends_turn_complete?: true, audio_transport?: "binary" }`.
  *   `agent_id` is the agent the session is bound to after supervisor resolution.
  *   `dm_navigation_item_id` is present only when the session ran in that DM's
  *   conversation, so clients can navigate straight to it. `sends_turn_complete` is
  *   present only when this session sends `turn_complete`; when it is absent (older
  *   servers, or a voice provider without a response-level completion signal),
- *   infer the end of an agent response from silence.
+ *   infer the end of an agent response from silence. `audio_transport` is present
+ *   only when the `start` message asked for `binary` and the server granted it;
+ *   when it is absent (older servers, not requested, or declined), audio stays
+ *   base64 JSON in both directions.
  * - `ready`: Agent is ready to receive audio
  * - `audio`: Audio response chunk
  *   `{ data: string (base64 PCM), mime_type: string }`
+ * - Binary frame: when `started` carried `audio_transport: "binary"`, audio
+ *   response chunks arrive as binary WebSocket frames of raw 16-bit mono PCM at 24
+ *   kHz instead of `audio` messages. Every other message stays a JSON text frame.
  * - `tool_call`: Tool invocation status
  *   `{ tool_name: string, status: "started" | "completed" | "failed", args?: object, tool_call_id?: string, turn_index?: number }`.
  *   `args` contains bounded, JSON-safe function arguments and is present only when
@@ -405,6 +424,13 @@ export namespace VoiceWebsocketMessage {
    * For 'started' messages
    */
   export interface UnionMember0 {
+    /**
+     * Present only when the `start` message asked for binary audio and the server
+     * granted it. Absent on older servers, when not requested, and when declined;
+     * audio then stays base64 JSON.
+     */
+    audio_transport?: 'binary';
+
     conversation_id?: string;
 
     message_id?: string;
@@ -764,6 +790,14 @@ export interface VoiceStartSessionParams {
    * the session. Ignored for direct-agent sessions.
    */
   allow_delegation?: boolean | null;
+
+  /**
+   * Set to `binary` to exchange audio as raw PCM binary WebSocket frames instead of
+   * base64 inside JSON `audio` messages. Binary audio is in use only when `started`
+   * carries `audio_transport: binary`; do not send binary frames before then.
+   * Omitted or unrecognized values keep JSON audio.
+   */
+  audio_transport?: 'binary' | null;
 
   /**
    * Override the agent config for this voice session. Only prompt overrides are

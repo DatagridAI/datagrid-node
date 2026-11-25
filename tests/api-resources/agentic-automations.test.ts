@@ -9,6 +9,36 @@ const client = new Datagrid({
 });
 
 describe('resource agenticAutomations', () => {
+  test('createEvent: only required params', async () => {
+    const responsePromise = client.agenticAutomations.createEvent({
+      agent_id: 'agent_id',
+      application_id: 'connector.procore',
+      name: 'name',
+      trigger_event: 'RFIs:create',
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('createEvent: required and optional params', async () => {
+    const response = await client.agenticAutomations.createEvent({
+      agent_id: 'agent_id',
+      application_id: 'connector.procore',
+      name: 'name',
+      trigger_event: 'RFIs:create',
+      description: 'description',
+      enabled: true,
+      output_channel_id: 'output_channel_id',
+      output_channel_type: 'output_channel_type',
+      run_conditions: 'run_conditions',
+    });
+  });
+
   test('createScheduled: only required params', async () => {
     const responsePromise = client.agenticAutomations.createScheduled({
       agent_id: 'agent_id',

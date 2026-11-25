@@ -214,9 +214,11 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/agentic-automations.ts">AgenticAutomation</a></code>
+- <code><a href="./src/resources/agentic-automations.ts">AppEventAgenticAutomation</a></code>
 
 Methods:
 
+- <code title="post /agentic-automations/event">client.agenticAutomations.<a href="./src/resources/agentic-automations.ts">createEvent</a>({ ...params }) -> AppEventAgenticAutomation</code>
 - <code title="post /agentic-automations/scheduled">client.agenticAutomations.<a href="./src/resources/agentic-automations.ts">createScheduled</a>({ ...params }) -> AgenticAutomation</code>
 
 # Agents

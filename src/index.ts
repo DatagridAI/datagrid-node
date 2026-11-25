@@ -23,8 +23,10 @@ import * as TopLevelAPI from './resources/top-level';
 import { ConverseParams, ConverseResponse, Properties } from './resources/top-level';
 import {
   AgenticAutomation,
+  AgenticAutomationCreateEventParams,
   AgenticAutomationCreateScheduledParams,
   AgenticAutomations,
+  AppEventAgenticAutomation,
 } from './resources/agentic-automations';
 import {
   BatchPrediction,
@@ -646,6 +648,8 @@ export declare namespace Datagrid {
   export {
     AgenticAutomations as AgenticAutomations,
     type AgenticAutomation as AgenticAutomation,
+    type AppEventAgenticAutomation as AppEventAgenticAutomation,
+    type AgenticAutomationCreateEventParams as AgenticAutomationCreateEventParams,
     type AgenticAutomationCreateScheduledParams as AgenticAutomationCreateScheduledParams,
   };
 

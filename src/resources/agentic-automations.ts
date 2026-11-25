@@ -5,6 +5,31 @@ import * as Core from '../core';
 
 export class AgenticAutomations extends APIResource {
   /**
+   * Create an automation that runs an agent when an event happens in a connected
+   * app. When `enabled` is `true`, the webhook for the app is registered before the
+   * automation is saved. If the save fails, the webhook is removed again. `agent_id`
+   * is the ID of the agent and is in the body. The caller needs the manage
+   * automations permission.
+   *
+   * @example
+   * ```ts
+   * const appEventAgenticAutomation =
+   *   await client.agenticAutomations.createEvent({
+   *     agent_id: 'agent_id',
+   *     application_id: 'connector.procore',
+   *     name: 'name',
+   *     trigger_event: 'RFIs:create',
+   *   });
+   * ```
+   */
+  createEvent(
+    body: AgenticAutomationCreateEventParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<AppEventAgenticAutomation> {
+    return this._client.post('/agentic-automations/event', { body, ...options });
+  }
+
+  /**
    * Create a scheduled automation for an agent. The automation fires on the given
    * cron schedule and runs the agent. `agent_id` is in the body. Schedules must fire
    * at most once every 15 minutes.
@@ -140,6 +165,166 @@ export namespace AgenticAutomation {
   }
 }
 
+export interface AppEventAgenticAutomation {
+  /**
+   * Unique identifier for the automation.
+   */
+  id: string;
+
+  /**
+   * The ID of the agent this automation runs.
+   */
+  agent_id: string;
+
+  app_event: AppEventAgenticAutomation.AppEvent;
+
+  /**
+   * ISO 8601 timestamp of when the automation was created.
+   */
+  created_at: string;
+
+  /**
+   * The user who created the automation.
+   */
+  creator_user_id: string;
+
+  /**
+   * Free-text description of what this automation does.
+   */
+  description: string | null;
+
+  /**
+   * Whether the automation is active.
+   */
+  enabled: boolean;
+
+  /**
+   * What the automation is. `app_event` for this route.
+   */
+  kind: 'app_event';
+
+  /**
+   * The user who last updated the automation.
+   */
+  last_updated_by_id: string;
+
+  /**
+   * Human-readable name of the automation.
+   */
+  name: string;
+
+  /**
+   * The object type, always 'agentic_automation'.
+   */
+  object: 'agentic_automation';
+
+  /**
+   * Additional delivery address, when one is stored.
+   */
+  output_channel_id: string | null;
+
+  /**
+   * Additional delivery transport, when one is stored.
+   */
+  output_channel_type: string | null;
+
+  /**
+   * ISO 8601 timestamp of the last modification.
+   */
+  updated_at: string;
+}
+
+export namespace AppEventAgenticAutomation {
+  export interface AppEvent {
+    /**
+     * The connector that sends the event.
+     */
+    application_id: string;
+
+    /**
+     * When the app webhook expires, if it does.
+     */
+    expires_at: string | null;
+
+    /**
+     * The app's ID for the registered webhook. Null when the automation was saved
+     * paused.
+     */
+    external_subscription_id: string | null;
+
+    /**
+     * Conditions an event must meet before the agent runs.
+     */
+    run_conditions: string | null;
+
+    /**
+     * App-specific details about the registered webhook, such as the Procore company
+     * and project.
+     */
+    source_metadata: { [key: string]: unknown } | null;
+
+    /**
+     * The scope the app registered the webhook for. Empty when no webhook is
+     * registered.
+     */
+    source_scope: string;
+
+    /**
+     * The event the automation runs on.
+     */
+    trigger_event: string;
+  }
+}
+
+export interface AgenticAutomationCreateEventParams {
+  /**
+   * The ID of the agent this automation runs.
+   */
+  agent_id: string;
+
+  /**
+   * The connector that sends the event.
+   */
+  application_id: string;
+
+  /**
+   * Human-readable name for the automation.
+   */
+  name: string;
+
+  /**
+   * The event to run on, in the form `resource:event`.
+   */
+  trigger_event: string;
+
+  /**
+   * Optional free-text description of what this automation does.
+   */
+  description?: string | null;
+
+  /**
+   * Whether the automation is active. When `true`, the app webhook is registered
+   * during this request. When `false`, no webhook is registered and the automation
+   * is saved paused. Defaults to `true` when omitted or null.
+   */
+  enabled?: boolean | null;
+
+  /**
+   * Optional additional delivery address.
+   */
+  output_channel_id?: string | null;
+
+  /**
+   * Optional additional delivery transport.
+   */
+  output_channel_type?: string | null;
+
+  /**
+   * Optional free-text conditions an event must meet before the agent runs.
+   */
+  run_conditions?: string | null;
+}
+
 export interface AgenticAutomationCreateScheduledParams {
   /**
    * The ID of the agent this automation runs.
@@ -179,6 +364,8 @@ export interface AgenticAutomationCreateScheduledParams {
 export declare namespace AgenticAutomations {
   export {
     type AgenticAutomation as AgenticAutomation,
+    type AppEventAgenticAutomation as AppEventAgenticAutomation,
+    type AgenticAutomationCreateEventParams as AgenticAutomationCreateEventParams,
     type AgenticAutomationCreateScheduledParams as AgenticAutomationCreateScheduledParams,
   };
 }
